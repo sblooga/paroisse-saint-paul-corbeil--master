@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -6,6 +7,10 @@ import BackToTop from '@/components/BackToTop';
 const PrivacyPolicy = () => {
   const { i18n } = useTranslation();
   const isFrench = i18n.language === 'fr';
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
