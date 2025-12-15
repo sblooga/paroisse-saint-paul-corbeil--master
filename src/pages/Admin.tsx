@@ -34,10 +34,13 @@ const Admin = () => {
   const [activeTab, setActiveTab] = useState<TabType>('articles');
   const [stats, setStats] = useState<Stats>({ messages: 0, unread: 0, subscribers: 0, activeSubscribers: 0 });
   const [refreshKey, setRefreshKey] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleRefresh = () => {
-    fetchStats();
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await fetchStats();
     setRefreshKey(prev => prev + 1);
+    setTimeout(() => setIsRefreshing(false), 600);
   };
 
   useEffect(() => {
@@ -124,8 +127,8 @@ const Admin = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={handleRefresh}>
-              <RefreshCw size={16} />
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
+              <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
               {t('admin.actions.refresh')}
             </Button>
             <Button variant="outline" size="sm" onClick={() => navigate('/')}>
