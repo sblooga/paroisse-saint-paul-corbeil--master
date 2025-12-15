@@ -267,9 +267,9 @@ const AdminPages = () => {
               </div>
 
               <Tabs defaultValue="fr" className="w-full">
-                <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
-                  <TabsTrigger value="pl">🇵🇱 Polski</TabsTrigger>
+                <TabsList className="w-full flex overflow-x-auto">
+                  <TabsTrigger value="fr" className="flex-1 min-w-[120px]">🇫🇷 Français</TabsTrigger>
+                  <TabsTrigger value="pl" className="flex-1 min-w-[120px]">🇵🇱 Polski</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="fr" className="space-y-4 mt-4">
