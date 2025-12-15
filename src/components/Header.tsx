@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelector from './LanguageSelector';
+import HashLink from './HashLink';
 import logoImage from '@/assets/logo.png';
 const Header = () => {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ const Header = () => {
 
   const navLinks = [
     { name: t('common.home'), href: '/' },
-    { name: t('common.parish'), href: isHomePage ? '#paroisse' : '/#paroisse' },
+    { name: t('common.parish'), href: isHomePage ? '#paroisse' : '/#paroisse', isHash: true },
     { name: t('common.team'), href: '/equipe' },
     { name: t('common.schedule'), href: '/horaires' },
     { name: t('common.news'), href: '/articles' },
@@ -47,10 +48,10 @@ const Header = () => {
               <Phone size={14} />
               <span className="hidden sm:inline">{t('common.contact')}</span>
             </Link>
-            <a href={isHomePage ? '#don' : '/#don'} className="flex items-center gap-2 hover:text-accent transition-colors">
+            <HashLink to={isHomePage ? '#don' : '/#don'} className="flex items-center gap-2 hover:text-accent transition-colors">
               <Heart size={14} />
               <span>{t('common.donate')}</span>
-            </a>
+            </HashLink>
           </div>
           
           <div className="flex items-center gap-4">
@@ -100,19 +101,19 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) => {
-              const isExternal = link.href.startsWith('#') || link.href.includes('/#');
+              const isHash = Boolean((link as any).isHash) || link.href.startsWith('#') || link.href.includes('/#');
               const isActive = link.href === location.pathname;
               
-              if (isExternal) {
+              if (isHash) {
                 return (
-                  <a
+                  <HashLink
                     key={link.name}
-                    href={link.href}
+                    to={link.href}
                     className={`text-foreground/80 hover:text-primary font-medium transition-colors relative group ${isActive ? 'text-primary' : ''}`}
                   >
                     {link.name}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" />
-                  </a>
+                  </HashLink>
                 );
               }
               
@@ -172,21 +173,24 @@ const Header = () => {
               
               <nav className="flex flex-col gap-4">
                 {navLinks.map((link, index) => {
-                  const isExternal = link.href.startsWith('#') || link.href.includes('/#');
+                  const isHash = Boolean((link as any).isHash) || link.href.startsWith('#') || link.href.includes('/#');
                   
-                  if (isExternal) {
+                  if (isHash) {
                     return (
-                      <motion.a
+                      <motion.div
                         key={link.name}
-                        href={link.href}
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="text-xl font-heading font-semibold text-foreground hover:text-primary transition-colors py-2 border-b border-border"
                       >
-                        {link.name}
-                      </motion.a>
+                        <HashLink
+                          to={link.href}
+                          onClick={() => setIsMenuOpen(false) as any}
+                          className="block text-xl font-heading font-semibold text-foreground hover:text-primary transition-colors py-2 border-b border-border"
+                        >
+                          {link.name}
+                        </HashLink>
+                      </motion.div>
                     );
                   }
                   
@@ -210,10 +214,14 @@ const Header = () => {
               </nav>
 
               <div className="mt-8 pt-8 border-t border-border">
-                <a href={isHomePage ? '#don' : '/#don'} className="btn-accent w-full text-center">
+                <HashLink
+                  to={isHomePage ? '#don' : '/#don'}
+                  onClick={() => setIsMenuOpen(false) as any}
+                  className="btn-accent w-full text-center"
+                >
                   <Heart size={18} />
                   {t('common.donate')}
-                </a>
+                </HashLink>
               </div>
             </div>
           </motion.div>

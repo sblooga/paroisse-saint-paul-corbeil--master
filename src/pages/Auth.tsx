@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, LogIn, UserPlus, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -166,9 +166,9 @@ const Auth = () => {
         </div>
 
         <p className="text-center mt-6 text-sm text-muted-foreground">
-          <a href="/" className="hover:text-primary transition-colors">
+          <Link to="/" className="hover:text-primary transition-colors">
             ← Retour au site
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>
