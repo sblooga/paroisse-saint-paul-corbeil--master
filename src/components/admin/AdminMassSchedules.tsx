@@ -17,13 +17,20 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface MassSchedule {
   id: string;
   day_of_week: string;
+  day_of_week_fr: string | null;
+  day_of_week_pl: string | null;
   time: string;
   location: string | null;
+  location_fr: string | null;
+  location_pl: string | null;
   description: string | null;
+  description_fr: string | null;
+  description_pl: string | null;
   is_special: boolean;
   special_date: string | null;
   active: boolean;
@@ -48,9 +55,15 @@ const AdminMassSchedules = () => {
   const [editingSchedule, setEditingSchedule] = useState<MassSchedule | null>(null);
   const [formData, setFormData] = useState({
     day_of_week: 'dimanche',
+    day_of_week_fr: '',
+    day_of_week_pl: '',
     time: '',
     location: '',
+    location_fr: '',
+    location_pl: '',
     description: '',
+    description_fr: '',
+    description_pl: '',
     is_special: false,
     special_date: '',
     active: true,
@@ -77,9 +90,15 @@ const AdminMassSchedules = () => {
   const resetForm = () => {
     setFormData({
       day_of_week: 'dimanche',
+      day_of_week_fr: '',
+      day_of_week_pl: '',
       time: '',
       location: '',
+      location_fr: '',
+      location_pl: '',
       description: '',
+      description_fr: '',
+      description_pl: '',
       is_special: false,
       special_date: '',
       active: true,
@@ -92,9 +111,15 @@ const AdminMassSchedules = () => {
     setEditingSchedule(schedule);
     setFormData({
       day_of_week: schedule.day_of_week,
+      day_of_week_fr: schedule.day_of_week_fr || '',
+      day_of_week_pl: schedule.day_of_week_pl || '',
       time: schedule.time,
       location: schedule.location || '',
+      location_fr: schedule.location_fr || '',
+      location_pl: schedule.location_pl || '',
       description: schedule.description || '',
+      description_fr: schedule.description_fr || '',
+      description_pl: schedule.description_pl || '',
       is_special: schedule.is_special,
       special_date: schedule.special_date || '',
       active: schedule.active,
@@ -112,10 +137,20 @@ const AdminMassSchedules = () => {
     }
 
     const dataToSend = {
-      ...formData,
+      day_of_week: formData.day_of_week,
+      day_of_week_fr: formData.day_of_week_fr || null,
+      day_of_week_pl: formData.day_of_week_pl || null,
+      time: formData.time,
       location: formData.location || null,
+      location_fr: formData.location_fr || null,
+      location_pl: formData.location_pl || null,
       description: formData.description || null,
+      description_fr: formData.description_fr || null,
+      description_pl: formData.description_pl || null,
+      is_special: formData.is_special,
       special_date: formData.special_date || null,
+      active: formData.active,
+      sort_order: formData.sort_order,
     };
 
     if (editingSchedule) {
@@ -194,7 +229,7 @@ const AdminMassSchedules = () => {
               Nouvel horaire
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-lg">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingSchedule ? 'Modifier l\'horaire' : 'Nouvel horaire'}
@@ -203,7 +238,7 @@ const AdminMassSchedules = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="day_of_week">Jour *</Label>
+                  <Label htmlFor="day_of_week">Jour (clé système) *</Label>
                   <Select
                     value={formData.day_of_week}
                     onValueChange={(value) => setFormData(prev => ({ ...prev, day_of_week: value }))}
@@ -231,26 +266,74 @@ const AdminMassSchedules = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="location">Lieu</Label>
-                <Input
-                  id="location"
-                  value={formData.location}
-                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                  placeholder="Église principale..."
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Messe en français, Messe anticipée..."
-                  rows={2}
-                />
-              </div>
+              <Tabs defaultValue="fr" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+                  <TabsTrigger value="pl">🇵🇱 Polski</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="fr" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="day_of_week_fr">Jour (affiché FR)</Label>
+                    <Input
+                      id="day_of_week_fr"
+                      value={formData.day_of_week_fr}
+                      onChange={(e) => setFormData(prev => ({ ...prev, day_of_week_fr: e.target.value }))}
+                      placeholder="Dimanche, En semaine..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="location_fr">Lieu (FR)</Label>
+                    <Input
+                      id="location_fr"
+                      value={formData.location_fr}
+                      onChange={(e) => setFormData(prev => ({ ...prev, location_fr: e.target.value }))}
+                      placeholder="Église principale..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description_fr">Description (FR)</Label>
+                    <Textarea
+                      id="description_fr"
+                      value={formData.description_fr}
+                      onChange={(e) => setFormData(prev => ({ ...prev, description_fr: e.target.value }))}
+                      placeholder="Messe en français..."
+                      rows={2}
+                    />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="pl" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="day_of_week_pl">Jour (affiché PL)</Label>
+                    <Input
+                      id="day_of_week_pl"
+                      value={formData.day_of_week_pl}
+                      onChange={(e) => setFormData(prev => ({ ...prev, day_of_week_pl: e.target.value }))}
+                      placeholder="Niedziela, W tygodniu..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="location_pl">Lieu (PL)</Label>
+                    <Input
+                      id="location_pl"
+                      value={formData.location_pl}
+                      onChange={(e) => setFormData(prev => ({ ...prev, location_pl: e.target.value }))}
+                      placeholder="Kościół główny..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description_pl">Description (PL)</Label>
+                    <Textarea
+                      id="description_pl"
+                      value={formData.description_pl}
+                      onChange={(e) => setFormData(prev => ({ ...prev, description_pl: e.target.value }))}
+                      placeholder="Msza po polsku..."
+                      rows={2}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -315,7 +398,7 @@ const AdminMassSchedules = () => {
             <TableRow>
               <TableHead>Jour</TableHead>
               <TableHead>Heure</TableHead>
-              <TableHead>Lieu</TableHead>
+              <TableHead>Lieu (FR)</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Actions</TableHead>
@@ -331,9 +414,11 @@ const AdminMassSchedules = () => {
             ) : (
               schedules.map((schedule) => (
                 <TableRow key={schedule.id}>
-                  <TableCell className="font-medium">{getDayLabel(schedule.day_of_week)}</TableCell>
+                  <TableCell className="font-medium">
+                    {schedule.day_of_week_fr || getDayLabel(schedule.day_of_week)}
+                  </TableCell>
                   <TableCell>{schedule.time}</TableCell>
-                  <TableCell>{schedule.location || '-'}</TableCell>
+                  <TableCell>{schedule.location_fr || schedule.location || '-'}</TableCell>
                   <TableCell>
                     {schedule.is_special ? (
                       <Badge variant="outline" className="border-amber-500 text-amber-600">Spéciale</Badge>

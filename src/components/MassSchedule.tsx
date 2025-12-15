@@ -9,9 +9,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface MassSchedule {
   id: string;
   day_of_week: string;
+  day_of_week_fr: string | null;
+  day_of_week_pl: string | null;
   time: string;
   location: string | null;
+  location_fr: string | null;
+  location_pl: string | null;
   description: string | null;
+  description_fr: string | null;
+  description_pl: string | null;
   is_special: boolean;
   sort_order: number;
 }
@@ -43,17 +49,28 @@ const MassScheduleSection = () => {
     setLoading(false);
   };
 
+  // Helper to get localized content
+  const getLocalizedField = (schedule: MassSchedule, field: 'day_of_week' | 'location' | 'description') => {
+    if (currentLang === 'pl') {
+      const plField = schedule[`${field}_pl` as keyof MassSchedule] as string | null;
+      if (plField) return plField;
+    }
+    const frField = schedule[`${field}_fr` as keyof MassSchedule] as string | null;
+    if (frField) return frField;
+    return schedule[field] as string | null;
+  };
+
   // Group schedules by day type
   const groupedSchedules = DAY_ORDER.reduce((acc, dayType) => {
     let daySchedules: MassSchedule[];
     
     if (dayType === 'Dimanche') {
-      daySchedules = schedules.filter(s => s.day_of_week === 'Dimanche');
+      daySchedules = schedules.filter(s => s.day_of_week.toLowerCase() === 'dimanche');
     } else if (dayType === 'Samedi') {
-      daySchedules = schedules.filter(s => s.day_of_week === 'Samedi');
+      daySchedules = schedules.filter(s => s.day_of_week.toLowerCase() === 'samedi');
     } else {
       daySchedules = schedules.filter(s => 
-        !['Dimanche', 'Samedi'].includes(s.day_of_week)
+        !['dimanche', 'samedi'].includes(s.day_of_week.toLowerCase())
       );
     }
     
@@ -135,27 +152,32 @@ const MassScheduleSection = () => {
                 </div>
 
                 <div className="space-y-3">
-                  {group.schedules.map((schedule) => (
-                    <div key={schedule.id} className="flex items-start gap-3">
-                      <Clock size={18} className="text-accent mt-0.5" />
-                      <div>
-                        <p className="text-foreground font-medium">
-                          {schedule.time}
-                          {schedule.day_of_week !== group.day && group.day === 'En semaine' && (
-                            <span className="text-sm text-muted-foreground ml-2">
-                              ({schedule.day_of_week.slice(0, 3)})
-                            </span>
+                  {group.schedules.map((schedule) => {
+                    const localizedLocation = getLocalizedField(schedule, 'location');
+                    const localizedDayOfWeek = getLocalizedField(schedule, 'day_of_week');
+                    
+                    return (
+                      <div key={schedule.id} className="flex items-start gap-3">
+                        <Clock size={18} className="text-accent mt-0.5" />
+                        <div>
+                          <p className="text-foreground font-medium">
+                            {schedule.time}
+                            {schedule.day_of_week.toLowerCase() !== group.day.toLowerCase() && group.day === 'En semaine' && (
+                              <span className="text-sm text-muted-foreground ml-2">
+                                ({localizedDayOfWeek?.slice(0, 3) || schedule.day_of_week.slice(0, 3)})
+                              </span>
+                            )}
+                          </p>
+                          {localizedLocation && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                              <MapPin size={14} />
+                              <span>{localizedLocation}</span>
+                            </div>
                           )}
-                        </p>
-                        {schedule.location && (
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin size={14} />
-                            <span>{schedule.location}</span>
-                          </div>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </motion.div>
             ))}
