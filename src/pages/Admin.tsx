@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Mail, Users, MessageSquare, LogOut, Trash2, Eye, 
-  Check, X, RefreshCw, LayoutDashboard 
+  Check, X, RefreshCw, LayoutDashboard, FileText, 
+  Calendar, UsersRound, Newspaper
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +19,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import AdminArticles from '@/components/admin/AdminArticles';
+import AdminPages from '@/components/admin/AdminPages';
+import AdminTeam from '@/components/admin/AdminTeam';
+import AdminMassSchedules from '@/components/admin/AdminMassSchedules';
 
 interface ContactMessage {
   id: string;
@@ -37,12 +42,14 @@ interface NewsletterSubscriber {
   consent_date: string;
 }
 
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules';
+
 const Admin = () => {
   const { user, isLoading, isEditor, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const [activeTab, setActiveTab] = useState<'messages' | 'subscribers'>('messages');
+  const [activeTab, setActiveTab] = useState<TabType>('articles');
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -271,131 +278,179 @@ const Admin = () => {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6">
+        <div className="flex flex-wrap gap-2 mb-6">
+          <Button
+            variant={activeTab === 'articles' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('articles')}
+            size="sm"
+          >
+            <Newspaper size={16} />
+            Articles
+          </Button>
+          <Button
+            variant={activeTab === 'pages' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('pages')}
+            size="sm"
+          >
+            <FileText size={16} />
+            Pages
+          </Button>
+          <Button
+            variant={activeTab === 'team' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('team')}
+            size="sm"
+          >
+            <UsersRound size={16} />
+            Équipe
+          </Button>
+          <Button
+            variant={activeTab === 'schedules' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('schedules')}
+            size="sm"
+          >
+            <Calendar size={16} />
+            Messes
+          </Button>
           <Button
             variant={activeTab === 'messages' ? 'default' : 'outline'}
             onClick={() => setActiveTab('messages')}
+            size="sm"
           >
-            <MessageSquare size={18} />
+            <MessageSquare size={16} />
             Messages ({messages.length})
           </Button>
           <Button
             variant={activeTab === 'subscribers' ? 'default' : 'outline'}
             onClick={() => setActiveTab('subscribers')}
+            size="sm"
           >
-            <Users size={18} />
-            Abonnés ({subscribers.length})
+            <Users size={16} />
+            Newsletter ({subscribers.length})
           </Button>
         </div>
 
         {/* Content */}
         <div className="card-parish overflow-hidden">
-          {loadingData ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin text-2xl mb-2">⏳</div>
-              <p className="text-muted-foreground">Chargement...</p>
-            </div>
-          ) : activeTab === 'messages' ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Statut</TableHead>
-                  <TableHead>Nom</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Sujet</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Newsletter</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {messages.length === 0 ? (
+          {activeTab === 'articles' && <AdminArticles />}
+          {activeTab === 'pages' && <AdminPages />}
+          {activeTab === 'team' && <AdminTeam />}
+          {activeTab === 'schedules' && <AdminMassSchedules />}
+          {activeTab === 'messages' && (
+            loadingData ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin text-2xl mb-2">⏳</div>
+                <p className="text-muted-foreground">Chargement...</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      Aucun message reçu
-                    </TableCell>
+                    <TableHead>Statut</TableHead>
+                    <TableHead>Nom</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Sujet</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Newsletter</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ) : (
-                  messages.map((msg) => (
-                    <TableRow key={msg.id} className={!msg.read ? 'bg-primary/5' : ''}>
-                      <TableCell>
-                        {msg.read ? (
-                          <Badge variant="secondary">Lu</Badge>
-                        ) : (
-                          <Badge variant="default">Nouveau</Badge>
-                        )}
+                </TableHeader>
+                <TableBody>
+                  {messages.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                        Aucun message reçu
                       </TableCell>
-                      <TableCell className="font-medium">{msg.name}</TableCell>
-                      <TableCell>{msg.email}</TableCell>
-                      <TableCell className="max-w-[200px] truncate">{msg.subject}</TableCell>
-                      <TableCell className="text-sm">{formatDate(msg.created_at)}</TableCell>
-                      <TableCell>
-                        {msg.newsletter_optin ? (
-                          <Check size={18} className="text-green-600" />
-                        ) : (
-                          <X size={18} className="text-muted-foreground" />
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          {!msg.read && (
-                            <Button size="sm" variant="outline" onClick={() => markAsRead(msg.id)}>
-                              <Eye size={14} />
-                            </Button>
+                    </TableRow>
+                  ) : (
+                    messages.map((msg) => (
+                      <TableRow key={msg.id} className={!msg.read ? 'bg-primary/5' : ''}>
+                        <TableCell>
+                          {msg.read ? (
+                            <Badge variant="secondary">Lu</Badge>
+                          ) : (
+                            <Badge variant="default">Nouveau</Badge>
                           )}
-                          <Button size="sm" variant="destructive" onClick={() => deleteMessage(msg.id)}>
-                            <Trash2 size={14} />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Date d'inscription</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {subscribers.length === 0 ? (
+                        </TableCell>
+                        <TableCell className="font-medium">{msg.name}</TableCell>
+                        <TableCell>{msg.email}</TableCell>
+                        <TableCell className="max-w-[200px] truncate">{msg.subject}</TableCell>
+                        <TableCell className="text-sm">{formatDate(msg.created_at)}</TableCell>
+                        <TableCell>
+                          {msg.newsletter_optin ? (
+                            <Check size={18} className="text-green-600" />
+                          ) : (
+                            <X size={18} className="text-muted-foreground" />
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            {!msg.read && (
+                              <Button size="sm" variant="outline" onClick={() => markAsRead(msg.id)}>
+                                <Eye size={14} />
+                              </Button>
+                            )}
+                            <Button size="sm" variant="destructive" onClick={() => deleteMessage(msg.id)}>
+                              <Trash2 size={14} />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )
+          )}
+          {activeTab === 'subscribers' && (
+            loadingData ? (
+              <div className="p-8 text-center">
+                <div className="animate-spin text-2xl mb-2">⏳</div>
+                <p className="text-muted-foreground">Chargement...</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                      Aucun abonné à la newsletter
-                    </TableCell>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Date d'inscription</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ) : (
-                  subscribers.map((sub) => (
-                    <TableRow key={sub.id}>
-                      <TableCell className="font-medium">{sub.email}</TableCell>
-                      <TableCell>{formatDate(sub.consent_date)}</TableCell>
-                      <TableCell>
-                        {sub.active ? (
-                          <Badge variant="default" className="bg-green-600">Actif</Badge>
-                        ) : (
-                          <Badge variant="secondary">Inactif</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          size="sm"
-                          variant={sub.active ? 'outline' : 'default'}
-                          onClick={() => toggleSubscriberStatus(sub.id, sub.active)}
-                        >
-                          {sub.active ? 'Désactiver' : 'Réactiver'}
-                        </Button>
+                </TableHeader>
+                <TableBody>
+                  {subscribers.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                        Aucun abonné à la newsletter
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    subscribers.map((sub) => (
+                      <TableRow key={sub.id}>
+                        <TableCell className="font-medium">{sub.email}</TableCell>
+                        <TableCell>{formatDate(sub.consent_date)}</TableCell>
+                        <TableCell>
+                          {sub.active ? (
+                            <Badge variant="default" className="bg-green-600">Actif</Badge>
+                          ) : (
+                            <Badge variant="secondary">Inactif</Badge>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            size="sm"
+                            variant={sub.active ? 'outline' : 'default'}
+                            onClick={() => toggleSubscriberStatus(sub.id, sub.active)}
+                          >
+                            {sub.active ? 'Désactiver' : 'Réactiver'}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  )}
+                </TableBody>
+              </Table>
+            )
           )}
         </div>
       </main>
