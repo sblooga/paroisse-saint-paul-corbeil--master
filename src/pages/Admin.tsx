@@ -33,6 +33,12 @@ const Admin = () => {
 
   const [activeTab, setActiveTab] = useState<TabType>('articles');
   const [stats, setStats] = useState<Stats>({ messages: 0, unread: 0, subscribers: 0, activeSubscribers: 0 });
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleRefresh = () => {
+    fetchStats();
+    setRefreshKey(prev => prev + 1);
+  };
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -118,7 +124,7 @@ const Admin = () => {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" onClick={fetchStats}>
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
               <RefreshCw size={16} />
               {t('admin.actions.refresh')}
             </Button>
@@ -255,12 +261,12 @@ const Admin = () => {
         </div>
 
         <div className="card-parish overflow-hidden">
-          {activeTab === 'articles' && <AdminArticles />}
-          {activeTab === 'pages' && <AdminPages />}
-          {activeTab === 'team' && <AdminTeam />}
-          {activeTab === 'schedules' && <AdminMassSchedules />}
-          {activeTab === 'messages' && <AdminMessages />}
-          {activeTab === 'subscribers' && <AdminNewsletter />}
+          {activeTab === 'articles' && <AdminArticles key={`articles-${refreshKey}`} />}
+          {activeTab === 'pages' && <AdminPages key={`pages-${refreshKey}`} />}
+          {activeTab === 'team' && <AdminTeam key={`team-${refreshKey}`} />}
+          {activeTab === 'schedules' && <AdminMassSchedules key={`schedules-${refreshKey}`} />}
+          {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
+          {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
         </div>
       </main>
     </div>
