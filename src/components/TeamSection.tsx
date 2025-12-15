@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -15,15 +16,8 @@ interface TeamMember {
   phone: string | null;
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  priests: 'Prêtres',
-  team: 'Équipe animatrice',
-  services: 'Services',
-  secretariat: 'Secrétariat',
-  choir: 'Chorale',
-};
-
 const TeamSection = () => {
+  const { t } = useTranslation();
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,6 +38,10 @@ const TeamSection = () => {
     setLoading(false);
   };
 
+  const getCategoryLabel = (category: string) => {
+    return t(`team.categories.${category}`, { defaultValue: category });
+  };
+
   return (
     <section id="equipes" className="section-padding bg-muted">
       <div className="container-parish">
@@ -55,12 +53,11 @@ const TeamSection = () => {
           className="text-center mb-12"
         >
           <span className="text-primary font-semibold uppercase tracking-wider text-sm">
-            Notre communauté
+            {t('team.subtitle')}
           </span>
-          <h2 className="mt-2 text-foreground">L'Équipe Paroissiale</h2>
+          <h2 className="mt-2 text-foreground">{t('team.title')}</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Une équipe dévouée au service de la communauté, pour vous accueillir et 
-            vous accompagner dans votre vie de foi.
+            {t('team.description')}
           </p>
         </motion.div>
 
@@ -79,7 +76,7 @@ const TeamSection = () => {
           </div>
         ) : members.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Aucun membre de l'équipe pour le moment.</p>
+            <p className="text-muted-foreground">{t('common.noResults')}</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -105,7 +102,7 @@ const TeamSection = () => {
                     </div>
                   )}
                   <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full whitespace-nowrap">
-                    {CATEGORY_LABELS[member.category] || member.category}
+                    {getCategoryLabel(member.category)}
                   </span>
                 </div>
 
@@ -119,7 +116,7 @@ const TeamSection = () => {
                     <a
                       href={`mailto:${member.email}`}
                       className="p-2 bg-primary/10 rounded-full text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-                      aria-label={`Envoyer un email à ${member.name}`}
+                      aria-label={`Email ${member.name}`}
                     >
                       <Mail size={18} />
                     </a>
@@ -128,7 +125,7 @@ const TeamSection = () => {
                     <a
                       href={`tel:${member.phone}`}
                       className="p-2 bg-secondary/20 rounded-full text-secondary hover:bg-secondary hover:text-secondary-foreground transition-colors"
-                      aria-label={`Appeler ${member.name}`}
+                      aria-label={`Call ${member.name}`}
                     >
                       <Phone size={18} />
                     </a>
@@ -147,7 +144,7 @@ const TeamSection = () => {
           className="mt-12 text-center"
         >
           <Link to="/equipe" className="btn-parish">
-            Découvrir toute l'équipe
+            {t('team.discoverAll')}
           </Link>
         </motion.div>
       </div>

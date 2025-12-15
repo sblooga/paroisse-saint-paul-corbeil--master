@@ -2,8 +2,12 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Search, Heart, Phone, Facebook, Instagram, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
+import LanguageSelector from './LanguageSelector';
+
 const Header = () => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -18,12 +22,12 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Accueil', href: '/' },
-    { name: 'La Paroisse', href: isHomePage ? '#paroisse' : '/#paroisse' },
-    { name: 'Équipe', href: '/equipe' },
-    { name: 'Actualités', href: '/articles' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'FAQ', href: '/faq' },
+    { name: t('common.home'), href: '/' },
+    { name: t('common.parish'), href: isHomePage ? '#paroisse' : '/#paroisse' },
+    { name: t('common.team'), href: '/equipe' },
+    { name: t('common.news'), href: '/articles' },
+    { name: t('common.contact'), href: '/contact' },
+    { name: t('common.faq'), href: '/faq' },
   ];
 
   const socialLinks = [
@@ -40,11 +44,11 @@ const Header = () => {
           <div className="flex items-center gap-6">
             <Link to="/contact" className="flex items-center gap-2 hover:text-accent transition-colors">
               <Phone size={14} />
-              <span className="hidden sm:inline">Contact</span>
+              <span className="hidden sm:inline">{t('common.contact')}</span>
             </Link>
             <a href={isHomePage ? '#don' : '/#don'} className="flex items-center gap-2 hover:text-accent transition-colors">
               <Heart size={14} />
-              <span>Faire un don</span>
+              <span>{t('common.donate')}</span>
             </a>
           </div>
           
@@ -61,14 +65,7 @@ const Header = () => {
                 </a>
               ))}
             </div>
-            <div className="flex items-center gap-2 ml-4">
-              <button className="px-2 py-1 text-xs font-semibold bg-primary-foreground/20 rounded hover:bg-primary-foreground/30 transition-colors">
-                FR
-              </button>
-              <button className="px-2 py-1 text-xs font-semibold hover:bg-primary-foreground/20 rounded transition-colors">
-                PL
-              </button>
-            </div>
+            <LanguageSelector variant="compact" className="ml-4" />
             <div className="ml-3">
               <ThemeToggle />
             </div>
@@ -88,14 +85,14 @@ const Header = () => {
           <Link to="/" className="flex items-center gap-3">
             <img 
               src="https://drive.google.com/uc?export=view&id=1qB3YKEBaH-NqMVWCKCHJmPW5vHN3HYVI" 
-              alt="Paroisse Saint-Paul"
+              alt={t('header.parishName')}
               className="h-12 w-12 object-contain"
             />
             <div className="hidden md:block">
               <h1 className="text-lg font-heading font-bold text-foreground leading-tight">
-                Paroisse Saint-Paul
+                {t('header.parishName')}
               </h1>
-              <p className="text-xs text-muted-foreground">Communauté catholique</p>
+              <p className="text-xs text-muted-foreground">{t('header.parishSubtitle')}</p>
             </div>
           </Link>
 
@@ -133,7 +130,7 @@ const Header = () => {
 
           <div className="flex items-center gap-4">
             <button 
-              aria-label="Rechercher"
+              aria-label={t('common.search')}
               className="p-2 hover:bg-muted rounded-full transition-colors"
             >
               <Search size={20} className="text-foreground" />
@@ -162,7 +159,8 @@ const Header = () => {
             className="fixed inset-y-0 right-0 w-80 bg-card shadow-2xl z-50 lg:hidden"
           >
             <div className="p-6">
-              <div className="flex justify-end mb-8">
+              <div className="flex justify-between items-center mb-8">
+                <LanguageSelector />
                 <button
                   onClick={() => setIsMenuOpen(false)}
                   className="p-2 hover:bg-muted rounded-full transition-colors"
@@ -213,7 +211,7 @@ const Header = () => {
               <div className="mt-8 pt-8 border-t border-border">
                 <a href={isHomePage ? '#don' : '/#don'} className="btn-accent w-full text-center">
                   <Heart size={18} />
-                  Faire un don
+                  {t('common.donate')}
                 </a>
               </div>
             </div>

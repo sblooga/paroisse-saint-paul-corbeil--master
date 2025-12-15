@@ -1,0 +1,133 @@
+{
+  "common": {
+    "home": "Strona główna",
+    "parish": "Parafia",
+    "team": "Zespół",
+    "news": "Aktualności",
+    "contact": "Kontakt",
+    "faq": "FAQ",
+    "donate": "Wspomóż nas",
+    "search": "Szukaj",
+    "readMore": "Czytaj więcej",
+    "seeAll": "Zobacz wszystko",
+    "backToTop": "Powrót na górę",
+    "loading": "Ładowanie...",
+    "noResults": "Brak wyników",
+    "send": "Wyślij",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "close": "Zamknij"
+  },
+  "header": {
+    "parishName": "Parafia Świętego Pawła",
+    "parishSubtitle": "Wspólnota katolicka"
+  },
+  "hero": {
+    "welcome": "Witamy",
+    "title": "Parafia Świętego Pawła",
+    "subtitle": "Żywa wspólnota w sercu miasta",
+    "cta": "Poznaj naszą parafię",
+    "massSchedule": "Godziny Mszy Świętych"
+  },
+  "about": {
+    "title": "Nasza Parafia",
+    "subtitle": "Historia wiary",
+    "description": "Od ponad stu lat nasza parafia przyjmuje wiernych i gości w duchu braterstwa i dzielenia się."
+  },
+  "team": {
+    "title": "Zespół Parafialny",
+    "subtitle": "Nasza wspólnota",
+    "description": "Zespół oddany służbie wspólnocie, aby was przyjąć i towarzyszyć wam w życiu wiary.",
+    "discoverAll": "Poznaj cały zespół",
+    "categories": {
+      "priests": "Księża",
+      "team": "Zespół animacyjny",
+      "services": "Służby",
+      "secretariat": "Sekretariat",
+      "choir": "Chór"
+    }
+  },
+  "articles": {
+    "title": "Aktualności",
+    "subtitle": "Bądź na bieżąco",
+    "headline": "Na pierwszej stronie",
+    "description": "Wszystkie najnowsze wiadomości z naszej wspólnoty parafialnej",
+    "seeAllNews": "Zobacz wszystkie aktualności",
+    "noArticles": "Brak opublikowanych artykułów.",
+    "notFound": "Artykuł nie znaleziony",
+    "notFoundDescription": "Ten artykuł nie istnieje lub nie jest już dostępny.",
+    "backToNews": "Powrót do aktualności"
+  },
+  "massSchedule": {
+    "title": "Godziny Mszy Świętych",
+    "subtitle": "Życie liturgiczne",
+    "description": "Znajdź wszystkie godziny naszych celebracji",
+    "sunday": "Niedziela",
+    "monday": "Poniedziałek",
+    "tuesday": "Wtorek",
+    "wednesday": "Środa",
+    "thursday": "Czwartek",
+    "friday": "Piątek",
+    "saturday": "Sobota"
+  },
+  "contact": {
+    "title": "Skontaktuj się z nami",
+    "subtitle": "Pozostańmy w kontakcie",
+    "description": "Nie wahaj się z nami skontaktować w razie pytań",
+    "form": {
+      "name": "Imię i nazwisko",
+      "namePlaceholder": "Twoje imię i nazwisko",
+      "email": "Email",
+      "emailPlaceholder": "twoj@email.com",
+      "subject": "Temat",
+      "subjectPlaceholder": "Temat wiadomości",
+      "message": "Wiadomość",
+      "messagePlaceholder": "Twoja wiadomość...",
+      "newsletter": "Chcę otrzymywać newsletter",
+      "consent": "Zgadzam się na wykorzystanie moich danych do kontaktu",
+      "send": "Wyślij wiadomość",
+      "sending": "Wysyłanie...",
+      "success": "Wiadomość wysłana pomyślnie!",
+      "error": "Błąd podczas wysyłania"
+    },
+    "info": {
+      "address": "Adres",
+      "phone": "Telefon",
+      "email": "Email",
+      "hours": "Godziny przyjęć"
+    }
+  },
+  "faq": {
+    "title": "Często zadawane pytania",
+    "subtitle": "FAQ",
+    "description": "Znajdź odpowiedzi na najczęściej zadawane pytania",
+    "moreQuestions": "Masz więcej pytań?",
+    "contactUs": "Skontaktuj się z nami"
+  },
+  "donation": {
+    "title": "Wspomóż naszą parafię",
+    "subtitle": "Apel o wsparcie",
+    "description": "Twoja hojność pozwala nam kontynuować naszą misję",
+    "cta": "Wspomóż nas"
+  },
+  "footer": {
+    "description": "Żywa wspólnota w służbie wiary i braterstwa.",
+    "quickLinks": "Szybkie linki",
+    "schedule": "Godziny",
+    "followUs": "Obserwuj nas",
+    "rights": "Wszelkie prawa zastrzeżone",
+    "privacy": "Polityka prywatności",
+    "legal": "Informacje prawne"
+  },
+  "auth": {
+    "login": "Zaloguj się",
+    "logout": "Wyloguj się",
+    "email": "Email",
+    "password": "Hasło",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "noAccount": "Nie masz jeszcze konta?",
+    "signUp": "Zarejestruj się"
+  }
+}
