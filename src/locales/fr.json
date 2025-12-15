@@ -30,7 +30,25 @@
     "title": "Paroisse Saint-Paul",
     "subtitle": "Une communauté vivante au cœur de la ville",
     "cta": "Découvrir notre paroisse",
-    "massSchedule": "Horaires des messes"
+    "massSchedule": "Horaires des messes",
+    "contactUs": "Nous contacter",
+    "slides": {
+      "slide1": {
+        "title": "Bienvenue à la Paroisse Saint-Paul",
+        "subtitle": "Une communauté vivante et accueillante"
+      },
+      "slide2": {
+        "title": "Vie Communautaire",
+        "subtitle": "Rejoignez nos équipes et activités"
+      },
+      "slide3": {
+        "title": "Temps Forts Liturgiques",
+        "subtitle": "Noël, Pâques et fêtes paroissiales"
+      }
+    },
+    "prevSlide": "Slide précédent",
+    "nextSlide": "Slide suivant",
+    "goToSlide": "Aller au slide"
   },
   "about": {
     "title": "Notre Paroisse",
@@ -127,19 +145,38 @@
     "contactUs": "Contactez-nous"
   },
   "donation": {
-    "title": "Soutenez Notre Paroisse",
+    "title": "Soutenez votre Paroisse",
     "subtitle": "Appel aux dons",
-    "description": "Votre générosité nous permet de continuer notre mission",
+    "description": "Votre générosité permet à notre communauté de vivre, d'accueillir et de rayonner. Chaque don contribue à l'entretien de notre église, aux activités paroissiales et à l'aide aux plus démunis.",
+    "oneTime": "Don ponctuel",
+    "monthly": "Don mensuel",
+    "securePayment": "Paiement sécurisé par Stripe • Reçu fiscal disponible",
     "cta": "Faire un don"
   },
   "footer": {
-    "description": "Une communauté vivante au service de la foi et de la fraternité.",
-    "quickLinks": "Liens rapides",
-    "schedule": "Horaires",
-    "followUs": "Suivez-nous",
+    "parishName": "Paroisse Saint-Paul",
+    "description": "Une communauté catholique vivante et accueillante, au service de tous.",
+    "contact": "Contact",
+    "secretariat": "Secrétariat",
+    "hours": {
+      "weekdays": "Lun - Ven : 9h - 12h / 14h - 17h",
+      "saturday": "Samedi : 9h - 12h"
+    },
+    "quickLinks": "Liens Rapides",
+    "links": {
+      "massSchedule": "Horaires des messes",
+      "baptism": "Baptême",
+      "wedding": "Mariage",
+      "catechesis": "Catéchèse",
+      "funerals": "Obsèques",
+      "bulletin": "Bulletin paroissial"
+    },
+    "donate": "Faire un don",
     "rights": "Tous droits réservés",
+    "legal": "Mentions légales",
     "privacy": "Politique de confidentialité",
-    "legal": "Mentions légales"
+    "cookies": "Gestion des cookies",
+    "admin": "Administration"
   },
   "auth": {
     "login": "Connexion",
