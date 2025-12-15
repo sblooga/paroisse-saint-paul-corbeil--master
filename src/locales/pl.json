@@ -41,6 +41,9 @@
     "subtitle": "Nasza wspólnota",
     "description": "Zespół oddany służbie wspólnocie, aby was przyjąć i towarzyszyć wam w życiu wiary.",
     "discoverAll": "Poznaj cały zespół",
+    "noMembers": "Brak członków zespołu.",
+    "question": "Masz pytanie?",
+    "contactCta": "Skontaktuj się z nami, nasz zespół jest do Twojej dyspozycji.",
     "categories": {
       "priests": "Księża",
       "team": "Zespół animacyjny",

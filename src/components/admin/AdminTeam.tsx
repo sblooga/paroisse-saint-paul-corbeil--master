@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TeamMember {
   id: string;
@@ -28,6 +29,12 @@ interface TeamMember {
   email: string | null;
   phone: string | null;
   bio: string | null;
+  name_fr: string | null;
+  name_pl: string | null;
+  role_fr: string | null;
+  role_pl: string | null;
+  bio_fr: string | null;
+  bio_pl: string | null;
   sort_order: number;
   active: boolean;
   created_at: string;
@@ -55,6 +62,12 @@ const AdminTeam = () => {
     email: '',
     phone: '',
     bio: '',
+    name_fr: '',
+    name_pl: '',
+    role_fr: '',
+    role_pl: '',
+    bio_fr: '',
+    bio_pl: '',
     sort_order: 0,
     active: true,
   });
@@ -71,7 +84,7 @@ const AdminTeam = () => {
       .order('category')
       .order('sort_order');
     
-    if (data) setMembers(data);
+    if (data) setMembers(data as TeamMember[]);
     if (error) console.error('Error fetching team members:', error);
     setLoading(false);
   };
@@ -85,6 +98,12 @@ const AdminTeam = () => {
       email: '',
       phone: '',
       bio: '',
+      name_fr: '',
+      name_pl: '',
+      role_fr: '',
+      role_pl: '',
+      bio_fr: '',
+      bio_pl: '',
       sort_order: 0,
       active: true,
     });
@@ -101,6 +120,12 @@ const AdminTeam = () => {
       email: member.email || '',
       phone: member.phone || '',
       bio: member.bio || '',
+      name_fr: member.name_fr || member.name || '',
+      name_pl: member.name_pl || '',
+      role_fr: member.role_fr || member.role || '',
+      role_pl: member.role_pl || '',
+      bio_fr: member.bio_fr || member.bio || '',
+      bio_pl: member.bio_pl || '',
       sort_order: member.sort_order,
       active: member.active,
     });
@@ -110,17 +135,27 @@ const AdminTeam = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.role || !formData.category) {
-      toast({ title: 'Erreur', description: 'Nom, fonction et catégorie requis', variant: 'destructive' });
+    if (!formData.name_fr || !formData.role_fr || !formData.category) {
+      toast({ title: 'Erreur', description: 'Nom (FR), fonction (FR) et catégorie requis', variant: 'destructive' });
       return;
     }
 
     const dataToSend = {
-      ...formData,
+      name: formData.name_fr,
+      role: formData.role_fr,
+      category: formData.category,
       photo_url: formData.photo_url || null,
       email: formData.email || null,
       phone: formData.phone || null,
-      bio: formData.bio || null,
+      bio: formData.bio_fr || null,
+      name_fr: formData.name_fr,
+      name_pl: formData.name_pl || null,
+      role_fr: formData.role_fr,
+      role_pl: formData.role_pl || null,
+      bio_fr: formData.bio_fr || null,
+      bio_pl: formData.bio_pl || null,
+      sort_order: formData.sort_order,
+      active: formData.active,
     };
 
     if (editingMember) {
@@ -199,34 +234,13 @@ const AdminTeam = () => {
               Nouveau membre
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-xl">
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingMember ? 'Modifier le membre' : 'Nouveau membre'}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Nom *</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                    placeholder="Nom complet"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role">Fonction *</Label>
-                  <Input
-                    id="role"
-                    value={formData.role}
-                    onChange={(e) => setFormData(prev => ({ ...prev, role: e.target.value }))}
-                    placeholder="Ex: Curé, Secrétaire..."
-                  />
-                </div>
-              </div>
-
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Catégorie *</Label>
@@ -288,16 +302,78 @@ const AdminTeam = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="bio">Biographie</Label>
-                <Textarea
-                  id="bio"
-                  value={formData.bio}
-                  onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
-                  placeholder="Courte présentation..."
-                  rows={3}
-                />
-              </div>
+              <Tabs defaultValue="fr" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+                  <TabsTrigger value="pl">🇵🇱 Polski</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="fr" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name_fr">Nom (FR) *</Label>
+                      <Input
+                        id="name_fr"
+                        value={formData.name_fr}
+                        onChange={(e) => setFormData(prev => ({ ...prev, name_fr: e.target.value }))}
+                        placeholder="Nom complet"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="role_fr">Fonction (FR) *</Label>
+                      <Input
+                        id="role_fr"
+                        value={formData.role_fr}
+                        onChange={(e) => setFormData(prev => ({ ...prev, role_fr: e.target.value }))}
+                        placeholder="Ex: Curé, Secrétaire..."
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bio_fr">Biographie (FR)</Label>
+                    <Textarea
+                      id="bio_fr"
+                      value={formData.bio_fr}
+                      onChange={(e) => setFormData(prev => ({ ...prev, bio_fr: e.target.value }))}
+                      placeholder="Courte présentation en français..."
+                      rows={3}
+                    />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="pl" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="name_pl">Nom (PL)</Label>
+                      <Input
+                        id="name_pl"
+                        value={formData.name_pl}
+                        onChange={(e) => setFormData(prev => ({ ...prev, name_pl: e.target.value }))}
+                        placeholder="Imię i nazwisko"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="role_pl">Fonction (PL)</Label>
+                      <Input
+                        id="role_pl"
+                        value={formData.role_pl}
+                        onChange={(e) => setFormData(prev => ({ ...prev, role_pl: e.target.value }))}
+                        placeholder="Np: Proboszcz, Sekretarz..."
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="bio_pl">Biographie (PL)</Label>
+                    <Textarea
+                      id="bio_pl"
+                      value={formData.bio_pl}
+                      onChange={(e) => setFormData(prev => ({ ...prev, bio_pl: e.target.value }))}
+                      placeholder="Krótka prezentacja po polsku..."
+                      rows={3}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
 
               <div className="flex items-center gap-2">
                 <Switch
@@ -330,6 +406,7 @@ const AdminTeam = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Nom</TableHead>
+              <TableHead>Traductions</TableHead>
               <TableHead>Fonction</TableHead>
               <TableHead>Catégorie</TableHead>
               <TableHead>Statut</TableHead>
@@ -339,15 +416,21 @@ const AdminTeam = () => {
           <TableBody>
             {members.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Aucun membre
                 </TableCell>
               </TableRow>
             ) : (
               members.map((member) => (
                 <TableRow key={member.id}>
-                  <TableCell className="font-medium">{member.name}</TableCell>
-                  <TableCell>{member.role}</TableCell>
+                  <TableCell className="font-medium">{member.name_fr || member.name}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {member.name_fr && <Badge variant="outline">FR</Badge>}
+                      {member.name_pl && <Badge variant="outline">PL</Badge>}
+                    </div>
+                  </TableCell>
+                  <TableCell>{member.role_fr || member.role}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{getCategoryLabel(member.category)}</Badge>
                   </TableCell>

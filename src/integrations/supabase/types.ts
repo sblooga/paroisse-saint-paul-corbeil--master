@@ -234,42 +234,60 @@ export type Database = {
         Row: {
           active: boolean | null
           bio: string | null
+          bio_fr: string | null
+          bio_pl: string | null
           category: string
           created_at: string
           email: string | null
           id: string
           name: string
+          name_fr: string | null
+          name_pl: string | null
           phone: string | null
           photo_url: string | null
           role: string
+          role_fr: string | null
+          role_pl: string | null
           sort_order: number | null
           updated_at: string
         }
         Insert: {
           active?: boolean | null
           bio?: string | null
+          bio_fr?: string | null
+          bio_pl?: string | null
           category: string
           created_at?: string
           email?: string | null
           id?: string
           name: string
+          name_fr?: string | null
+          name_pl?: string | null
           phone?: string | null
           photo_url?: string | null
           role: string
+          role_fr?: string | null
+          role_pl?: string | null
           sort_order?: number | null
           updated_at?: string
         }
         Update: {
           active?: boolean | null
           bio?: string | null
+          bio_fr?: string | null
+          bio_pl?: string | null
           category?: string
           created_at?: string
           email?: string | null
           id?: string
           name?: string
+          name_fr?: string | null
+          name_pl?: string | null
           phone?: string | null
           photo_url?: string | null
           role?: string
+          role_fr?: string | null
+          role_pl?: string | null
           sort_order?: number | null
           updated_at?: string
         }

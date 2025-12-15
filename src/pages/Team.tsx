@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -16,21 +17,23 @@ interface TeamMember {
   email: string | null;
   phone: string | null;
   bio: string | null;
+  name_fr: string | null;
+  name_pl: string | null;
+  role_fr: string | null;
+  role_pl: string | null;
+  bio_fr: string | null;
+  bio_pl: string | null;
   sort_order: number;
 }
 
 const CATEGORY_ORDER = ['priests', 'team', 'services', 'secretariat', 'choir'];
-const CATEGORY_LABELS: Record<string, string> = {
-  priests: 'Prêtres',
-  team: 'Équipe animatrice',
-  services: 'Services',
-  secretariat: 'Secrétariat',
-  choir: 'Chorale',
-};
 
 const Team = () => {
+  const { t, i18n } = useTranslation();
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
   useEffect(() => {
     fetchMembers();
@@ -43,9 +46,28 @@ const Team = () => {
       .eq('active', true)
       .order('sort_order');
 
-    if (data) setMembers(data);
+    if (data) setMembers(data as TeamMember[]);
     if (error) console.error('Error fetching team members:', error);
     setLoading(false);
+  };
+
+  const getCategoryLabel = (category: string) => {
+    return t(`team.categories.${category}`, { defaultValue: category });
+  };
+
+  const getLocalizedName = (member: TeamMember) => {
+    if (currentLang === 'pl' && member.name_pl) return member.name_pl;
+    return member.name_fr || member.name;
+  };
+
+  const getLocalizedRole = (member: TeamMember) => {
+    if (currentLang === 'pl' && member.role_pl) return member.role_pl;
+    return member.role_fr || member.role;
+  };
+
+  const getLocalizedBio = (member: TeamMember) => {
+    if (currentLang === 'pl' && member.bio_pl) return member.bio_pl;
+    return member.bio_fr || member.bio;
   };
 
   const groupedMembers = CATEGORY_ORDER.reduce((acc, category) => {
@@ -70,12 +92,11 @@ const Team = () => {
               transition={{ duration: 0.5 }}
             >
               <span className="text-primary font-semibold uppercase tracking-wider text-sm">
-                Notre communauté
+                {t('team.subtitle')}
               </span>
-              <h1 className="mt-2 text-foreground">L'Équipe Paroissiale</h1>
+              <h1 className="mt-2 text-foreground">{t('team.title')}</h1>
               <p className="mt-4 text-muted-foreground max-w-2xl mx-auto text-lg">
-                Une équipe dévouée au service de la communauté, pour vous accueillir et 
-                vous accompagner dans votre vie de foi.
+                {t('team.description')}
               </p>
             </motion.div>
           </div>
@@ -100,7 +121,7 @@ const Team = () => {
               </div>
             ) : members.length === 0 ? (
               <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg">Aucun membre de l'équipe pour le moment.</p>
+                <p className="text-muted-foreground text-lg">{t('team.noMembers')}</p>
               </div>
             ) : (
               <div className="space-y-16">
@@ -112,7 +133,7 @@ const Team = () => {
                     transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
                   >
                     <h2 className="text-2xl font-heading font-bold text-foreground mb-8 text-center">
-                      {CATEGORY_LABELS[category] || category}
+                      {getCategoryLabel(category)}
                     </h2>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                       {categoryMembers.map((member, index) => (
@@ -127,24 +148,24 @@ const Team = () => {
                             {member.photo_url ? (
                               <img
                                 src={member.photo_url}
-                                alt={member.name}
+                                alt={getLocalizedName(member)}
                                 className="w-full h-full rounded-full object-cover border-4 border-accent shadow-lg group-hover:border-primary transition-colors"
                               />
                             ) : (
                               <div className="w-full h-full rounded-full bg-muted border-4 border-accent shadow-lg flex items-center justify-center text-2xl font-bold text-muted-foreground">
-                                {member.name.charAt(0)}
+                                {getLocalizedName(member).charAt(0)}
                               </div>
                             )}
                           </div>
 
                           <h3 className="text-lg font-heading font-bold text-foreground mt-4">
-                            {member.name}
+                            {getLocalizedName(member)}
                           </h3>
-                          <p className="text-muted-foreground text-sm mb-2">{member.role}</p>
+                          <p className="text-muted-foreground text-sm mb-2">{getLocalizedRole(member)}</p>
                           
-                          {member.bio && (
+                          {getLocalizedBio(member) && (
                             <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                              {member.bio}
+                              {getLocalizedBio(member)}
                             </p>
                           )}
 
@@ -153,7 +174,7 @@ const Team = () => {
                               <a
                                 href={`mailto:${member.email}`}
                                 className="p-2 bg-primary/10 rounded-full text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-                                aria-label={`Envoyer un email à ${member.name}`}
+                                aria-label={`${t('contact.form.email')} ${getLocalizedName(member)}`}
                               >
                                 <Mail size={18} />
                               </a>
@@ -162,7 +183,7 @@ const Team = () => {
                               <a
                                 href={`tel:${member.phone}`}
                                 className="p-2 bg-secondary/20 rounded-full text-secondary hover:bg-secondary hover:text-secondary-foreground transition-colors"
-                                aria-label={`Appeler ${member.name}`}
+                                aria-label={`${t('contact.info.phone')} ${getLocalizedName(member)}`}
                               >
                                 <Phone size={18} />
                               </a>
@@ -173,7 +194,7 @@ const Team = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 hover:bg-green-600 hover:text-white transition-colors"
-                                aria-label={`Contacter ${member.name} sur WhatsApp`}
+                                aria-label={`WhatsApp ${getLocalizedName(member)}`}
                               >
                                 <MessageCircle size={18} />
                               </a>
@@ -199,13 +220,13 @@ const Team = () => {
               transition={{ duration: 0.5 }}
             >
               <h2 className="text-2xl font-heading font-bold text-foreground mb-4">
-                Une question ?
+                {t('team.question')}
               </h2>
               <p className="text-muted-foreground mb-8 max-w-xl mx-auto">
-                N'hésitez pas à nous contacter, notre équipe est là pour vous accompagner.
+                {t('team.contactCta')}
               </p>
               <Link to="/contact" className="btn-parish">
-                Nous contacter
+                {t('common.contact')}
               </Link>
             </motion.div>
           </div>

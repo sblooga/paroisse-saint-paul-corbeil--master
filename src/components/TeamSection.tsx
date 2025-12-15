@@ -14,12 +14,18 @@ interface TeamMember {
   photo_url: string | null;
   email: string | null;
   phone: string | null;
+  name_fr: string | null;
+  name_pl: string | null;
+  role_fr: string | null;
+  role_pl: string | null;
 }
 
 const TeamSection = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
   useEffect(() => {
     fetchMembers();
@@ -28,18 +34,28 @@ const TeamSection = () => {
   const fetchMembers = async () => {
     const { data, error } = await supabase
       .from('team_members')
-      .select('id, name, role, category, photo_url, email, phone')
+      .select('id, name, role, category, photo_url, email, phone, name_fr, name_pl, role_fr, role_pl')
       .eq('active', true)
       .order('sort_order')
       .limit(6);
 
-    if (data) setMembers(data);
+    if (data) setMembers(data as TeamMember[]);
     if (error) console.error('Error fetching team members:', error);
     setLoading(false);
   };
 
   const getCategoryLabel = (category: string) => {
     return t(`team.categories.${category}`, { defaultValue: category });
+  };
+
+  const getLocalizedName = (member: TeamMember) => {
+    if (currentLang === 'pl' && member.name_pl) return member.name_pl;
+    return member.name_fr || member.name;
+  };
+
+  const getLocalizedRole = (member: TeamMember) => {
+    if (currentLang === 'pl' && member.role_pl) return member.role_pl;
+    return member.role_fr || member.role;
   };
 
   return (
@@ -93,12 +109,12 @@ const TeamSection = () => {
                   {member.photo_url ? (
                     <img
                       src={member.photo_url}
-                      alt={member.name}
+                      alt={getLocalizedName(member)}
                       className="w-full h-full rounded-full object-cover border-4 border-accent shadow-lg group-hover:border-primary transition-colors"
                     />
                   ) : (
                     <div className="w-full h-full rounded-full bg-background border-4 border-accent shadow-lg flex items-center justify-center text-2xl font-bold text-muted-foreground">
-                      {member.name.charAt(0)}
+                      {getLocalizedName(member).charAt(0)}
                     </div>
                   )}
                   <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full whitespace-nowrap">
@@ -107,16 +123,16 @@ const TeamSection = () => {
                 </div>
 
                 <h3 className="text-lg font-heading font-bold text-foreground mt-4">
-                  {member.name}
+                  {getLocalizedName(member)}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4">{member.role}</p>
+                <p className="text-muted-foreground text-sm mb-4">{getLocalizedRole(member)}</p>
 
                 <div className="flex justify-center gap-3">
                   {member.email && (
                     <a
                       href={`mailto:${member.email}`}
                       className="p-2 bg-primary/10 rounded-full text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-                      aria-label={`Email ${member.name}`}
+                      aria-label={`Email ${getLocalizedName(member)}`}
                     >
                       <Mail size={18} />
                     </a>
@@ -125,7 +141,7 @@ const TeamSection = () => {
                     <a
                       href={`tel:${member.phone}`}
                       className="p-2 bg-secondary/20 rounded-full text-secondary hover:bg-secondary hover:text-secondary-foreground transition-colors"
-                      aria-label={`Call ${member.name}`}
+                      aria-label={`Call ${getLocalizedName(member)}`}
                     >
                       <Phone size={18} />
                     </a>

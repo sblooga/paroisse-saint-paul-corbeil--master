@@ -41,6 +41,9 @@
     "subtitle": "Notre communauté",
     "description": "Une équipe dévouée au service de la communauté, pour vous accueillir et vous accompagner dans votre vie de foi.",
     "discoverAll": "Découvrir toute l'équipe",
+    "noMembers": "Aucun membre de l'équipe pour le moment.",
+    "question": "Une question ?",
+    "contactCta": "N'hésitez pas à nous contacter, notre équipe est là pour vous accompagner.",
     "categories": {
       "priests": "Prêtres",
       "team": "Équipe animatrice",
