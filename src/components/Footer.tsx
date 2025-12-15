@@ -1,5 +1,5 @@
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Heart } from 'lucide-react';
-
+import { Link } from 'react-router-dom';
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -126,6 +126,9 @@ const Footer = () => {
               <a href="#" className="hover:text-accent transition-colors">
                 Gestion des cookies
               </a>
+              <Link to="/auth" className="hover:text-accent transition-colors">
+                Administration
+              </Link>
             </div>
           </div>
         </div>
