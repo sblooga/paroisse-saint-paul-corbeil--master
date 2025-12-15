@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { ImageUpload } from '@/components/ui/image-upload';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -257,12 +258,11 @@ const AdminTeam = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="photo_url">URL de la photo</Label>
-                <Input
-                  id="photo_url"
+                <Label>Photo</Label>
+                <ImageUpload
                   value={formData.photo_url}
-                  onChange={(e) => setFormData(prev => ({ ...prev, photo_url: e.target.value }))}
-                  placeholder="https://..."
+                  onChange={(url) => setFormData(prev => ({ ...prev, photo_url: url }))}
+                  folder="team"
                 />
               </div>
 
