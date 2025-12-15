@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
@@ -37,23 +38,57 @@ const Contact = () => {
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: "Message envoyé !",
-      description: "Nous vous répondrons dans les plus brefs délais.",
-    });
-    
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: '',
-      newsletter: false,
-      rgpd: false,
-    });
-    setIsSubmitting(false);
+    try {
+      // Save contact message to database
+      const { error: messageError } = await supabase
+        .from('contact_messages')
+        .insert({
+          name: formData.name.trim(),
+          email: formData.email.trim().toLowerCase(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+          newsletter_optin: formData.newsletter,
+        });
+
+      if (messageError) throw messageError;
+
+      // If newsletter opted in, add to subscribers
+      if (formData.newsletter) {
+        const { error: subscriberError } = await supabase
+          .from('newsletter_subscribers')
+          .upsert(
+            { email: formData.email.trim().toLowerCase() },
+            { onConflict: 'email' }
+          );
+        
+        if (subscriberError) {
+          console.error('Newsletter subscription error:', subscriberError);
+        }
+      }
+
+      toast({
+        title: "Message envoyé !",
+        description: "Nous vous répondrons dans les plus brefs délais.",
+      });
+      
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        newsletter: false,
+        rgpd: false,
+      });
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue. Veuillez réessayer.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
