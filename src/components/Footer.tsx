@@ -119,10 +119,10 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-primary-foreground/10">
-        <div className="container-parish py-6 px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary-foreground/50">
-            <p>© {currentYear} {t('footer.parishName')}. {t('footer.rights')}.</p>
-            <div className="flex gap-6">
+        <div className="container-parish py-6 px-4 pb-20 md:pb-6">
+          <div className="flex flex-col items-center gap-4 text-sm text-primary-foreground/50">
+            <p className="text-center">© {currentYear} {t('footer.parishName')}. {t('footer.rights')}.</p>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
               <a href="#" className="hover:text-accent transition-colors">
                 {t('footer.legal')}
               </a>
