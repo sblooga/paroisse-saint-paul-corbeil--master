@@ -19,39 +19,57 @@ export type Database = {
           author_id: string | null
           category: string | null
           content: string | null
+          content_fr: string | null
+          content_pl: string | null
           created_at: string
           excerpt: string | null
+          excerpt_fr: string | null
+          excerpt_pl: string | null
           id: string
           image_url: string | null
           published: boolean | null
           slug: string
           title: string
+          title_fr: string | null
+          title_pl: string | null
           updated_at: string
         }
         Insert: {
           author_id?: string | null
           category?: string | null
           content?: string | null
+          content_fr?: string | null
+          content_pl?: string | null
           created_at?: string
           excerpt?: string | null
+          excerpt_fr?: string | null
+          excerpt_pl?: string | null
           id?: string
           image_url?: string | null
           published?: boolean | null
           slug: string
           title: string
+          title_fr?: string | null
+          title_pl?: string | null
           updated_at?: string
         }
         Update: {
           author_id?: string | null
           category?: string | null
           content?: string | null
+          content_fr?: string | null
+          content_pl?: string | null
           created_at?: string
           excerpt?: string | null
+          excerpt_fr?: string | null
+          excerpt_pl?: string | null
           id?: string
           image_url?: string | null
           published?: boolean | null
           slug?: string
           title?: string
+          title_fr?: string | null
+          title_pl?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -155,35 +173,59 @@ export type Database = {
       pages: {
         Row: {
           content: string | null
+          content_fr: string | null
+          content_pl: string | null
           created_at: string
           id: string
           meta_description: string | null
+          meta_description_fr: string | null
+          meta_description_pl: string | null
           meta_title: string | null
+          meta_title_fr: string | null
+          meta_title_pl: string | null
           published: boolean | null
           slug: string
           title: string
+          title_fr: string | null
+          title_pl: string | null
           updated_at: string
         }
         Insert: {
           content?: string | null
+          content_fr?: string | null
+          content_pl?: string | null
           created_at?: string
           id?: string
           meta_description?: string | null
+          meta_description_fr?: string | null
+          meta_description_pl?: string | null
           meta_title?: string | null
+          meta_title_fr?: string | null
+          meta_title_pl?: string | null
           published?: boolean | null
           slug: string
           title: string
+          title_fr?: string | null
+          title_pl?: string | null
           updated_at?: string
         }
         Update: {
           content?: string | null
+          content_fr?: string | null
+          content_pl?: string | null
           created_at?: string
           id?: string
           meta_description?: string | null
+          meta_description_fr?: string | null
+          meta_description_pl?: string | null
           meta_title?: string | null
+          meta_title_fr?: string | null
+          meta_title_pl?: string | null
           published?: boolean | null
           slug?: string
           title?: string
+          title_fr?: string | null
+          title_pl?: string | null
           updated_at?: string
         }
         Relationships: []

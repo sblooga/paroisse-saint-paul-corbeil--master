@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -13,6 +14,10 @@ interface Article {
   title: string;
   slug: string;
   excerpt: string | null;
+  title_fr: string | null;
+  title_pl: string | null;
+  excerpt_fr: string | null;
+  excerpt_pl: string | null;
   image_url: string | null;
   category: string | null;
   created_at: string;
@@ -21,10 +26,13 @@ interface Article {
 const ARTICLES_PER_PAGE = 9;
 
 const Articles = () => {
+  const { t, i18n } = useTranslation();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+
+  const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
   useEffect(() => {
     fetchArticles();
@@ -37,12 +45,12 @@ const Articles = () => {
 
     const { data, error, count } = await supabase
       .from('articles')
-      .select('id, title, slug, excerpt, image_url, category, created_at', { count: 'exact' })
+      .select('id, title, slug, excerpt, title_fr, title_pl, excerpt_fr, excerpt_pl, image_url, category, created_at', { count: 'exact' })
       .eq('published', true)
       .order('created_at', { ascending: false })
       .range(from, to);
 
-    if (data) setArticles(data);
+    if (data) setArticles(data as Article[]);
     if (count !== null) setTotalCount(count);
     if (error) console.error('Error fetching articles:', error);
     setLoading(false);
@@ -51,11 +59,21 @@ const Articles = () => {
   const totalPages = Math.ceil(totalCount / ARTICLES_PER_PAGE);
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString(currentLang === 'pl' ? 'pl-PL' : 'fr-FR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
+  };
+
+  const getLocalizedTitle = (article: Article) => {
+    if (currentLang === 'pl' && article.title_pl) return article.title_pl;
+    return article.title_fr || article.title;
+  };
+
+  const getLocalizedExcerpt = (article: Article) => {
+    if (currentLang === 'pl' && article.excerpt_pl) return article.excerpt_pl;
+    return article.excerpt_fr || article.excerpt;
   };
 
   return (
@@ -71,9 +89,9 @@ const Articles = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-foreground mb-4">Actualités</h1>
+              <h1 className="text-foreground mb-4">{t('articles.title')}</h1>
               <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-                Toutes les dernières nouvelles et événements de notre communauté paroissiale
+                {t('articles.subtitle')}
               </p>
             </motion.div>
           </div>
@@ -98,7 +116,7 @@ const Articles = () => {
               </div>
             ) : articles.length === 0 ? (
               <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg">Aucun article publié pour le moment.</p>
+                <p className="text-muted-foreground text-lg">{t('articles.noArticles')}</p>
               </div>
             ) : (
               <>
@@ -115,12 +133,12 @@ const Articles = () => {
                         {article.image_url ? (
                           <img
                             src={article.image_url}
-                            alt={article.title}
+                            alt={getLocalizedTitle(article)}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           />
                         ) : (
                           <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <span className="text-muted-foreground">Pas d'image</span>
+                            <span className="text-muted-foreground">{t('articles.noImage')}</span>
                           </div>
                         )}
                         {article.category && (
@@ -139,12 +157,12 @@ const Articles = () => {
                         </div>
 
                         <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                          {article.title}
+                          {getLocalizedTitle(article)}
                         </h3>
 
-                        {article.excerpt && (
+                        {getLocalizedExcerpt(article) && (
                           <p className="text-muted-foreground line-clamp-3 mb-4">
-                            {article.excerpt}
+                            {getLocalizedExcerpt(article)}
                           </p>
                         )}
 
@@ -152,7 +170,7 @@ const Articles = () => {
                           to={`/articles/${article.slug}`}
                           className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
                         >
-                          Lire la suite
+                          {t('articles.readMore')}
                           <ArrowRight size={18} />
                         </Link>
                       </div>

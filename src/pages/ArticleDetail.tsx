@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar as CalendarIcon, User } from 'lucide-react';
+import { ArrowLeft, Calendar as CalendarIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -13,6 +14,12 @@ interface Article {
   slug: string;
   content: string | null;
   excerpt: string | null;
+  title_fr: string | null;
+  title_pl: string | null;
+  content_fr: string | null;
+  content_pl: string | null;
+  excerpt_fr: string | null;
+  excerpt_pl: string | null;
   image_url: string | null;
   category: string | null;
   created_at: string;
@@ -20,9 +27,12 @@ interface Article {
 
 const ArticleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  const { t, i18n } = useTranslation();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
   useEffect(() => {
     if (slug) {
@@ -44,7 +54,7 @@ const ArticleDetail = () => {
     }
     
     if (data) {
-      setArticle(data);
+      setArticle(data as Article);
     } else {
       setNotFound(true);
     }
@@ -52,11 +62,26 @@ const ArticleDetail = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    return new Date(dateString).toLocaleDateString(currentLang === 'pl' ? 'pl-PL' : 'fr-FR', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
+  };
+
+  const getLocalizedTitle = (article: Article) => {
+    if (currentLang === 'pl' && article.title_pl) return article.title_pl;
+    return article.title_fr || article.title;
+  };
+
+  const getLocalizedContent = (article: Article) => {
+    if (currentLang === 'pl' && article.content_pl) return article.content_pl;
+    return article.content_fr || article.content;
+  };
+
+  const getLocalizedExcerpt = (article: Article) => {
+    if (currentLang === 'pl' && article.excerpt_pl) return article.excerpt_pl;
+    return article.excerpt_fr || article.excerpt;
   };
 
   if (loading) {
@@ -88,14 +113,14 @@ const ArticleDetail = () => {
         <main className="section-padding">
           <div className="container-parish text-center py-16">
             <h1 className="text-2xl font-heading font-bold text-foreground mb-4">
-              Article non trouvé
+              {t('articles.notFound')}
             </h1>
             <p className="text-muted-foreground mb-8">
-              Cet article n'existe pas ou n'est plus disponible.
+              {t('articles.notFoundDesc')}
             </p>
             <Link to="/articles" className="btn-parish">
               <ArrowLeft size={18} />
-              Retour aux actualités
+              {t('articles.backToArticles')}
             </Link>
           </div>
         </main>
@@ -103,6 +128,9 @@ const ArticleDetail = () => {
       </div>
     );
   }
+
+  const content = getLocalizedContent(article);
+  const excerpt = getLocalizedExcerpt(article);
 
   return (
     <div className="min-h-screen bg-background">
@@ -121,7 +149,7 @@ const ArticleDetail = () => {
                 className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
               >
                 <ArrowLeft size={18} />
-                Retour aux actualités
+                {t('articles.backToArticles')}
               </Link>
 
               {article.category && (
@@ -131,7 +159,7 @@ const ArticleDetail = () => {
               )}
 
               <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
-                {article.title}
+                {getLocalizedTitle(article)}
               </h1>
 
               <div className="flex items-center gap-4 text-muted-foreground mb-8">
@@ -145,21 +173,21 @@ const ArticleDetail = () => {
                 <div className="relative overflow-hidden rounded-xl mb-8">
                   <img
                     src={article.image_url}
-                    alt={article.title}
+                    alt={getLocalizedTitle(article)}
                     className="w-full aspect-video object-cover"
                   />
                 </div>
               )}
 
-              {article.content ? (
+              {content ? (
                 <div 
                   className="prose prose-lg max-w-none dark:prose-invert"
-                  dangerouslySetInnerHTML={{ __html: article.content }}
+                  dangerouslySetInnerHTML={{ __html: content }}
                 />
-              ) : article.excerpt ? (
-                <p className="text-lg text-muted-foreground">{article.excerpt}</p>
+              ) : excerpt ? (
+                <p className="text-lg text-muted-foreground">{excerpt}</p>
               ) : (
-                <p className="text-muted-foreground italic">Aucun contenu disponible.</p>
+                <p className="text-muted-foreground italic">{t('articles.noContent')}</p>
               )}
             </motion.div>
           </div>

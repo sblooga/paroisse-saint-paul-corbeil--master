@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Page {
   id: string;
@@ -23,6 +24,14 @@ interface Page {
   content: string | null;
   meta_title: string | null;
   meta_description: string | null;
+  title_fr: string | null;
+  title_pl: string | null;
+  content_fr: string | null;
+  content_pl: string | null;
+  meta_title_fr: string | null;
+  meta_title_pl: string | null;
+  meta_description_fr: string | null;
+  meta_description_pl: string | null;
   published: boolean;
   created_at: string;
   updated_at: string;
@@ -40,6 +49,14 @@ const AdminPages = () => {
     content: '',
     meta_title: '',
     meta_description: '',
+    title_fr: '',
+    title_pl: '',
+    content_fr: '',
+    content_pl: '',
+    meta_title_fr: '',
+    meta_title_pl: '',
+    meta_description_fr: '',
+    meta_description_pl: '',
     published: true,
   });
 
@@ -54,7 +71,7 @@ const AdminPages = () => {
       .select('*')
       .order('title');
     
-    if (data) setPages(data);
+    if (data) setPages(data as Page[]);
     if (error) console.error('Error fetching pages:', error);
     setLoading(false);
   };
@@ -68,13 +85,22 @@ const AdminPages = () => {
       .replace(/(^-|-$)/g, '');
   };
 
-  const handleTitleChange = (title: string) => {
-    setFormData(prev => ({
-      ...prev,
-      title,
-      slug: editingPage ? prev.slug : generateSlug(title),
-      meta_title: editingPage ? prev.meta_title : title,
-    }));
+  const handleTitleChange = (title: string, lang: 'fr' | 'pl') => {
+    if (lang === 'fr') {
+      setFormData(prev => ({
+        ...prev,
+        title_fr: title,
+        title: title,
+        slug: editingPage ? prev.slug : generateSlug(title),
+        meta_title_fr: editingPage ? prev.meta_title_fr : title,
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        title_pl: title,
+        meta_title_pl: editingPage ? prev.meta_title_pl : title,
+      }));
+    }
   };
 
   const resetForm = () => {
@@ -84,6 +110,14 @@ const AdminPages = () => {
       content: '',
       meta_title: '',
       meta_description: '',
+      title_fr: '',
+      title_pl: '',
+      content_fr: '',
+      content_pl: '',
+      meta_title_fr: '',
+      meta_title_pl: '',
+      meta_description_fr: '',
+      meta_description_pl: '',
       published: true,
     });
     setEditingPage(null);
@@ -97,6 +131,14 @@ const AdminPages = () => {
       content: page.content || '',
       meta_title: page.meta_title || '',
       meta_description: page.meta_description || '',
+      title_fr: page.title_fr || page.title || '',
+      title_pl: page.title_pl || '',
+      content_fr: page.content_fr || page.content || '',
+      content_pl: page.content_pl || '',
+      meta_title_fr: page.meta_title_fr || page.meta_title || '',
+      meta_title_pl: page.meta_title_pl || '',
+      meta_description_fr: page.meta_description_fr || page.meta_description || '',
+      meta_description_pl: page.meta_description_pl || '',
       published: page.published,
     });
     setDialogOpen(true);
@@ -105,16 +147,26 @@ const AdminPages = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.slug) {
-      toast({ title: 'Erreur', description: 'Titre et slug requis', variant: 'destructive' });
+    if (!formData.title_fr || !formData.slug) {
+      toast({ title: 'Erreur', description: 'Titre (FR) et slug requis', variant: 'destructive' });
       return;
     }
 
     const dataToSend = {
-      ...formData,
-      content: formData.content || null,
-      meta_title: formData.meta_title || null,
-      meta_description: formData.meta_description || null,
+      title: formData.title_fr,
+      slug: formData.slug,
+      content: formData.content_fr,
+      meta_title: formData.meta_title_fr,
+      meta_description: formData.meta_description_fr,
+      title_fr: formData.title_fr,
+      title_pl: formData.title_pl || null,
+      content_fr: formData.content_fr || null,
+      content_pl: formData.content_pl || null,
+      meta_title_fr: formData.meta_title_fr || null,
+      meta_title_pl: formData.meta_title_pl || null,
+      meta_description_fr: formData.meta_description_fr || null,
+      meta_description_pl: formData.meta_description_pl || null,
+      published: formData.published,
     };
 
     if (editingPage) {
@@ -197,71 +249,125 @@ const AdminPages = () => {
               Nouvelle page
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingPage ? 'Modifier la page' : 'Nouvelle page'}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Titre *</Label>
-                  <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => handleTitleChange(e.target.value)}
-                    placeholder="Titre de la page"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="slug">Slug *</Label>
-                  <Input
-                    id="slug"
-                    value={formData.slug}
-                    onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                    placeholder="url-de-la-page"
-                  />
-                </div>
-              </div>
-
               <div className="space-y-2">
-                <Label>Contenu</Label>
-                <RichTextEditor
-                  content={formData.content}
-                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                  placeholder="Contenu de la page..."
+                <Label htmlFor="slug">Slug *</Label>
+                <Input
+                  id="slug"
+                  value={formData.slug}
+                  onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+                  placeholder="url-de-la-page"
                 />
               </div>
 
-              <div className="border-t pt-4 mt-4">
-                <h4 className="text-sm font-medium mb-3">SEO</h4>
-                <div className="space-y-4">
+              <Tabs defaultValue="fr" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+                  <TabsTrigger value="pl">🇵🇱 Polski</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="fr" className="space-y-4 mt-4">
                   <div className="space-y-2">
-                    <Label htmlFor="meta_title">Meta Title</Label>
+                    <Label htmlFor="title_fr">Titre (FR) *</Label>
                     <Input
-                      id="meta_title"
-                      value={formData.meta_title}
-                      onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
-                      placeholder="Titre pour les moteurs de recherche"
-                      maxLength={60}
+                      id="title_fr"
+                      value={formData.title_fr}
+                      onChange={(e) => handleTitleChange(e.target.value, 'fr')}
+                      placeholder="Titre de la page en français"
                     />
-                    <p className="text-xs text-muted-foreground">{formData.meta_title.length}/60 caractères</p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="meta_description">Meta Description</Label>
-                    <Textarea
-                      id="meta_description"
-                      value={formData.meta_description}
-                      onChange={(e) => setFormData(prev => ({ ...prev, meta_description: e.target.value }))}
-                      placeholder="Description pour les moteurs de recherche"
-                      rows={2}
-                      maxLength={160}
+                    <Label>Contenu (FR)</Label>
+                    <RichTextEditor
+                      content={formData.content_fr}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content_fr: content }))}
+                      placeholder="Contenu de la page en français..."
                     />
-                    <p className="text-xs text-muted-foreground">{formData.meta_description.length}/160 caractères</p>
                   </div>
-                </div>
-              </div>
+                  <div className="border-t pt-4 mt-4">
+                    <h4 className="text-sm font-medium mb-3">SEO (FR)</h4>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="meta_title_fr">Meta Title</Label>
+                        <Input
+                          id="meta_title_fr"
+                          value={formData.meta_title_fr}
+                          onChange={(e) => setFormData(prev => ({ ...prev, meta_title_fr: e.target.value }))}
+                          placeholder="Titre pour les moteurs de recherche"
+                          maxLength={60}
+                        />
+                        <p className="text-xs text-muted-foreground">{formData.meta_title_fr.length}/60 caractères</p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="meta_description_fr">Meta Description</Label>
+                        <Textarea
+                          id="meta_description_fr"
+                          value={formData.meta_description_fr}
+                          onChange={(e) => setFormData(prev => ({ ...prev, meta_description_fr: e.target.value }))}
+                          placeholder="Description pour les moteurs de recherche"
+                          rows={2}
+                          maxLength={160}
+                        />
+                        <p className="text-xs text-muted-foreground">{formData.meta_description_fr.length}/160 caractères</p>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="pl" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_pl">Titre (PL)</Label>
+                    <Input
+                      id="title_pl"
+                      value={formData.title_pl}
+                      onChange={(e) => handleTitleChange(e.target.value, 'pl')}
+                      placeholder="Tytuł strony po polsku"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Contenu (PL)</Label>
+                    <RichTextEditor
+                      content={formData.content_pl}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content_pl: content }))}
+                      placeholder="Treść strony po polsku..."
+                    />
+                  </div>
+                  <div className="border-t pt-4 mt-4">
+                    <h4 className="text-sm font-medium mb-3">SEO (PL)</h4>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="meta_title_pl">Meta Title</Label>
+                        <Input
+                          id="meta_title_pl"
+                          value={formData.meta_title_pl}
+                          onChange={(e) => setFormData(prev => ({ ...prev, meta_title_pl: e.target.value }))}
+                          placeholder="Tytuł dla wyszukiwarek"
+                          maxLength={60}
+                        />
+                        <p className="text-xs text-muted-foreground">{formData.meta_title_pl.length}/60 znaków</p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="meta_description_pl">Meta Description</Label>
+                        <Textarea
+                          id="meta_description_pl"
+                          value={formData.meta_description_pl}
+                          onChange={(e) => setFormData(prev => ({ ...prev, meta_description_pl: e.target.value }))}
+                          placeholder="Opis dla wyszukiwarek"
+                          rows={2}
+                          maxLength={160}
+                        />
+                        <p className="text-xs text-muted-foreground">{formData.meta_description_pl.length}/160 znaków</p>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
 
               <div className="flex items-center gap-2">
                 <Switch
@@ -294,6 +400,7 @@ const AdminPages = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Titre</TableHead>
+              <TableHead>Traductions</TableHead>
               <TableHead>Slug</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Modifié</TableHead>
@@ -303,14 +410,20 @@ const AdminPages = () => {
           <TableBody>
             {pages.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Aucune page
                 </TableCell>
               </TableRow>
             ) : (
               pages.map((page) => (
                 <TableRow key={page.id}>
-                  <TableCell className="font-medium">{page.title}</TableCell>
+                  <TableCell className="font-medium">{page.title_fr || page.title}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {page.title_fr && <Badge variant="outline">FR</Badge>}
+                      {page.title_pl && <Badge variant="outline">PL</Badge>}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">/{page.slug}</TableCell>
                   <TableCell>
                     {page.published ? (
