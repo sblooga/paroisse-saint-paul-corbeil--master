@@ -14,7 +14,11 @@ import Team from "./pages/Team";
 import MassSchedules from "./pages/MassSchedules";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
+import LegalNotice from "./pages/LegalNotice";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookiePolicy from "./pages/CookiePolicy";
 import NotFound from "./pages/NotFound";
+import CookieConsent from "./components/CookieConsent";
 
 const queryClient = new QueryClient();
 
@@ -36,9 +40,13 @@ const App = () => (
               <Route path="/horaires" element={<MassSchedules />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/mentions-legales" element={<LegalNotice />} />
+              <Route path="/confidentialite" element={<PrivacyPolicy />} />
+              <Route path="/cookies" element={<CookiePolicy />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <CookieConsent />
           </BrowserRouter>
         </TooltipProvider>
       </AuthProvider>
