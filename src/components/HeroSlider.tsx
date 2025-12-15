@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import HashLink from '@/components/HashLink';
 
 import heroChurch from '@/assets/hero-church-1.jpg';
 import heroCommunity from '@/assets/hero-community.jpg';
@@ -32,9 +33,8 @@ const slides = [
 
 const HeroSlider = () => {
   const { t } = useTranslation();
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 5000, stopOnInteraction: false }),
-  ]);
+  const autoplay = useMemo(() => Autoplay({ delay: 5000, stopOnInteraction: false }), []);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [autoplay]);
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const scrollPrev = useCallback(() => {
@@ -47,13 +47,17 @@ const HeroSlider = () => {
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
-    setSelectedIndex(emblaApi.selectedScrollSnap());
+    const next = emblaApi.selectedScrollSnap();
+    setSelectedIndex((prev) => (prev === next ? prev : next));
   }, [emblaApi]);
 
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
     emblaApi.on('select', onSelect);
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
   }, [emblaApi, onSelect]);
 
   return (
@@ -91,12 +95,15 @@ const HeroSlider = () => {
                       {t(slide.subtitleKey)}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <a href="#horaires" className="btn-accent">
+                      <HashLink to="#horaires" className="btn-accent">
                         {t('hero.massSchedule')}
-                      </a>
-                      <a href="#contact" className="btn-parish-outline border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                      </HashLink>
+                      <HashLink
+                        to="#contact"
+                        className="btn-parish-outline border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                      >
                         {t('hero.contactUs')}
-                      </a>
+                      </HashLink>
                     </div>
                   </motion.div>
                 </div>
