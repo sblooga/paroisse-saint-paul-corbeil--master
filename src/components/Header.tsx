@@ -25,6 +25,7 @@ const Header = () => {
     { name: t('common.home'), href: '/' },
     { name: t('common.parish'), href: isHomePage ? '#paroisse' : '/#paroisse' },
     { name: t('common.team'), href: '/equipe' },
+    { name: t('common.schedule'), href: '/horaires' },
     { name: t('common.news'), href: '/articles' },
     { name: t('common.contact'), href: '/contact' },
     { name: t('common.faq'), href: '/faq' },
