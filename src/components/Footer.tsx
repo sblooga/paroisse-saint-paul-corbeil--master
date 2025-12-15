@@ -1,20 +1,41 @@
+import { useState, useEffect } from 'react';
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import logoImage from '@/assets/logo.png';
+import { supabase } from '@/integrations/supabase/client';
+
+interface FooterLink {
+  id: string;
+  label: string;
+  label_fr: string | null;
+  label_pl: string | null;
+  url: string;
+}
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const currentYear = new Date().getFullYear();
+  const [footerLinks, setFooterLinks] = useState<FooterLink[]>([]);
 
-  const quickLinks = [
-    { key: 'massSchedule', href: '#horaires' },
-    { key: 'baptism', href: '#' },
-    { key: 'wedding', href: '#' },
-    { key: 'catechesis', href: '#' },
-    { key: 'funerals', href: '#' },
-    { key: 'bulletin', href: '#' },
-  ];
+  useEffect(() => {
+    const fetchLinks = async () => {
+      const { data } = await supabase
+        .from('footer_links')
+        .select('id, label, label_fr, label_pl, url')
+        .eq('active', true)
+        .order('sort_order', { ascending: true });
+      
+      if (data) setFooterLinks(data);
+    };
+    fetchLinks();
+  }, []);
+
+  const getLinkLabel = (link: FooterLink) => {
+    if (i18n.language === 'pl' && link.label_pl) return link.label_pl;
+    if (i18n.language === 'fr' && link.label_fr) return link.label_fr;
+    return link.label_fr || link.label;
+  };
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -98,17 +119,16 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Liens Rapides */}
           <div>
             <h4 className="text-lg font-heading font-bold mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2 text-sm">
-              {quickLinks.map((link) => (
-                <li key={link.key}>
+              {footerLinks.map((link) => (
+                <li key={link.id}>
                   <a
-                    href={link.href}
+                    href={link.url}
                     className="text-primary-foreground/70 hover:text-accent transition-colors"
                   >
-                    {t(`footer.links.${link.key}`)}
+                    {getLinkLabel(link)}
                   </a>
                 </li>
               ))}
