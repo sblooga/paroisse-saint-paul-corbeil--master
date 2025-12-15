@@ -233,5 +233,31 @@
     "forgotPassword": "Zapomniałeś hasła?",
     "noAccount": "Nie masz jeszcze konta?",
     "signUp": "Zarejestruj się"
+  },
+  "admin": {
+    "title": "Panel administracyjny",
+    "actions": {
+      "refresh": "Odśwież",
+      "viewSite": "Zobacz stronę"
+    },
+    "tabs": {
+      "articles": "Artykuły",
+      "pages": "Strony",
+      "team": "Zespół",
+      "schedules": "Msze",
+      "messages": "Wiadomości",
+      "newsletter": "Newsletter"
+    },
+    "stats": {
+      "messages": "Wiadomości",
+      "unread": "Nieprzeczytane",
+      "subscribers": "Subskrybenci",
+      "activeSubscribers": "Aktywni"
+    },
+    "accessDenied": {
+      "title": "Brak dostępu",
+      "description": "Nie masz uprawnień do tej strony. Skontaktuj się z administratorem.",
+      "backToSite": "Powrót do strony"
+    }
   }
 }

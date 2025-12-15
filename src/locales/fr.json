@@ -233,5 +233,31 @@
     "forgotPassword": "Mot de passe oublié ?",
     "noAccount": "Pas encore de compte ?",
     "signUp": "S'inscrire"
+  },
+  "admin": {
+    "title": "Tableau de bord",
+    "actions": {
+      "refresh": "Actualiser",
+      "viewSite": "Voir le site"
+    },
+    "tabs": {
+      "articles": "Articles",
+      "pages": "Pages",
+      "team": "Équipe",
+      "schedules": "Messes",
+      "messages": "Messages",
+      "newsletter": "Newsletter"
+    },
+    "stats": {
+      "messages": "Messages",
+      "unread": "Non lus",
+      "subscribers": "Abonnés newsletter",
+      "activeSubscribers": "Actifs"
+    },
+    "accessDenied": {
+      "title": "Accès restreint",
+      "description": "Vous n'avez pas les droits nécessaires pour accéder à cette page. Contactez un administrateur pour obtenir l'accès.",
+      "backToSite": "Retour au site"
+    }
   }
 }

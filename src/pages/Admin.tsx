@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { 
-  Mail, Users, MessageSquare, LogOut, 
-  Check, RefreshCw, LayoutDashboard, FileText, 
+import { useTranslation } from 'react-i18next';
+import {
+  Mail, Users, MessageSquare, LogOut,
+  Check, RefreshCw, LayoutDashboard, FileText,
   Calendar, UsersRound, Newspaper
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
@@ -26,9 +27,10 @@ interface Stats {
 }
 
 const Admin = () => {
+  const { t } = useTranslation();
   const { user, isLoading, isEditor, signOut } = useAuth();
   const navigate = useNavigate();
-  
+
   const [activeTab, setActiveTab] = useState<TabType>('articles');
   const [stats, setStats] = useState<Stats>({ messages: 0, unread: 0, subscribers: 0, activeSubscribers: 0 });
 
@@ -81,19 +83,18 @@ const Admin = () => {
         <div className="card-parish p-8 text-center max-w-md">
           <div className="text-5xl mb-4">🔒</div>
           <h2 className="text-xl font-heading font-bold text-foreground mb-2">
-            Accès restreint
+            {t('admin.accessDenied.title')}
           </h2>
           <p className="text-muted-foreground mb-6">
-            Vous n'avez pas les droits nécessaires pour accéder à cette page.
-            Contactez un administrateur pour obtenir l'accès.
+            {t('admin.accessDenied.description')}
           </p>
           <div className="flex gap-4 justify-center">
             <Button onClick={() => navigate('/')} variant="outline">
-              Retour au site
+              {t('admin.accessDenied.backToSite')}
             </Button>
             <Button onClick={handleSignOut} variant="destructive">
               <LogOut size={18} />
-              Déconnexion
+              {t('auth.logout')}
             </Button>
           </div>
         </div>
@@ -103,7 +104,6 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-muted">
-      {/* Header */}
       <header className="bg-card border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -112,7 +112,7 @@ const Admin = () => {
             </div>
             <div>
               <h1 className="text-xl font-heading font-bold text-foreground">
-                Tableau de bord
+                {t('admin.title')}
               </h1>
               <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
@@ -120,21 +120,20 @@ const Admin = () => {
           <div className="flex items-center gap-3">
             <Button variant="outline" size="sm" onClick={fetchStats}>
               <RefreshCw size={16} />
-              Actualiser
+              {t('admin.actions.refresh')}
             </Button>
             <Button variant="outline" size="sm" onClick={() => navigate('/')}>
-              Voir le site
+              {t('admin.actions.viewSite')}
             </Button>
             <Button variant="destructive" size="sm" onClick={handleSignOut}>
               <LogOut size={16} />
-              Déconnexion
+              {t('auth.logout')}
             </Button>
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Stats Cards */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -147,7 +146,7 @@ const Admin = () => {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.messages}</p>
-                <p className="text-sm text-muted-foreground">Messages</p>
+                <p className="text-sm text-muted-foreground">{t('admin.stats.messages')}</p>
               </div>
             </div>
           </motion.div>
@@ -164,7 +163,7 @@ const Admin = () => {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.unread}</p>
-                <p className="text-sm text-muted-foreground">Non lus</p>
+                <p className="text-sm text-muted-foreground">{t('admin.stats.unread')}</p>
               </div>
             </div>
           </motion.div>
@@ -181,7 +180,7 @@ const Admin = () => {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.subscribers}</p>
-                <p className="text-sm text-muted-foreground">Abonnés newsletter</p>
+                <p className="text-sm text-muted-foreground">{t('admin.stats.subscribers')}</p>
               </div>
             </div>
           </motion.div>
@@ -198,13 +197,12 @@ const Admin = () => {
               </div>
               <div>
                 <p className="text-2xl font-bold text-foreground">{stats.activeSubscribers}</p>
-                <p className="text-sm text-muted-foreground">Actifs</p>
+                <p className="text-sm text-muted-foreground">{t('admin.stats.activeSubscribers')}</p>
               </div>
             </div>
           </motion.div>
         </div>
 
-        {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-6">
           <Button
             variant={activeTab === 'articles' ? 'default' : 'outline'}
@@ -212,7 +210,7 @@ const Admin = () => {
             size="sm"
           >
             <Newspaper size={16} />
-            Articles
+            {t('admin.tabs.articles')}
           </Button>
           <Button
             variant={activeTab === 'pages' ? 'default' : 'outline'}
@@ -220,7 +218,7 @@ const Admin = () => {
             size="sm"
           >
             <FileText size={16} />
-            Pages
+            {t('admin.tabs.pages')}
           </Button>
           <Button
             variant={activeTab === 'team' ? 'default' : 'outline'}
@@ -228,7 +226,7 @@ const Admin = () => {
             size="sm"
           >
             <UsersRound size={16} />
-            Équipe
+            {t('admin.tabs.team')}
           </Button>
           <Button
             variant={activeTab === 'schedules' ? 'default' : 'outline'}
@@ -236,7 +234,7 @@ const Admin = () => {
             size="sm"
           >
             <Calendar size={16} />
-            Messes
+            {t('admin.tabs.schedules')}
           </Button>
           <Button
             variant={activeTab === 'messages' ? 'default' : 'outline'}
@@ -244,7 +242,7 @@ const Admin = () => {
             size="sm"
           >
             <MessageSquare size={16} />
-            Messages {stats.unread > 0 && `(${stats.unread})`}
+            {t('admin.tabs.messages')} {stats.unread > 0 && `(${stats.unread})`}
           </Button>
           <Button
             variant={activeTab === 'subscribers' ? 'default' : 'outline'}
@@ -252,11 +250,10 @@ const Admin = () => {
             size="sm"
           >
             <Users size={16} />
-            Newsletter ({stats.subscribers})
+            {t('admin.tabs.newsletter')} ({stats.subscribers})
           </Button>
         </div>
 
-        {/* Content */}
         <div className="card-parish overflow-hidden">
           {activeTab === 'articles' && <AdminArticles />}
           {activeTab === 'pages' && <AdminPages />}
