@@ -143,15 +143,15 @@ const Footer = () => {
           <div className="flex flex-col items-center gap-4 text-sm text-primary-foreground/50">
             <p className="text-center">© {currentYear} {t('footer.parishName')}. {t('footer.rights')}.</p>
             <div className="flex flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-6 sm:gap-y-2">
-              <a href="#" className="hover:text-accent transition-colors">
+              <Link to="/mentions-legales" className="hover:text-accent transition-colors">
                 {t('footer.legal')}
-              </a>
-              <a href="#" className="hover:text-accent transition-colors">
+              </Link>
+              <Link to="/confidentialite" className="hover:text-accent transition-colors">
                 {t('footer.privacy')}
-              </a>
-              <a href="#" className="hover:text-accent transition-colors">
+              </Link>
+              <Link to="/cookies" className="hover:text-accent transition-colors">
                 {t('footer.cookies')}
-              </a>
+              </Link>
               <Link to="/auth" className="hover:text-accent transition-colors">
                 {t('footer.admin')}
               </Link>
