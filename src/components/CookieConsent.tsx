@@ -61,6 +61,11 @@ const CookieConsent = () => {
     setShowBanner(false);
   };
 
+  // Just hide temporarily - will show again on next visit
+  const handleDismiss = () => {
+    setShowBanner(false);
+  };
+
   return (
     <AnimatePresence>
       {showBanner && (
@@ -74,7 +79,7 @@ const CookieConsent = () => {
           <div className="container mx-auto max-w-4xl">
             <div className="bg-card border border-border rounded-xl shadow-xl p-4 md:p-6 relative">
               <button
-                onClick={handleDecline}
+                onClick={handleDismiss}
                 className="absolute top-3 right-3 text-muted-foreground hover:text-foreground transition-colors"
                 aria-label={isFrench ? 'Fermer' : 'Zamknij'}
               >
