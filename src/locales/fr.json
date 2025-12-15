@@ -51,14 +51,17 @@
   },
   "articles": {
     "title": "Actualités",
-    "subtitle": "Restez informés",
+    "subtitle": "Toutes les dernières nouvelles et événements de notre communauté paroissiale",
     "headline": "À la Une",
     "description": "Toutes les dernières nouvelles de notre communauté paroissiale",
     "seeAllNews": "Voir toutes les actualités",
     "noArticles": "Aucun article publié pour le moment.",
+    "noImage": "Pas d'image",
+    "noContent": "Aucun contenu disponible.",
+    "readMore": "Lire la suite",
     "notFound": "Article non trouvé",
-    "notFoundDescription": "Cet article n'existe pas ou n'est plus disponible.",
-    "backToNews": "Retour aux actualités"
+    "notFoundDesc": "Cet article n'existe pas ou n'est plus disponible.",
+    "backToArticles": "Retour aux actualités"
   },
   "massSchedule": {
     "title": "Horaires des Messes",

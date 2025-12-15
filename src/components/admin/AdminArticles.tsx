@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Article {
   id: string;
@@ -23,6 +24,12 @@ interface Article {
   slug: string;
   content: string | null;
   excerpt: string | null;
+  title_fr: string | null;
+  title_pl: string | null;
+  content_fr: string | null;
+  content_pl: string | null;
+  excerpt_fr: string | null;
+  excerpt_pl: string | null;
   image_url: string | null;
   category: string | null;
   published: boolean;
@@ -41,6 +48,12 @@ const AdminArticles = () => {
     slug: '',
     content: '',
     excerpt: '',
+    title_fr: '',
+    title_pl: '',
+    content_fr: '',
+    content_pl: '',
+    excerpt_fr: '',
+    excerpt_pl: '',
     image_url: '',
     category: '',
     published: false,
@@ -57,7 +70,7 @@ const AdminArticles = () => {
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (data) setArticles(data);
+    if (data) setArticles(data as Article[]);
     if (error) console.error('Error fetching articles:', error);
     setLoading(false);
   };
@@ -71,12 +84,20 @@ const AdminArticles = () => {
       .replace(/(^-|-$)/g, '');
   };
 
-  const handleTitleChange = (title: string) => {
-    setFormData(prev => ({
-      ...prev,
-      title,
-      slug: editingArticle ? prev.slug : generateSlug(title),
-    }));
+  const handleTitleChange = (title: string, lang: 'fr' | 'pl') => {
+    if (lang === 'fr') {
+      setFormData(prev => ({
+        ...prev,
+        title_fr: title,
+        title: title, // Keep main title synced with FR
+        slug: editingArticle ? prev.slug : generateSlug(title),
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        title_pl: title,
+      }));
+    }
   };
 
   const resetForm = () => {
@@ -85,6 +106,12 @@ const AdminArticles = () => {
       slug: '',
       content: '',
       excerpt: '',
+      title_fr: '',
+      title_pl: '',
+      content_fr: '',
+      content_pl: '',
+      excerpt_fr: '',
+      excerpt_pl: '',
       image_url: '',
       category: '',
       published: false,
@@ -99,6 +126,12 @@ const AdminArticles = () => {
       slug: article.slug,
       content: article.content || '',
       excerpt: article.excerpt || '',
+      title_fr: article.title_fr || article.title || '',
+      title_pl: article.title_pl || '',
+      content_fr: article.content_fr || article.content || '',
+      content_pl: article.content_pl || '',
+      excerpt_fr: article.excerpt_fr || article.excerpt || '',
+      excerpt_pl: article.excerpt_pl || '',
       image_url: article.image_url || '',
       category: article.category || '',
       published: article.published,
@@ -109,15 +142,31 @@ const AdminArticles = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.slug) {
-      toast({ title: 'Erreur', description: 'Titre et slug requis', variant: 'destructive' });
+    if (!formData.title_fr || !formData.slug) {
+      toast({ title: 'Erreur', description: 'Titre (FR) et slug requis', variant: 'destructive' });
       return;
     }
+
+    const dataToSend = {
+      title: formData.title_fr, // Main title = FR title
+      slug: formData.slug,
+      content: formData.content_fr,
+      excerpt: formData.excerpt_fr,
+      title_fr: formData.title_fr,
+      title_pl: formData.title_pl || null,
+      content_fr: formData.content_fr || null,
+      content_pl: formData.content_pl || null,
+      excerpt_fr: formData.excerpt_fr || null,
+      excerpt_pl: formData.excerpt_pl || null,
+      image_url: formData.image_url || null,
+      category: formData.category || null,
+      published: formData.published,
+    };
 
     if (editingArticle) {
       const { error } = await supabase
         .from('articles')
-        .update(formData)
+        .update(dataToSend)
         .eq('id', editingArticle.id);
       
       if (error) {
@@ -131,7 +180,7 @@ const AdminArticles = () => {
     } else {
       const { error } = await supabase
         .from('articles')
-        .insert([formData]);
+        .insert([dataToSend]);
       
       if (error) {
         toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
@@ -194,7 +243,7 @@ const AdminArticles = () => {
               Nouvel article
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
                 {editingArticle ? 'Modifier l\'article' : 'Nouvel article'}
@@ -203,52 +252,12 @@ const AdminArticles = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Titre *</Label>
-                  <Input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) => handleTitleChange(e.target.value)}
-                    placeholder="Titre de l'article"
-                  />
-                </div>
-                <div className="space-y-2">
                   <Label htmlFor="slug">Slug *</Label>
                   <Input
                     id="slug"
                     value={formData.slug}
                     onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
                     placeholder="url-de-l-article"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="excerpt">Résumé</Label>
-                <Textarea
-                  id="excerpt"
-                  value={formData.excerpt}
-                  onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
-                  placeholder="Court résumé de l'article..."
-                  rows={2}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Contenu</Label>
-                <RichTextEditor
-                  content={formData.content}
-                  onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                  placeholder="Contenu de l'article..."
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Image de couverture</Label>
-                  <ImageUpload
-                    value={formData.image_url}
-                    onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
-                    folder="articles"
                   />
                 </div>
                 <div className="space-y-2">
@@ -261,6 +270,82 @@ const AdminArticles = () => {
                   />
                 </div>
               </div>
+
+              <div className="space-y-2">
+                <Label>Image de couverture</Label>
+                <ImageUpload
+                  value={formData.image_url}
+                  onChange={(url) => setFormData(prev => ({ ...prev, image_url: url }))}
+                  folder="articles"
+                />
+              </div>
+
+              <Tabs defaultValue="fr" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="fr">🇫🇷 Français</TabsTrigger>
+                  <TabsTrigger value="pl">🇵🇱 Polski</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="fr" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_fr">Titre (FR) *</Label>
+                    <Input
+                      id="title_fr"
+                      value={formData.title_fr}
+                      onChange={(e) => handleTitleChange(e.target.value, 'fr')}
+                      placeholder="Titre de l'article en français"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="excerpt_fr">Résumé (FR)</Label>
+                    <Textarea
+                      id="excerpt_fr"
+                      value={formData.excerpt_fr}
+                      onChange={(e) => setFormData(prev => ({ ...prev, excerpt_fr: e.target.value }))}
+                      placeholder="Court résumé en français..."
+                      rows={2}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Contenu (FR)</Label>
+                    <RichTextEditor
+                      content={formData.content_fr}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content_fr: content }))}
+                      placeholder="Contenu de l'article en français..."
+                    />
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="pl" className="space-y-4 mt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title_pl">Titre (PL)</Label>
+                    <Input
+                      id="title_pl"
+                      value={formData.title_pl}
+                      onChange={(e) => handleTitleChange(e.target.value, 'pl')}
+                      placeholder="Tytuł artykułu po polsku"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="excerpt_pl">Résumé (PL)</Label>
+                    <Textarea
+                      id="excerpt_pl"
+                      value={formData.excerpt_pl}
+                      onChange={(e) => setFormData(prev => ({ ...prev, excerpt_pl: e.target.value }))}
+                      placeholder="Krótkie podsumowanie po polsku..."
+                      rows={2}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Contenu (PL)</Label>
+                    <RichTextEditor
+                      content={formData.content_pl}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content_pl: content }))}
+                      placeholder="Treść artykułu po polsku..."
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
 
               <div className="flex items-center gap-2">
                 <Switch
@@ -293,6 +378,7 @@ const AdminArticles = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Titre</TableHead>
+              <TableHead>Traductions</TableHead>
               <TableHead>Catégorie</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Date</TableHead>
@@ -302,14 +388,20 @@ const AdminArticles = () => {
           <TableBody>
             {articles.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                   Aucun article
                 </TableCell>
               </TableRow>
             ) : (
               articles.map((article) => (
                 <TableRow key={article.id}>
-                  <TableCell className="font-medium">{article.title}</TableCell>
+                  <TableCell className="font-medium">{article.title_fr || article.title}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {article.title_fr && <Badge variant="outline">FR</Badge>}
+                      {article.title_pl && <Badge variant="outline">PL</Badge>}
+                    </div>
+                  </TableCell>
                   <TableCell>{article.category || '-'}</TableCell>
                   <TableCell>
                     {article.published ? (
