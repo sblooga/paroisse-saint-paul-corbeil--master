@@ -249,7 +249,7 @@ const AdminPages = () => {
               Nouvelle page
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto overflow-x-hidden w-[95vw]">
             <DialogHeader>
               <DialogTitle>
                 {editingPage ? 'Modifier la page' : 'Nouvelle page'}
@@ -267,9 +267,9 @@ const AdminPages = () => {
               </div>
 
               <Tabs defaultValue="fr" className="w-full">
-                <TabsList className="w-full flex overflow-x-auto">
-                  <TabsTrigger value="fr" className="flex-1 min-w-[120px]">🇫🇷 Français</TabsTrigger>
-                  <TabsTrigger value="pl" className="flex-1 min-w-[120px]">🇵🇱 Polski</TabsTrigger>
+                <TabsList className="w-full grid grid-cols-2 shrink-0">
+                  <TabsTrigger value="fr" className="text-xs sm:text-sm">🇫🇷 FR</TabsTrigger>
+                  <TabsTrigger value="pl" className="text-xs sm:text-sm">🇵🇱 PL</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="fr" className="space-y-4 mt-4">
