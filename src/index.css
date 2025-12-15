@@ -143,7 +143,8 @@
   .btn-parish {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300;
     @apply bg-primary text-primary-foreground hover:opacity-90;
-    @apply shadow-soft hover:shadow-lg hover:-translate-y-0.5;
+    box-shadow: var(--shadow-soft);
+    @apply hover:shadow-lg hover:-translate-y-0.5;
   }
 
   .btn-parish-outline {
@@ -154,12 +155,12 @@
   .btn-accent {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300;
     background: var(--gradient-gold);
-    @apply text-accent-foreground hover:opacity-90 shadow-glow;
+    @apply text-accent-foreground hover:opacity-90;
+    box-shadow: var(--shadow-glow);
   }
 
   .card-parish {
-    @apply bg-card rounded-xl overflow-hidden;
-    box-shadow: var(--shadow-card);
+    @apply bg-card rounded-xl overflow-hidden shadow-card;
     @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
   }
 
