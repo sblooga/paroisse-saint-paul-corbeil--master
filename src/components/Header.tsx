@@ -20,7 +20,7 @@ const Header = () => {
   const navLinks = [
     { name: 'Accueil', href: '/' },
     { name: 'La Paroisse', href: isHomePage ? '#paroisse' : '/#paroisse' },
-    { name: 'Équipes', href: isHomePage ? '#equipes' : '/#equipes' },
+    { name: 'Équipe', href: '/equipe' },
     { name: 'Actualités', href: '/articles' },
     { name: 'Contact', href: '/contact' },
     { name: 'FAQ', href: '/faq' },
