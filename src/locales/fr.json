@@ -246,7 +246,8 @@
       "team": "Équipe",
       "schedules": "Messes",
       "messages": "Messages",
-      "newsletter": "Newsletter"
+      "newsletter": "Newsletter",
+      "footerLinks": "Liens footer"
     },
     "stats": {
       "messages": "Messages",
@@ -258,6 +259,38 @@
       "title": "Accès restreint",
       "description": "Vous n'avez pas les droits nécessaires pour accéder à cette page. Contactez un administrateur pour obtenir l'accès.",
       "backToSite": "Retour au site"
+    },
+    "footerLinks": {
+      "title": "Liens rapides du footer",
+      "add": "Ajouter un lien",
+      "edit": "Modifier le lien",
+      "labelDefault": "Libellé (défaut)",
+      "labelFr": "Libellé FR",
+      "labelPl": "Libellé PL",
+      "url": "URL / Lien",
+      "sortOrder": "Ordre d'affichage",
+      "active": "Actif",
+      "empty": "Aucun lien configuré"
+    },
+    "loading": "Chargement...",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cet élément ?",
+    "errors": {
+      "fetchFailed": "Erreur lors du chargement",
+      "createFailed": "Erreur lors de la création",
+      "updateFailed": "Erreur lors de la mise à jour",
+      "deleteFailed": "Erreur lors de la suppression"
+    },
+    "success": {
+      "created": "Créé avec succès",
+      "updated": "Mis à jour avec succès",
+      "deleted": "Supprimé avec succès"
+    },
+    "actions": {
+      "refresh": "Actualiser",
+      "viewSite": "Voir le site",
+      "cancel": "Annuler",
+      "save": "Enregistrer",
+      "create": "Créer"
     }
   }
 }

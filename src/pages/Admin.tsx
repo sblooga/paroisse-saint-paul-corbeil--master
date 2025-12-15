@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
-  Calendar, UsersRound, Newspaper
+  Calendar, UsersRound, Newspaper, Link as LinkIcon
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,8 +16,9 @@ import AdminTeam from '@/components/admin/AdminTeam';
 import AdminMassSchedules from '@/components/admin/AdminMassSchedules';
 import AdminMessages from '@/components/admin/AdminMessages';
 import AdminNewsletter from '@/components/admin/AdminNewsletter';
+import AdminFooterLinks from '@/components/admin/AdminFooterLinks';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks';
 
 interface Stats {
   messages: number;
@@ -261,6 +262,14 @@ const Admin = () => {
             <Users size={16} />
             {t('admin.tabs.newsletter')} ({stats.subscribers})
           </Button>
+          <Button
+            variant={activeTab === 'footerLinks' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('footerLinks')}
+            size="sm"
+          >
+            <LinkIcon size={16} />
+            {t('admin.tabs.footerLinks')}
+          </Button>
         </div>
 
         <div className="card-parish overflow-hidden">
@@ -270,6 +279,7 @@ const Admin = () => {
           {activeTab === 'schedules' && <AdminMassSchedules key={`schedules-${refreshKey}`} />}
           {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
+          {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
         </div>
       </main>
     </div>

@@ -107,6 +107,42 @@ export type Database = {
         }
         Relationships: []
       }
+      footer_links: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          id: string
+          label: string
+          label_fr: string | null
+          label_pl: string | null
+          sort_order: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          id?: string
+          label: string
+          label_fr?: string | null
+          label_pl?: string | null
+          sort_order?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          id?: string
+          label?: string
+          label_fr?: string | null
+          label_pl?: string | null
+          sort_order?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       mass_schedules: {
         Row: {
           active: boolean | null

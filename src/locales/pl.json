@@ -246,7 +246,8 @@
       "team": "Zespół",
       "schedules": "Msze",
       "messages": "Wiadomości",
-      "newsletter": "Newsletter"
+      "newsletter": "Newsletter",
+      "footerLinks": "Linki stopki"
     },
     "stats": {
       "messages": "Wiadomości",
@@ -258,6 +259,38 @@
       "title": "Brak dostępu",
       "description": "Nie masz uprawnień do tej strony. Skontaktuj się z administratorem.",
       "backToSite": "Powrót do strony"
+    },
+    "footerLinks": {
+      "title": "Szybkie linki w stopce",
+      "add": "Dodaj link",
+      "edit": "Edytuj link",
+      "labelDefault": "Etykieta (domyślna)",
+      "labelFr": "Etykieta FR",
+      "labelPl": "Etykieta PL",
+      "url": "URL / Link",
+      "sortOrder": "Kolejność wyświetlania",
+      "active": "Aktywny",
+      "empty": "Brak skonfigurowanych linków"
+    },
+    "loading": "Ładowanie...",
+    "confirmDelete": "Czy na pewno chcesz usunąć ten element?",
+    "errors": {
+      "fetchFailed": "Błąd podczas ładowania",
+      "createFailed": "Błąd podczas tworzenia",
+      "updateFailed": "Błąd podczas aktualizacji",
+      "deleteFailed": "Błąd podczas usuwania"
+    },
+    "success": {
+      "created": "Utworzono pomyślnie",
+      "updated": "Zaktualizowano pomyślnie",
+      "deleted": "Usunięto pomyślnie"
+    },
+    "actions": {
+      "refresh": "Odśwież",
+      "viewSite": "Zobacz stronę",
+      "cancel": "Anuluj",
+      "save": "Zapisz",
+      "create": "Utwórz"
     }
   }
 }
