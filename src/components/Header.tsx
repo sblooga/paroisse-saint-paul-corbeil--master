@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Search, Heart, Phone, Facebook, Instagram, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-
+import ThemeToggle from './ThemeToggle';
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -68,6 +68,9 @@ const Header = () => {
               <button className="px-2 py-1 text-xs font-semibold hover:bg-primary-foreground/20 rounded transition-colors">
                 PL
               </button>
+            </div>
+            <div className="ml-3">
+              <ThemeToggle />
             </div>
           </div>
         </div>
