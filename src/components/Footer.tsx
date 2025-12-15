@@ -122,7 +122,7 @@ const Footer = () => {
         <div className="container-parish py-6 px-4 pb-20 md:pb-6">
           <div className="flex flex-col items-center gap-4 text-sm text-primary-foreground/50">
             <p className="text-center">© {currentYear} {t('footer.parishName')}. {t('footer.rights')}.</p>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <div className="flex flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-6 sm:gap-y-2">
               <a href="#" className="hover:text-accent transition-colors">
                 {t('footer.legal')}
               </a>
