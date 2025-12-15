@@ -1,34 +1,49 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { supabase } from '@/integrations/supabase/client';
+import { Skeleton } from '@/components/ui/skeleton';
 
-const articles = [
-  {
-    id: 1,
-    title: 'Préparation à Noël : Temps de l\'Avent',
-    excerpt: 'Découvrez le programme de nos célébrations et activités pour ce temps de préparation spirituelle à la naissance du Sauveur.',
-    image: 'https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=600&h=400&fit=crop',
-    date: '15 Décembre 2024',
-    category: 'Liturgie',
-  },
-  {
-    id: 2,
-    title: 'Nouvelle équipe de catéchèse',
-    excerpt: 'Bienvenue à nos nouveaux catéchistes qui accompagneront les enfants dans leur découverte de la foi cette année.',
-    image: 'https://images.unsplash.com/photo-1529070538774-1843cb3265df?w=600&h=400&fit=crop',
-    date: '10 Décembre 2024',
-    category: 'Vie paroissiale',
-  },
-  {
-    id: 3,
-    title: 'Concert de la chorale paroissiale',
-    excerpt: 'Ne manquez pas notre traditionnel concert de Noël le 22 décembre à 20h30. Entrée libre, participation aux frais.',
-    image: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=600&h=400&fit=crop',
-    date: '5 Décembre 2024',
-    category: 'Événement',
-  },
-];
+interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  image_url: string | null;
+  category: string | null;
+  created_at: string;
+}
 
 const FeaturedArticles = () => {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+  const fetchArticles = async () => {
+    const { data, error } = await supabase
+      .from('articles')
+      .select('id, title, slug, excerpt, image_url, category, created_at')
+      .eq('published', true)
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    if (data) setArticles(data);
+    if (error) console.error('Error fetching articles:', error);
+    setLoading(false);
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
   return (
     <section id="actualites" className="section-padding bg-background">
       <div className="container-parish">
@@ -48,54 +63,84 @@ const FeaturedArticles = () => {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articles.map((article, index) => (
-            <motion.article
-              key={article.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="card-parish group"
-            >
-              <div className="relative overflow-hidden aspect-[3/2]">
-                <img
-                  src={article.image}
-                  alt={article.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute top-4 left-4">
-                  <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-semibold rounded-full">
-                    {article.category}
-                  </span>
+        {loading ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="card-parish">
+                <Skeleton className="aspect-[3/2] w-full" />
+                <div className="p-6 space-y-3">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-6 w-full" />
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-2/3" />
                 </div>
               </div>
-
-              <div className="p-6">
-                <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
-                  <CalendarIcon size={14} />
-                  <time>{article.date}</time>
+            ))}
+          </div>
+        ) : articles.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">Aucun article publié pour le moment.</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {articles.map((article, index) => (
+              <motion.article
+                key={article.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="card-parish group"
+              >
+                <div className="relative overflow-hidden aspect-[3/2]">
+                  {article.image_url ? (
+                    <img
+                      src={article.image_url}
+                      alt={article.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-muted flex items-center justify-center">
+                      <span className="text-muted-foreground text-sm">Pas d'image</span>
+                    </div>
+                  )}
+                  {article.category && (
+                    <div className="absolute top-4 left-4">
+                      <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-semibold rounded-full">
+                        {article.category}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                  {article.title}
-                </h3>
+                <div className="p-6">
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
+                    <CalendarIcon size={14} />
+                    <time>{formatDate(article.created_at)}</time>
+                  </div>
 
-                <p className="text-muted-foreground line-clamp-3 mb-4">
-                  {article.excerpt}
-                </p>
+                  <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                    {article.title}
+                  </h3>
 
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
-                >
-                  Lire la suite
-                  <ArrowRight size={18} />
-                </a>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+                  {article.excerpt && (
+                    <p className="text-muted-foreground line-clamp-3 mb-4">
+                      {article.excerpt}
+                    </p>
+                  )}
+
+                  <Link
+                    to={`/articles/${article.slug}`}
+                    className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
+                  >
+                    Lire la suite
+                    <ArrowRight size={18} />
+                  </Link>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -104,10 +149,10 @@ const FeaturedArticles = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mt-12 text-center"
         >
-          <a href="#" className="btn-parish-outline">
+          <Link to="/articles" className="btn-parish-outline">
             Voir toutes les actualités
             <ArrowRight size={18} />
-          </a>
+          </Link>
         </motion.div>
       </div>
     </section>
