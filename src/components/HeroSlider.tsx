@@ -1,0 +1,142 @@
+import { useCallback, useEffect, useState } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
+import Autoplay from 'embla-carousel-autoplay';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+
+import heroChurch from '@/assets/hero-church-1.jpg';
+import heroCommunity from '@/assets/hero-community.jpg';
+import heroCelebration from '@/assets/hero-celebration.jpg';
+
+const slides = [
+  {
+    id: 1,
+    image: heroChurch,
+    title: 'Bienvenue à la Paroisse Saint-Paul',
+    subtitle: 'Une communauté vivante et accueillante',
+  },
+  {
+    id: 2,
+    image: heroCommunity,
+    title: 'Vie Communautaire',
+    subtitle: 'Rejoignez nos équipes et activités',
+  },
+  {
+    id: 3,
+    image: heroCelebration,
+    title: 'Temps Forts Liturgiques',
+    subtitle: 'Noël, Pâques et fêtes paroissiales',
+  },
+];
+
+const HeroSlider = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
+    Autoplay({ delay: 5000, stopOnInteraction: false }),
+  ]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on('select', onSelect);
+  }, [emblaApi, onSelect]);
+
+  return (
+    <section className="relative w-full h-[70vh] md:h-[85vh] overflow-hidden">
+      <div ref={emblaRef} className="h-full">
+        <div className="flex h-full">
+          {slides.map((slide, index) => (
+            <div
+              key={slide.id}
+              className="flex-[0_0_100%] min-w-0 relative h-full"
+            >
+              <div
+                className="absolute inset-0 bg-cover bg-center"
+                style={{
+                  backgroundImage: `url(${slide.image})`,
+                }}
+              />
+              <div className="absolute inset-0 overlay-gradient" />
+              
+              {selectedIndex === index && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="max-w-4xl"
+                  >
+                    <div className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 bg-card/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <span className="text-4xl md:text-5xl">✝️</span>
+                    </div>
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold text-primary-foreground mb-4 drop-shadow-lg">
+                      {slide.title}
+                    </h2>
+                    <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 drop-shadow-md">
+                      {slide.subtitle}
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <a href="#horaires" className="btn-accent">
+                        Horaires des messes
+                      </a>
+                      <a href="#contact" className="btn-parish-outline border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                        Nous contacter
+                      </a>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={scrollPrev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-card/30 backdrop-blur-sm rounded-full text-primary-foreground hover:bg-card/50 transition-all"
+        aria-label="Slide précédent"
+      >
+        <ChevronLeft size={24} />
+      </button>
+      <button
+        onClick={scrollNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-card/30 backdrop-blur-sm rounded-full text-primary-foreground hover:bg-card/50 transition-all"
+        aria-label="Slide suivant"
+      >
+        <ChevronRight size={24} />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => emblaApi?.scrollTo(index)}
+            className={`w-3 h-3 rounded-full transition-all ${
+              index === selectedIndex
+                ? 'bg-accent w-8'
+                : 'bg-primary-foreground/50 hover:bg-primary-foreground/70'
+            }`}
+            aria-label={`Aller au slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+export default HeroSlider;
