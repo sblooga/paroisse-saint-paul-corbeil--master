@@ -3,6 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 import heroChurch from '@/assets/hero-church-1.jpg';
 import heroCommunity from '@/assets/hero-community.jpg';
@@ -12,24 +13,25 @@ const slides = [
   {
     id: 1,
     image: heroChurch,
-    title: 'Bienvenue à la Paroisse Saint-Paul',
-    subtitle: 'Une communauté vivante et accueillante',
+    titleKey: 'hero.slides.slide1.title',
+    subtitleKey: 'hero.slides.slide1.subtitle',
   },
   {
     id: 2,
     image: heroCommunity,
-    title: 'Vie Communautaire',
-    subtitle: 'Rejoignez nos équipes et activités',
+    titleKey: 'hero.slides.slide2.title',
+    subtitleKey: 'hero.slides.slide2.subtitle',
   },
   {
     id: 3,
     image: heroCelebration,
-    title: 'Temps Forts Liturgiques',
-    subtitle: 'Noël, Pâques et fêtes paroissiales',
+    titleKey: 'hero.slides.slide3.title',
+    subtitleKey: 'hero.slides.slide3.subtitle',
   },
 ];
 
 const HeroSlider = () => {
+  const { t } = useTranslation();
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: 5000, stopOnInteraction: false }),
   ]);
@@ -83,17 +85,17 @@ const HeroSlider = () => {
                       <span className="text-4xl md:text-5xl">✝️</span>
                     </div>
                     <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold text-primary-foreground mb-4 drop-shadow-lg">
-                      {slide.title}
+                      {t(slide.titleKey)}
                     </h2>
                     <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 drop-shadow-md">
-                      {slide.subtitle}
+                      {t(slide.subtitleKey)}
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <a href="#horaires" className="btn-accent">
-                        Horaires des messes
+                        {t('hero.massSchedule')}
                       </a>
                       <a href="#contact" className="btn-parish-outline border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                        Nous contacter
+                        {t('hero.contactUs')}
                       </a>
                     </div>
                   </motion.div>
@@ -108,14 +110,14 @@ const HeroSlider = () => {
       <button
         onClick={scrollPrev}
         className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-card/30 backdrop-blur-sm rounded-full text-primary-foreground hover:bg-card/50 transition-all"
-        aria-label="Slide précédent"
+        aria-label={t('hero.prevSlide')}
       >
         <ChevronLeft size={24} />
       </button>
       <button
         onClick={scrollNext}
         className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-card/30 backdrop-blur-sm rounded-full text-primary-foreground hover:bg-card/50 transition-all"
-        aria-label="Slide suivant"
+        aria-label={t('hero.nextSlide')}
       >
         <ChevronRight size={24} />
       </button>
@@ -131,7 +133,7 @@ const HeroSlider = () => {
                 ? 'bg-accent w-8'
                 : 'bg-primary-foreground/50 hover:bg-primary-foreground/70'
             }`}
-            aria-label={`Aller au slide ${index + 1}`}
+            aria-label={`${t('hero.goToSlide')} ${index + 1}`}
           />
         ))}
       </div>

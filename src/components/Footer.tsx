@@ -1,9 +1,20 @@
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import logoImage from '@/assets/logo.png';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
+
+  const quickLinks = [
+    { key: 'massSchedule', href: '#horaires' },
+    { key: 'baptism', href: '#' },
+    { key: 'wedding', href: '#' },
+    { key: 'catechesis', href: '#' },
+    { key: 'funerals', href: '#' },
+    { key: 'bulletin', href: '#' },
+  ];
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -15,15 +26,15 @@ const Footer = () => {
             <div className="flex items-center gap-3 mb-4">
               <img
                 src={logoImage}
-                alt="Paroisse Saint-Paul"
+                alt={t('footer.parishName')}
                 className="h-12 w-12 object-contain"
               />
               <h3 className="text-xl font-heading font-bold">
-                Paroisse Saint-Paul
+                {t('footer.parishName')}
               </h3>
             </div>
             <p className="text-primary-foreground/70 text-sm mb-6">
-              Une communauté catholique vivante et accueillante, au service de tous.
+              {t('footer.description')}
             </p>
             <div className="flex gap-3">
               {[
@@ -45,7 +56,7 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="text-lg font-heading font-bold mb-4">Contact</h4>
+            <h4 className="text-lg font-heading font-bold mb-4">{t('footer.contact')}</h4>
             <ul className="space-y-3 text-sm text-primary-foreground/70">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-accent shrink-0 mt-0.5" />
@@ -68,43 +79,36 @@ const Footer = () => {
 
           {/* Horaires Secrétariat */}
           <div>
-            <h4 className="text-lg font-heading font-bold mb-4">Secrétariat</h4>
+            <h4 className="text-lg font-heading font-bold mb-4">{t('footer.secretariat')}</h4>
             <ul className="space-y-2 text-sm text-primary-foreground/70">
               <li className="flex items-center gap-3">
                 <Clock size={18} className="text-secondary shrink-0" />
-                <span>Lun - Ven : 9h - 12h / 14h - 17h</span>
+                <span>{t('footer.hours.weekdays')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Clock size={18} className="text-secondary shrink-0" />
-                <span>Samedi : 9h - 12h</span>
+                <span>{t('footer.hours.saturday')}</span>
               </li>
             </ul>
             <div className="mt-6">
               <a href="#don" className="inline-flex items-center gap-2 btn-accent text-sm py-2 px-4">
                 <Heart size={16} />
-                Faire un don
+                {t('footer.donate')}
               </a>
             </div>
           </div>
 
           {/* Liens Rapides */}
           <div>
-            <h4 className="text-lg font-heading font-bold mb-4">Liens Rapides</h4>
+            <h4 className="text-lg font-heading font-bold mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2 text-sm">
-              {[
-                'Horaires des messes',
-                'Baptême',
-                'Mariage',
-                'Catéchèse',
-                'Obsèques',
-                'Bulletin paroissial',
-              ].map((link) => (
-                <li key={link}>
+              {quickLinks.map((link) => (
+                <li key={link.key}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-primary-foreground/70 hover:text-accent transition-colors"
                   >
-                    {link}
+                    {t(`footer.links.${link.key}`)}
                   </a>
                 </li>
               ))}
@@ -117,19 +121,19 @@ const Footer = () => {
       <div className="border-t border-primary-foreground/10">
         <div className="container-parish py-6 px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-primary-foreground/50">
-            <p>© {currentYear} Paroisse Saint-Paul. Tous droits réservés.</p>
+            <p>© {currentYear} {t('footer.parishName')}. {t('footer.rights')}.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-accent transition-colors">
-                Mentions légales
+                {t('footer.legal')}
               </a>
               <a href="#" className="hover:text-accent transition-colors">
-                Politique de confidentialité
+                {t('footer.privacy')}
               </a>
               <a href="#" className="hover:text-accent transition-colors">
-                Gestion des cookies
+                {t('footer.cookies')}
               </a>
               <Link to="/auth" className="hover:text-accent transition-colors">
-                Administration
+                {t('footer.admin')}
               </Link>
             </div>
           </div>

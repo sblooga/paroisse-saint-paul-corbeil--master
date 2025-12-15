@@ -30,7 +30,25 @@
     "title": "Parafia Świętego Pawła",
     "subtitle": "Żywa wspólnota w sercu miasta",
     "cta": "Poznaj naszą parafię",
-    "massSchedule": "Godziny Mszy Świętych"
+    "massSchedule": "Godziny Mszy Świętych",
+    "contactUs": "Skontaktuj się z nami",
+    "slides": {
+      "slide1": {
+        "title": "Witamy w Parafii Świętego Pawła",
+        "subtitle": "Żywa i gościnna wspólnota"
+      },
+      "slide2": {
+        "title": "Życie Wspólnotowe",
+        "subtitle": "Dołącz do naszych zespołów i działań"
+      },
+      "slide3": {
+        "title": "Ważne Momenty Liturgiczne",
+        "subtitle": "Boże Narodzenie, Wielkanoc i święta parafialne"
+      }
+    },
+    "prevSlide": "Poprzedni slajd",
+    "nextSlide": "Następny slajd",
+    "goToSlide": "Przejdź do slajdu"
   },
   "about": {
     "title": "Nasza Parafia",
@@ -127,19 +145,38 @@
     "contactUs": "Skontaktuj się z nami"
   },
   "donation": {
-    "title": "Wspomóż naszą parafię",
+    "title": "Wspomóż swoją Parafię",
     "subtitle": "Apel o wsparcie",
-    "description": "Twoja hojność pozwala nam kontynuować naszą misję",
+    "description": "Twoja hojność pozwala naszej wspólnocie żyć, przyjmować i promieniować. Każdy dar przyczynia się do utrzymania naszego kościoła, działań parafialnych i pomocy potrzebującym.",
+    "oneTime": "Darowizna jednorazowa",
+    "monthly": "Darowizna miesięczna",
+    "securePayment": "Bezpieczna płatność przez Stripe • Dostępne potwierdzenie podatkowe",
     "cta": "Wspomóż nas"
   },
   "footer": {
-    "description": "Żywa wspólnota w służbie wiary i braterstwa.",
+    "parishName": "Parafia Świętego Pawła",
+    "description": "Żywa i gościnna wspólnota katolicka, w służbie wszystkim.",
+    "contact": "Kontakt",
+    "secretariat": "Sekretariat",
+    "hours": {
+      "weekdays": "Pon - Pt: 9:00 - 12:00 / 14:00 - 17:00",
+      "saturday": "Sobota: 9:00 - 12:00"
+    },
     "quickLinks": "Szybkie linki",
-    "schedule": "Godziny",
-    "followUs": "Obserwuj nas",
+    "links": {
+      "massSchedule": "Godziny Mszy Świętych",
+      "baptism": "Chrzest",
+      "wedding": "Ślub",
+      "catechesis": "Katecheza",
+      "funerals": "Pogrzeby",
+      "bulletin": "Biuletyn parafialny"
+    },
+    "donate": "Wspomóż nas",
     "rights": "Wszelkie prawa zastrzeżone",
+    "legal": "Informacje prawne",
     "privacy": "Polityka prywatności",
-    "legal": "Informacje prawne"
+    "cookies": "Zarządzanie ciasteczkami",
+    "admin": "Administracja"
   },
   "auth": {
     "login": "Zaloguj się",
