@@ -112,10 +112,16 @@ export type Database = {
           active: boolean | null
           created_at: string
           day_of_week: string
+          day_of_week_fr: string | null
+          day_of_week_pl: string | null
           description: string | null
+          description_fr: string | null
+          description_pl: string | null
           id: string
           is_special: boolean | null
           location: string | null
+          location_fr: string | null
+          location_pl: string | null
           sort_order: number | null
           special_date: string | null
           time: string
@@ -125,10 +131,16 @@ export type Database = {
           active?: boolean | null
           created_at?: string
           day_of_week: string
+          day_of_week_fr?: string | null
+          day_of_week_pl?: string | null
           description?: string | null
+          description_fr?: string | null
+          description_pl?: string | null
           id?: string
           is_special?: boolean | null
           location?: string | null
+          location_fr?: string | null
+          location_pl?: string | null
           sort_order?: number | null
           special_date?: string | null
           time: string
@@ -138,10 +150,16 @@ export type Database = {
           active?: boolean | null
           created_at?: string
           day_of_week?: string
+          day_of_week_fr?: string | null
+          day_of_week_pl?: string | null
           description?: string | null
+          description_fr?: string | null
+          description_pl?: string | null
           id?: string
           is_special?: boolean | null
           location?: string | null
+          location_fr?: string | null
+          location_pl?: string | null
           sort_order?: number | null
           special_date?: string | null
           time?: string
