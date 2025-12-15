@@ -113,36 +113,83 @@
   "contact": {
     "title": "Skontaktuj się z nami",
     "subtitle": "Pozostańmy w kontakcie",
-    "description": "Nie wahaj się z nami skontaktować w razie pytań",
+    "description": "Masz pytanie lub prośbę? Skontaktuj się z nami. Jesteśmy do Twojej dyspozycji.",
     "form": {
       "name": "Imię i nazwisko",
-      "namePlaceholder": "Twoje imię i nazwisko",
+      "namePlaceholder": "Jan Kowalski",
       "email": "Email",
-      "emailPlaceholder": "twoj@email.com",
+      "emailPlaceholder": "jan@przyklad.pl",
       "subject": "Temat",
-      "subjectPlaceholder": "Temat wiadomości",
+      "subjectPlaceholder": "Zapytanie",
       "message": "Wiadomość",
       "messagePlaceholder": "Twoja wiadomość...",
-      "newsletter": "Chcę otrzymywać newsletter",
-      "consent": "Zgadzam się na wykorzystanie moich danych do kontaktu",
+      "newsletter": "Zapisz się do newslettera",
+      "newsletterDesc": "Otrzymuj aktualności parafii emailem (1-2 razy w miesiącu)",
+      "consent": "Zgadzam się na wykorzystanie moich danych zgodnie z",
+      "privacyPolicy": "polityką prywatności",
       "send": "Wyślij wiadomość",
       "sending": "Wysyłanie...",
-      "success": "Wiadomość wysłana pomyślnie!",
-      "error": "Błąd podczas wysyłania"
+      "success": "Wiadomość wysłana!",
+      "successDesc": "Odpowiemy najszybciej jak to możliwe.",
+      "error": "Błąd",
+      "errorDesc": "Wystąpił błąd. Spróbuj ponownie.",
+      "consentRequired": "Wymagana zgoda",
+      "consentRequiredDesc": "Proszę zaakceptować politykę prywatności.",
+      "sendMessage": "Wyślij nam wiadomość",
+      "sendMessageDesc": "Wypełnij poniższy formularz, a my odpowiemy jak najszybciej.",
+      "responseTime": "Odpowiedź w ciągu 48 godzin roboczych"
     },
     "info": {
       "address": "Adres",
+      "addressValue": "12 Rue de l'Église\n75000 Paryż, Francja",
       "phone": "Telefon",
       "email": "Email",
-      "hours": "Godziny przyjęć"
+      "hours": "Godziny",
+      "hoursValue": "Pon-Pt: 9:00-12:00 / 14:00-17:00\nSob: 9:00-12:00"
     }
   },
   "faq": {
     "title": "Często zadawane pytania",
     "subtitle": "FAQ",
-    "description": "Znajdź odpowiedzi na najczęściej zadawane pytania",
-    "moreQuestions": "Masz więcej pytań?",
-    "contactUs": "Skontaktuj się z nami"
+    "description": "Znajdź odpowiedzi na najczęściej zadawane pytania dotyczące życia naszej parafii, sakramentów i spraw administracyjnych.",
+    "moreQuestions": "Nie znalazłeś odpowiedzi?",
+    "moreQuestionsDesc": "Nasz zespół jest do Twojej dyspozycji, aby odpowiedzieć na wszystkie pytania.",
+    "contactUs": "Skontaktuj się z nami",
+    "categories": {
+      "sacraments": "Sakramenty",
+      "parishLife": "Życie parafialne",
+      "practicalInfo": "Informacje praktyczne"
+    },
+    "sacraments": {
+      "q1": "Jak przygotować się do chrztu?",
+      "a1": "Aby przygotować chrzest, skontaktuj się z sekretariatem parafii co najmniej 3 miesiące wcześniej. Przygotowanie z zespołem chrzcielnym jest obowiązkowe. Potrzebujesz aktu urodzenia i wyboru chrzestnych, którzy są ochrzczeni i bierzmowani.",
+      "q2": "Jakie są etapy ślubu kościelnego?",
+      "a2": "Skontaktuj się z parafią co najmniej rok przed planowaną datą. Przejdziesz przygotowanie do małżeństwa obejmujące kilka spotkań. Wymagane dokumenty to: akty urodzenia, świadectwa chrztu i zaświadczenie o przygotowaniu.",
+      "q3": "Jak się wyspowiadać?",
+      "a3": "Spowiedź jest możliwa 30 minut przed każdą Mszą lub po umówieniu się z księdzem. Jeśli to twoja pierwsza spowiedź, ksiądz cię poprowadzi.",
+      "q4": "Jak otrzymać sakrament chorych?",
+      "a4": "Skontaktuj się z sekretariatem lub bezpośrednio z księdzem. Sakrament ten może być udzielony w domu, w szpitalu lub podczas wspólnotowych celebracji organizowanych w ciągu roku."
+    },
+    "parishLife": {
+      "q1": "Jak zapisać dziecko na katechezę?",
+      "a1": "Zapisy odbywają się we wrześniu na rok szkolny. Katecheza jest otwarta dla dzieci w wieku szkolnym. Skontaktuj się z sekretariatem lub osobą odpowiedzialną za katechezę.",
+      "q2": "Jak dołączyć do chóru?",
+      "a2": "Chór przyjmuje wszystkich chętnych, nawet bez wykształcenia muzycznego! Próby odbywają się w czwartki o 20:30. Skontaktuj się z dyrygentem przez sekretariat.",
+      "q3": "Czy są zajęcia dla młodzieży?",
+      "a3": "Tak! Oferujemy duszpasterstwo dla gimnazjalistów i licealistów, grupy harcerskie i różne aktywności (rekolekcje, pielgrzymki, spotkania). Sprawdź naszą stronę Aktualności lub skontaktuj się z nami.",
+      "q4": "Jak zostać wolontariuszem?",
+      "a4": "Wiele służb potrzebuje wolontariuszy: przyjmowanie gości, dekorowanie kwiatami, konserwacja, katecheza, towarzyszenie chorym... Skontaktuj się z sekretariatem."
+    },
+    "practicalInfo": {
+      "q1": "Jakie są godziny Mszy Świętych?",
+      "a1": "Niedziela: 9:00, 11:00 i 18:30. Sobota: 18:00 (Msza wigilii). W tygodniu: wtorek i czwartek o 8:30, środa i piątek o 18:30. Godziny mogą się różnić w święta.",
+      "q2": "Czy kościół jest dostępny dla osób niepełnosprawnych?",
+      "a2": "Tak, kościół posiada podjazd i zarezerwowane miejsce. Dostępna jest również pętla indukcyjna dla niedosłyszących.",
+      "q3": "Jak przekazać dar na parafię?",
+      "a3": "Możesz przekazać dar podczas kolekt, przelewem lub online na naszej stronie \"Wspomóż nas\". Darowizny można odliczyć od podatku.",
+      "q4": "Jak zarezerwować salę parafialną?",
+      "a4": "Sala parafialna może być zarezerwowana na wydarzenia związane z życiem Kościoła. Skontaktuj się z sekretariatem, aby poznać dostępność i warunki."
+    }
   },
   "donation": {
     "title": "Wspomóż swoją Parafię",

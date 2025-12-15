@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
@@ -13,6 +14,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,8 +31,8 @@ const Contact = () => {
     
     if (!formData.rgpd) {
       toast({
-        title: "Consentement requis",
-        description: "Veuillez accepter la politique de confidentialité.",
+        title: t('contact.form.consentRequired'),
+        description: t('contact.form.consentRequiredDesc'),
         variant: "destructive",
       });
       return;
@@ -39,7 +41,6 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
-      // Save contact message to database
       const { error: messageError } = await supabase
         .from('contact_messages')
         .insert({
@@ -52,7 +53,6 @@ const Contact = () => {
 
       if (messageError) throw messageError;
 
-      // If newsletter opted in, add to subscribers
       if (formData.newsletter) {
         const { error: subscriberError } = await supabase
           .from('newsletter_subscribers')
@@ -67,8 +67,8 @@ const Contact = () => {
       }
 
       toast({
-        title: "Message envoyé !",
-        description: "Nous vous répondrons dans les plus brefs délais.",
+        title: t('contact.form.success'),
+        description: t('contact.form.successDesc'),
       });
       
       setFormData({
@@ -82,8 +82,8 @@ const Contact = () => {
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue. Veuillez réessayer.",
+        title: t('contact.form.error'),
+        description: t('contact.form.errorDesc'),
         variant: "destructive",
       });
     } finally {
@@ -111,10 +111,9 @@ const Contact = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="text-primary-foreground mb-4">Contactez-nous</h1>
+              <h1 className="text-primary-foreground mb-4">{t('contact.title')}</h1>
               <p className="text-primary-foreground/80 max-w-2xl mx-auto text-lg">
-                Une question, une demande ? N'hésitez pas à nous contacter. 
-                Nous sommes à votre écoute.
+                {t('contact.description')}
               </p>
             </motion.div>
           </div>
@@ -140,7 +139,7 @@ const Contact = () => {
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title="Localisation de la paroisse"
+                    title={t('contact.info.address')}
                   />
                 </div>
 
@@ -152,10 +151,9 @@ const Contact = () => {
                         <MapPin className="text-primary" size={24} />
                       </div>
                       <div>
-                        <h4 className="font-heading font-bold text-foreground mb-1">Adresse</h4>
-                        <p className="text-muted-foreground text-sm">
-                          12 Rue de l'Église<br />
-                          75000 Paris, France
+                        <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.address')}</h4>
+                        <p className="text-muted-foreground text-sm whitespace-pre-line">
+                          {t('contact.info.addressValue')}
                         </p>
                       </div>
                     </div>
@@ -167,7 +165,7 @@ const Contact = () => {
                         <Phone className="text-secondary" size={24} />
                       </div>
                       <div>
-                        <h4 className="font-heading font-bold text-foreground mb-1">Téléphone</h4>
+                        <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.phone')}</h4>
                         <a 
                           href="tel:+33123456789" 
                           className="text-muted-foreground text-sm hover:text-primary transition-colors"
@@ -184,7 +182,7 @@ const Contact = () => {
                         <Mail className="text-accent" size={24} />
                       </div>
                       <div>
-                        <h4 className="font-heading font-bold text-foreground mb-1">Email</h4>
+                        <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.email')}</h4>
                         <a 
                           href="mailto:contact@paroisse-stpaul.fr" 
                           className="text-muted-foreground text-sm hover:text-primary transition-colors"
@@ -201,10 +199,9 @@ const Contact = () => {
                         <Clock className="text-primary" size={24} />
                       </div>
                       <div>
-                        <h4 className="font-heading font-bold text-foreground mb-1">Horaires</h4>
-                        <p className="text-muted-foreground text-sm">
-                          Lun-Ven: 9h-12h / 14h-17h<br />
-                          Sam: 9h-12h
+                        <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.hours')}</h4>
+                        <p className="text-muted-foreground text-sm whitespace-pre-line">
+                          {t('contact.info.hoursValue')}
                         </p>
                       </div>
                     </div>
@@ -220,35 +217,35 @@ const Contact = () => {
               >
                 <div className="card-parish p-8">
                   <h2 className="text-2xl font-heading font-bold text-foreground mb-2">
-                    Envoyez-nous un message
+                    {t('contact.form.sendMessage')}
                   </h2>
                   <p className="text-muted-foreground mb-6">
-                    Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.
+                    {t('contact.form.sendMessageDesc')}
                   </p>
 
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Nom complet *</Label>
+                        <Label htmlFor="name">{t('contact.form.name')} *</Label>
                         <Input
                           id="name"
                           name="name"
                           value={formData.name}
                           onChange={handleChange}
-                          placeholder="Jean Dupont"
+                          placeholder={t('contact.form.namePlaceholder')}
                           required
                           className="bg-background"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email *</Label>
+                        <Label htmlFor="email">{t('contact.form.email')} *</Label>
                         <Input
                           id="email"
                           name="email"
                           type="email"
                           value={formData.email}
                           onChange={handleChange}
-                          placeholder="jean@exemple.fr"
+                          placeholder={t('contact.form.emailPlaceholder')}
                           required
                           className="bg-background"
                         />
@@ -256,26 +253,26 @@ const Contact = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="subject">Sujet *</Label>
+                      <Label htmlFor="subject">{t('contact.form.subject')} *</Label>
                       <Input
                         id="subject"
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
-                        placeholder="Demande de renseignements"
+                        placeholder={t('contact.form.subjectPlaceholder')}
                         required
                         className="bg-background"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="message">Message *</Label>
+                      <Label htmlFor="message">{t('contact.form.message')} *</Label>
                       <Textarea
                         id="message"
                         name="message"
                         value={formData.message}
                         onChange={handleChange}
-                        placeholder="Votre message..."
+                        placeholder={t('contact.form.messagePlaceholder')}
                         rows={5}
                         required
                         className="bg-background resize-none"
@@ -293,10 +290,10 @@ const Contact = () => {
                       />
                       <div className="space-y-1">
                         <Label htmlFor="newsletter" className="cursor-pointer font-medium">
-                          S'inscrire à la newsletter
+                          {t('contact.form.newsletter')}
                         </Label>
                         <p className="text-xs text-muted-foreground">
-                          Recevez les actualités de la paroisse par email (1-2 fois par mois)
+                          {t('contact.form.newsletterDesc')}
                         </p>
                       </div>
                     </div>
@@ -312,10 +309,9 @@ const Contact = () => {
                         required
                       />
                       <Label htmlFor="rgpd" className="text-sm text-muted-foreground cursor-pointer">
-                        J'accepte que mes données soient utilisées pour traiter ma demande 
-                        conformément à la{' '}
+                        {t('contact.form.consent')}{' '}
                         <a href="#" className="text-primary hover:underline">
-                          politique de confidentialité
+                          {t('contact.form.privacyPolicy')}
                         </a>
                         . *
                       </Label>
@@ -329,12 +325,12 @@ const Contact = () => {
                       {isSubmitting ? (
                         <>
                           <span className="animate-spin">⏳</span>
-                          Envoi en cours...
+                          {t('contact.form.sending')}
                         </>
                       ) : (
                         <>
                           <Send size={18} />
-                          Envoyer le message
+                          {t('contact.form.send')}
                         </>
                       )}
                     </Button>
@@ -344,7 +340,7 @@ const Contact = () => {
                 {/* Trust Indicators */}
                 <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                   <CheckCircle size={16} className="text-secondary" />
-                  <span>Réponse sous 48h ouvrées</span>
+                  <span>{t('contact.form.responseTime')}</span>
                 </div>
               </motion.div>
             </div>
