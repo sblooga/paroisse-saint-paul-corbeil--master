@@ -111,38 +111,85 @@
     "saturday": "Samedi"
   },
   "contact": {
-    "title": "Nous Contacter",
+    "title": "Contactez-nous",
     "subtitle": "Restons en contact",
-    "description": "N'hésitez pas à nous contacter pour toute question",
+    "description": "Une question, une demande ? N'hésitez pas à nous contacter. Nous sommes à votre écoute.",
     "form": {
-      "name": "Nom",
-      "namePlaceholder": "Votre nom complet",
+      "name": "Nom complet",
+      "namePlaceholder": "Jean Dupont",
       "email": "Email",
-      "emailPlaceholder": "votre@email.com",
+      "emailPlaceholder": "jean@exemple.fr",
       "subject": "Sujet",
-      "subjectPlaceholder": "Objet de votre message",
+      "subjectPlaceholder": "Demande de renseignements",
       "message": "Message",
       "messagePlaceholder": "Votre message...",
-      "newsletter": "Je souhaite recevoir la newsletter",
-      "consent": "J'accepte que mes données soient utilisées pour me recontacter",
+      "newsletter": "S'inscrire à la newsletter",
+      "newsletterDesc": "Recevez les actualités de la paroisse par email (1-2 fois par mois)",
+      "consent": "J'accepte que mes données soient utilisées pour traiter ma demande conformément à la",
+      "privacyPolicy": "politique de confidentialité",
       "send": "Envoyer le message",
       "sending": "Envoi en cours...",
-      "success": "Message envoyé avec succès !",
-      "error": "Erreur lors de l'envoi"
+      "success": "Message envoyé !",
+      "successDesc": "Nous vous répondrons dans les plus brefs délais.",
+      "error": "Erreur",
+      "errorDesc": "Une erreur est survenue. Veuillez réessayer.",
+      "consentRequired": "Consentement requis",
+      "consentRequiredDesc": "Veuillez accepter la politique de confidentialité.",
+      "sendMessage": "Envoyez-nous un message",
+      "sendMessageDesc": "Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.",
+      "responseTime": "Réponse sous 48h ouvrées"
     },
     "info": {
       "address": "Adresse",
+      "addressValue": "12 Rue de l'Église\n75000 Paris, France",
       "phone": "Téléphone",
       "email": "Email",
-      "hours": "Horaires d'accueil"
+      "hours": "Horaires",
+      "hoursValue": "Lun-Ven: 9h-12h / 14h-17h\nSam: 9h-12h"
     }
   },
   "faq": {
-    "title": "Questions Fréquentes",
+    "title": "Foire Aux Questions",
     "subtitle": "FAQ",
-    "description": "Retrouvez les réponses aux questions les plus posées",
-    "moreQuestions": "Vous avez d'autres questions ?",
-    "contactUs": "Contactez-nous"
+    "description": "Retrouvez les réponses aux questions les plus fréquentes sur la vie de notre paroisse, les sacrements et les démarches administratives.",
+    "moreQuestions": "Vous n'avez pas trouvé votre réponse ?",
+    "moreQuestionsDesc": "Notre équipe est à votre disposition pour répondre à toutes vos questions.",
+    "contactUs": "Nous contacter",
+    "categories": {
+      "sacraments": "Sacrements",
+      "parishLife": "Vie paroissiale",
+      "practicalInfo": "Informations pratiques"
+    },
+    "sacraments": {
+      "q1": "Comment préparer un baptême ?",
+      "a1": "Pour préparer un baptême, contactez le secrétariat paroissial au moins 3 mois à l'avance. Une préparation avec l'équipe baptême est obligatoire. Vous aurez besoin d'un extrait d'acte de naissance et de choisir un parrain et/ou une marraine baptisé(e) et confirmé(e).",
+      "q2": "Quelles sont les étapes pour se marier à l'église ?",
+      "a2": "Prenez contact avec la paroisse au moins un an avant la date souhaitée. Vous suivrez une préparation au mariage comprenant plusieurs rencontres. Les documents nécessaires incluent : extraits d'acte de naissance, certificats de baptême, et attestation de préparation.",
+      "q3": "Comment se confesser ?",
+      "a3": "Les confessions sont possibles 30 minutes avant chaque messe ou sur rendez-vous auprès d'un prêtre. N'hésitez pas à demander si c'est votre première confession, le prêtre vous guidera.",
+      "q4": "Comment recevoir le sacrement des malades ?",
+      "a4": "Contactez le secrétariat ou directement un prêtre. Ce sacrement peut être donné à domicile, à l'hôpital ou lors de célébrations communautaires organisées dans l'année."
+    },
+    "parishLife": {
+      "q1": "Comment inscrire mon enfant au catéchisme ?",
+      "a1": "Les inscriptions se font en septembre pour l'année scolaire. Le catéchisme est ouvert aux enfants du CE1 au CM2. Contactez le secrétariat ou la responsable de la catéchèse pour plus d'informations.",
+      "q2": "Comment rejoindre la chorale ?",
+      "a2": "La chorale accueille tous les volontaires, même sans formation musicale ! Les répétitions ont lieu le jeudi soir à 20h30. Contactez le chef de chorale via le secrétariat.",
+      "q3": "Y a-t-il des activités pour les jeunes ?",
+      "a3": "Oui ! Nous proposons l'aumônerie pour les collégiens et lycéens, des groupes scouts, et diverses activités (retraites, pèlerinages, soirées). Consultez notre page Actualités ou contactez-nous.",
+      "q4": "Comment devenir bénévole ?",
+      "a4": "De nombreux services ont besoin de bénévoles : accueil, fleurissement, entretien, catéchèse, accompagnement des malades... Contactez le secrétariat pour découvrir où vos talents peuvent servir."
+    },
+    "practicalInfo": {
+      "q1": "Quels sont les horaires des messes ?",
+      "a1": "Dimanche : 9h00, 11h00 et 18h30. Samedi : 18h00 (messe anticipée). En semaine : mardi et jeudi à 8h30, mercredi et vendredi à 18h30. Les horaires peuvent varier pendant les fêtes.",
+      "q2": "L'église est-elle accessible aux personnes à mobilité réduite ?",
+      "a2": "Oui, l'église dispose d'une rampe d'accès et d'un emplacement réservé. Une boucle magnétique est également disponible pour les malentendants.",
+      "q3": "Comment faire un don à la paroisse ?",
+      "a3": "Vous pouvez donner lors des quêtes, par chèque, par virement ou en ligne sur notre page \"Faire un don\". Les dons sont déductibles des impôts à hauteur de 66%. Un reçu fiscal vous sera envoyé.",
+      "q4": "Comment réserver la salle paroissiale ?",
+      "a4": "La salle paroissiale peut être réservée pour des événements en lien avec la vie de l'Église. Contactez le secrétariat pour connaître les disponibilités et les conditions."
+    }
   },
   "donation": {
     "title": "Soutenez votre Paroisse",
