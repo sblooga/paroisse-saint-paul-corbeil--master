@@ -1,0 +1,133 @@
+{
+  "common": {
+    "home": "Accueil",
+    "parish": "La Paroisse",
+    "team": "Équipe",
+    "news": "Actualités",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "donate": "Faire un don",
+    "search": "Rechercher",
+    "readMore": "Lire la suite",
+    "seeAll": "Voir tout",
+    "backToTop": "Retour en haut",
+    "loading": "Chargement...",
+    "noResults": "Aucun résultat",
+    "send": "Envoyer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer"
+  },
+  "header": {
+    "parishName": "Paroisse Saint-Paul",
+    "parishSubtitle": "Communauté catholique"
+  },
+  "hero": {
+    "welcome": "Bienvenue",
+    "title": "Paroisse Saint-Paul",
+    "subtitle": "Une communauté vivante au cœur de la ville",
+    "cta": "Découvrir notre paroisse",
+    "massSchedule": "Horaires des messes"
+  },
+  "about": {
+    "title": "Notre Paroisse",
+    "subtitle": "Une histoire de foi",
+    "description": "Depuis plus d'un siècle, notre paroisse accueille fidèles et visiteurs dans un esprit de fraternité et de partage."
+  },
+  "team": {
+    "title": "L'Équipe Paroissiale",
+    "subtitle": "Notre communauté",
+    "description": "Une équipe dévouée au service de la communauté, pour vous accueillir et vous accompagner dans votre vie de foi.",
+    "discoverAll": "Découvrir toute l'équipe",
+    "categories": {
+      "priests": "Prêtres",
+      "team": "Équipe animatrice",
+      "services": "Services",
+      "secretariat": "Secrétariat",
+      "choir": "Chorale"
+    }
+  },
+  "articles": {
+    "title": "Actualités",
+    "subtitle": "Restez informés",
+    "headline": "À la Une",
+    "description": "Toutes les dernières nouvelles de notre communauté paroissiale",
+    "seeAllNews": "Voir toutes les actualités",
+    "noArticles": "Aucun article publié pour le moment.",
+    "notFound": "Article non trouvé",
+    "notFoundDescription": "Cet article n'existe pas ou n'est plus disponible.",
+    "backToNews": "Retour aux actualités"
+  },
+  "massSchedule": {
+    "title": "Horaires des Messes",
+    "subtitle": "Vie liturgique",
+    "description": "Retrouvez tous les horaires de nos célébrations",
+    "sunday": "Dimanche",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi"
+  },
+  "contact": {
+    "title": "Nous Contacter",
+    "subtitle": "Restons en contact",
+    "description": "N'hésitez pas à nous contacter pour toute question",
+    "form": {
+      "name": "Nom",
+      "namePlaceholder": "Votre nom complet",
+      "email": "Email",
+      "emailPlaceholder": "votre@email.com",
+      "subject": "Sujet",
+      "subjectPlaceholder": "Objet de votre message",
+      "message": "Message",
+      "messagePlaceholder": "Votre message...",
+      "newsletter": "Je souhaite recevoir la newsletter",
+      "consent": "J'accepte que mes données soient utilisées pour me recontacter",
+      "send": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé avec succès !",
+      "error": "Erreur lors de l'envoi"
+    },
+    "info": {
+      "address": "Adresse",
+      "phone": "Téléphone",
+      "email": "Email",
+      "hours": "Horaires d'accueil"
+    }
+  },
+  "faq": {
+    "title": "Questions Fréquentes",
+    "subtitle": "FAQ",
+    "description": "Retrouvez les réponses aux questions les plus posées",
+    "moreQuestions": "Vous avez d'autres questions ?",
+    "contactUs": "Contactez-nous"
+  },
+  "donation": {
+    "title": "Soutenez Notre Paroisse",
+    "subtitle": "Appel aux dons",
+    "description": "Votre générosité nous permet de continuer notre mission",
+    "cta": "Faire un don"
+  },
+  "footer": {
+    "description": "Une communauté vivante au service de la foi et de la fraternité.",
+    "quickLinks": "Liens rapides",
+    "schedule": "Horaires",
+    "followUs": "Suivez-nous",
+    "rights": "Tous droits réservés",
+    "privacy": "Politique de confidentialité",
+    "legal": "Mentions légales"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "signUp": "S'inscrire"
+  }
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -16,6 +17,7 @@ interface Article {
 }
 
 const FeaturedArticles = () => {
+  const { t, i18n } = useTranslation();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +39,8 @@ const FeaturedArticles = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+    const locale = i18n.language === 'pl' ? 'pl-PL' : 'fr-FR';
+    return new Date(dateString).toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -55,11 +58,11 @@ const FeaturedArticles = () => {
           className="text-center mb-12"
         >
           <span className="text-secondary font-semibold uppercase tracking-wider text-sm">
-            Restez informés
+            {t('articles.subtitle')}
           </span>
-          <h2 className="mt-2 text-foreground">À la Une</h2>
+          <h2 className="mt-2 text-foreground">{t('articles.headline')}</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Toutes les dernières nouvelles de notre communauté paroissiale
+            {t('articles.description')}
           </p>
         </motion.div>
 
@@ -79,7 +82,7 @@ const FeaturedArticles = () => {
           </div>
         ) : articles.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground">Aucun article publié pour le moment.</p>
+            <p className="text-muted-foreground">{t('articles.noArticles')}</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -101,7 +104,7 @@ const FeaturedArticles = () => {
                     />
                   ) : (
                     <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <span className="text-muted-foreground text-sm">Pas d'image</span>
+                      <span className="text-muted-foreground text-sm">{t('common.noResults')}</span>
                     </div>
                   )}
                   {article.category && (
@@ -133,7 +136,7 @@ const FeaturedArticles = () => {
                     to={`/articles/${article.slug}`}
                     className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
                   >
-                    Lire la suite
+                    {t('common.readMore')}
                     <ArrowRight size={18} />
                   </Link>
                 </div>
@@ -150,7 +153,7 @@ const FeaturedArticles = () => {
           className="mt-12 text-center"
         >
           <Link to="/articles" className="btn-parish-outline">
-            Voir toutes les actualités
+            {t('articles.seeAllNews')}
             <ArrowRight size={18} />
           </Link>
         </motion.div>
