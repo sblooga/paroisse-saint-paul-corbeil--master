@@ -23,7 +23,7 @@ const Header = () => {
     { name: 'Équipes', href: isHomePage ? '#equipes' : '/#equipes' },
     { name: 'Actualités', href: isHomePage ? '#actualites' : '/#actualites' },
     { name: 'Contact', href: '/contact' },
-    { name: 'FAQ', href: isHomePage ? '#faq' : '/#faq' },
+    { name: 'FAQ', href: '/faq' },
   ];
 
   const socialLinks = [
