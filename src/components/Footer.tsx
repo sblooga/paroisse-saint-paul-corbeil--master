@@ -1,5 +1,7 @@
 import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logoImage from '@/assets/logo.png';
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -12,7 +14,7 @@ const Footer = () => {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <img
-                src="https://drive.google.com/uc?export=view&id=1qB3YKEBaH-NqMVWCKCHJmPW5vHN3HYVI"
+                src={logoImage}
                 alt="Paroisse Saint-Paul"
                 className="h-12 w-12 object-contain"
               />

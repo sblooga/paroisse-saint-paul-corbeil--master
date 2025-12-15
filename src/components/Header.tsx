@@ -5,7 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelector from './LanguageSelector';
-
+import logoImage from '@/assets/logo.png';
 const Header = () => {
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,7 +85,7 @@ const Header = () => {
         <div className="container-parish flex items-center justify-between py-4 px-4">
           <Link to="/" className="flex items-center gap-3">
             <img 
-              src="https://drive.google.com/uc?export=view&id=1qB3YKEBaH-NqMVWCKCHJmPW5vHN3HYVI" 
+              src={logoImage} 
               alt={t('header.parishName')}
               className="h-12 w-12 object-contain"
             />
