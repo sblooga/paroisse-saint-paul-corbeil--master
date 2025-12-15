@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Search, Heart, Phone, Facebook, Instagram, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,12 +18,12 @@ const Header = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Accueil', href: '#' },
-    { name: 'La Paroisse', href: '#paroisse' },
-    { name: 'Équipes', href: '#equipes' },
-    { name: 'Actualités', href: '#actualites' },
-    { name: 'Contact', href: '#contact' },
-    { name: 'FAQ', href: '#faq' },
+    { name: 'Accueil', href: '/' },
+    { name: 'La Paroisse', href: isHomePage ? '#paroisse' : '/#paroisse' },
+    { name: 'Équipes', href: isHomePage ? '#equipes' : '/#equipes' },
+    { name: 'Actualités', href: isHomePage ? '#actualites' : '/#actualites' },
+    { name: 'Contact', href: '/contact' },
+    { name: 'FAQ', href: isHomePage ? '#faq' : '/#faq' },
   ];
 
   const socialLinks = [
@@ -35,11 +38,11 @@ const Header = () => {
       <div className="bg-primary text-primary-foreground py-2 px-4">
         <div className="container-parish flex items-center justify-between text-sm">
           <div className="flex items-center gap-6">
-            <a href="#contact" className="flex items-center gap-2 hover:text-accent transition-colors">
+            <Link to="/contact" className="flex items-center gap-2 hover:text-accent transition-colors">
               <Phone size={14} />
               <span className="hidden sm:inline">Contact</span>
-            </a>
-            <a href="#don" className="flex items-center gap-2 hover:text-accent transition-colors">
+            </Link>
+            <a href={isHomePage ? '#don' : '/#don'} className="flex items-center gap-2 hover:text-accent transition-colors">
               <Heart size={14} />
               <span>Faire un don</span>
             </a>
@@ -79,7 +82,7 @@ const Header = () => {
         }`}
       >
         <div className="container-parish flex items-center justify-between py-4 px-4">
-          <a href="#" className="flex items-center gap-3">
+          <Link to="/" className="flex items-center gap-3">
             <img 
               src="https://drive.google.com/uc?export=view&id=1qB3YKEBaH-NqMVWCKCHJmPW5vHN3HYVI" 
               alt="Paroisse Saint-Paul"
@@ -91,20 +94,38 @@ const Header = () => {
               </h1>
               <p className="text-xs text-muted-foreground">Communauté catholique</p>
             </div>
-          </a>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-foreground/80 hover:text-primary font-medium transition-colors relative group"
-              >
-                {link.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" />
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isExternal = link.href.startsWith('#') || link.href.includes('/#');
+              const isActive = link.href === location.pathname;
+              
+              if (isExternal) {
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    className={`text-foreground/80 hover:text-primary font-medium transition-colors relative group ${isActive ? 'text-primary' : ''}`}
+                  >
+                    {link.name}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all duration-300 group-hover:w-full" />
+                  </a>
+                );
+              }
+              
+              return (
+                <Link
+                  key={link.name}
+                  to={link.href}
+                  className={`text-foreground/80 hover:text-primary font-medium transition-colors relative group ${isActive ? 'text-primary' : ''}`}
+                >
+                  {link.name}
+                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-accent transition-all duration-300 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-4">
@@ -148,23 +169,46 @@ const Header = () => {
               </div>
               
               <nav className="flex flex-col gap-4">
-                {navLinks.map((link, index) => (
-                  <motion.a
-                    key={link.name}
-                    href={link.href}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-xl font-heading font-semibold text-foreground hover:text-primary transition-colors py-2 border-b border-border"
-                  >
-                    {link.name}
-                  </motion.a>
-                ))}
+                {navLinks.map((link, index) => {
+                  const isExternal = link.href.startsWith('#') || link.href.includes('/#');
+                  
+                  if (isExternal) {
+                    return (
+                      <motion.a
+                        key={link.name}
+                        href={link.href}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="text-xl font-heading font-semibold text-foreground hover:text-primary transition-colors py-2 border-b border-border"
+                      >
+                        {link.name}
+                      </motion.a>
+                    );
+                  }
+                  
+                  return (
+                    <motion.div
+                      key={link.name}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        to={link.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block text-xl font-heading font-semibold text-foreground hover:text-primary transition-colors py-2 border-b border-border"
+                      >
+                        {link.name}
+                      </Link>
+                    </motion.div>
+                  );
+                })}
               </nav>
 
               <div className="mt-8 pt-8 border-t border-border">
-                <a href="#don" className="btn-accent w-full text-center">
+                <a href={isHomePage ? '#don' : '/#don'} className="btn-accent w-full text-center">
                   <Heart size={18} />
                   Faire un don
                 </a>
