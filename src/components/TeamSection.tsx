@@ -29,14 +29,10 @@ const TeamSection = () => {
   }, []);
 
   const fetchMembers = async () => {
-    // Use public view that excludes sensitive contact information
-    const { data, error } = await supabase
-      .from('team_members_public')
-      .select('id, name, role, category, photo_url, name_fr, name_pl, role_fr, role_pl')
-      .order('sort_order')
-      .limit(6);
+    // Use secure function that excludes sensitive contact information (email, phone)
+    const { data, error } = await supabase.rpc('get_team_members_public');
 
-    if (data) setMembers(data as TeamMemberPublic[]);
+    if (data) setMembers((data as TeamMemberPublic[]).slice(0, 6));
     if (error) console.error('Error fetching team members:', error);
     setLoading(false);
   };

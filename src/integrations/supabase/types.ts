@@ -370,65 +370,30 @@ export type Database = {
       }
     }
     Views: {
-      team_members_public: {
-        Row: {
-          active: boolean | null
-          bio: string | null
-          bio_fr: string | null
-          bio_pl: string | null
-          category: string | null
-          created_at: string | null
-          id: string | null
-          name: string | null
-          name_fr: string | null
-          name_pl: string | null
-          photo_url: string | null
-          role: string | null
-          role_fr: string | null
-          role_pl: string | null
-          sort_order: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          active?: boolean | null
-          bio?: string | null
-          bio_fr?: string | null
-          bio_pl?: string | null
-          category?: string | null
-          created_at?: string | null
-          id?: string | null
-          name?: string | null
-          name_fr?: string | null
-          name_pl?: string | null
-          photo_url?: string | null
-          role?: string | null
-          role_fr?: string | null
-          role_pl?: string | null
-          sort_order?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          active?: boolean | null
-          bio?: string | null
-          bio_fr?: string | null
-          bio_pl?: string | null
-          category?: string | null
-          created_at?: string | null
-          id?: string | null
-          name?: string | null
-          name_fr?: string | null
-          name_pl?: string | null
-          photo_url?: string | null
-          role?: string | null
-          role_fr?: string | null
-          role_pl?: string | null
-          sort_order?: number | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
+      get_team_members_public: {
+        Args: never
+        Returns: {
+          active: boolean
+          bio: string
+          bio_fr: string
+          bio_pl: string
+          category: string
+          created_at: string
+          id: string
+          name: string
+          name_fr: string
+          name_pl: string
+          photo_url: string
+          role: string
+          role_fr: string
+          role_pl: string
+          sort_order: number
+          updated_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

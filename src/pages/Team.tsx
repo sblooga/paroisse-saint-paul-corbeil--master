@@ -37,11 +37,8 @@ const Team = () => {
   }, []);
 
   const fetchMembers = async () => {
-    // Use public view that excludes sensitive contact information (email, phone)
-    const { data, error } = await supabase
-      .from('team_members_public')
-      .select('*')
-      .order('sort_order');
+    // Use secure function that excludes sensitive contact information (email, phone)
+    const { data, error } = await supabase.rpc('get_team_members_public');
 
     if (data) setMembers(data as TeamMemberPublic[]);
     if (error) console.error('Error fetching team members:', error);
