@@ -141,11 +141,11 @@
     },
     "info": {
       "address": "Adresse",
-      "addressValue": "12 Rue de l'Église\n75000 Paris, France",
-      "phone": "Téléphone",
+      "addressValue": "Église Saint-Paul de Moulin-Galant\n118 bv. John Kennedy\nMoulin-Galant, CORBEIL-ESSONNES 91100",
+      "phone": "Standard",
       "email": "Email",
       "hours": "Horaires",
-      "hoursValue": "Lun-Ven: 9h-12h / 14h-17h\nSam: 9h-12h"
+      "hoursValue": "À venir"
     }
   },
   "faq": {
