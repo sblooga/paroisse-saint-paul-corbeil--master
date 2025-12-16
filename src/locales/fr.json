@@ -259,9 +259,24 @@
     "noAccount": "Pas de compte ? S'inscrire",
     "backToSite": "Retour au site",
     "logout": "Déconnexion",
+    "passwordStrength": {
+      "label": "Force du mot de passe",
+      "weak": "Faible",
+      "medium": "Moyen",
+      "strong": "Fort",
+      "veryStrong": "Très fort"
+    },
+    "requirements": {
+      "minLength": "8 caractères min.",
+      "uppercase": "1 majuscule",
+      "lowercase": "1 minuscule",
+      "number": "1 chiffre",
+      "special": "1 caractère spécial"
+    },
     "errors": {
       "invalidCredentials": "Email ou mot de passe incorrect.",
       "alreadyRegistered": "Cet email est déjà enregistré.",
+      "weakPassword": "Le mot de passe n'est pas assez fort.",
       "generic": "Une erreur est survenue. Veuillez réessayer."
     }
   },
