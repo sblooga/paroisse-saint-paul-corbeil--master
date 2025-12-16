@@ -148,6 +148,8 @@
       "errorDesc": "Wystąpił błąd. Spróbuj ponownie.",
       "consentRequired": "Wymagana zgoda",
       "consentRequiredDesc": "Proszę zaakceptować politykę prywatności.",
+      "categoryRequired": "Wymagana kategoria",
+      "categoryRequiredDesc": "Proszę wybrać kategorię dla swojego zapytania.",
       "sendMessage": "Wyślij nam wiadomość",
       "sendMessageDesc": "Wypełnij poniższy formularz, a my odpowiemy jak najszybciej.",
       "responseTime": "Odpowiedź w ciągu 48 godzin roboczych"
