@@ -49,12 +49,16 @@ const Contact = () => {
     setIsSubmitting(true);
     
     try {
+      // Build subject with category prefix if selected
+      const categoryLabel = formData.category ? `[${formData.category.toUpperCase()}] ` : '';
+      const fullSubject = `${categoryLabel}${formData.subject.trim()}`;
+
       const { error: messageError } = await supabase
         .from('contact_messages')
         .insert({
           name: formData.name.trim(),
           email: formData.email.trim().toLowerCase(),
-          subject: formData.subject.trim(),
+          subject: fullSubject,
           message: formData.message.trim(),
           newsletter_optin: formData.newsletter,
         });
