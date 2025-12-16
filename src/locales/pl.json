@@ -292,5 +292,14 @@
       "save": "Zapisz",
       "create": "Utwórz"
     }
+  },
+  "search": {
+    "placeholder": "Szukaj...",
+    "loading": "Wyszukiwanie...",
+    "noResults": "Nie znaleziono wyników.",
+    "hint": "Wpisz, aby wyszukać...",
+    "articles": "Artykuły",
+    "pages": "Strony",
+    "team": "Zespół"
   }
 }
