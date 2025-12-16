@@ -176,7 +176,7 @@ const Contact = () => {
                           href="https://wa.me/33164960901"
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-colors"
+                          className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-all hover:scale-105 animate-pulse hover:animate-none"
                         >
                           <MessageCircle size={14} />
                           WhatsApp
