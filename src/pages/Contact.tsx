@@ -293,6 +293,7 @@ const Contact = () => {
                           <SelectValue placeholder={t('contact.form.categoryPlaceholder')} />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="secretariat">{t('contact.form.categories.secretariat')}</SelectItem>
                           <SelectItem value="pretre">{t('contact.form.categories.priest')}</SelectItem>
                           <SelectItem value="animateur">{t('contact.form.categories.animator')}</SelectItem>
                           <SelectItem value="service">{t('contact.form.categories.service')}</SelectItem>

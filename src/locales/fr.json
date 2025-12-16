@@ -124,6 +124,7 @@
       "category": "Catégorie",
       "categoryPlaceholder": "Choisir une catégorie...",
       "categories": {
+        "secretariat": "Secrétariat",
         "priest": "Prêtre",
         "animator": "Animateur",
         "service": "Service",
