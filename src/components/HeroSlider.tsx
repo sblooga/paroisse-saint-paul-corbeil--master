@@ -88,7 +88,7 @@ const HeroSlider = () => {
                     <div className="w-24 h-24 md:w-32 md:h-32 mx-auto mb-6 bg-card/20 backdrop-blur-sm rounded-full flex items-center justify-center">
                       <span className="text-4xl md:text-5xl">✝️</span>
                     </div>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold text-primary-foreground mb-4 drop-shadow-lg">
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-heading font-bold text-primary-foreground mb-4 drop-shadow-lg whitespace-pre-line">
                       {t(slide.titleKey)}
                     </h2>
                     <p className="text-lg md:text-xl text-primary-foreground/90 mb-8 drop-shadow-md">
