@@ -12,6 +12,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -20,6 +27,7 @@ const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    category: '',
     subject: '',
     message: '',
     newsletter: false,
@@ -74,6 +82,7 @@ const Contact = () => {
       setFormData({
         name: '',
         email: '',
+        category: '',
         subject: '',
         message: '',
         newsletter: false,
@@ -259,6 +268,27 @@ const Contact = () => {
                           className="bg-background"
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="category">{t('contact.form.category')}</Label>
+                      <Select
+                        value={formData.category}
+                        onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                      >
+                        <SelectTrigger className="bg-background">
+                          <SelectValue placeholder={t('contact.form.categoryPlaceholder')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pretre">{t('contact.form.categories.priest')}</SelectItem>
+                          <SelectItem value="animateur">{t('contact.form.categories.animator')}</SelectItem>
+                          <SelectItem value="service">{t('contact.form.categories.service')}</SelectItem>
+                          <SelectItem value="chorale">{t('contact.form.categories.choir')}</SelectItem>
+                          <SelectItem value="bapteme">{t('contact.form.categories.baptism')}</SelectItem>
+                          <SelectItem value="mariage">{t('contact.form.categories.wedding')}</SelectItem>
+                          <SelectItem value="obseques">{t('contact.form.categories.funeral')}</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
 
                     <div className="space-y-2">
