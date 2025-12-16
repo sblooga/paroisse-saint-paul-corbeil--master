@@ -169,7 +169,7 @@ const Team = () => {
             {/* Contact CTA - Users can contact via the contact form instead */}
             <div className="mt-12 text-center">
               <p className="text-muted-foreground mb-4">
-                {t('team.contactInfo', 'Pour contacter un membre de l\'équipe, utilisez notre formulaire de contact.')}
+                {t('team.contactInfo')}
               </p>
               <Link to="/contact" className="btn-parish-outline">
                 {t('common.contact')}
