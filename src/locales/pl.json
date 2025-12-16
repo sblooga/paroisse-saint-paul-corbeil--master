@@ -121,6 +121,17 @@
       "namePlaceholder": "Jan Kowalski",
       "email": "Email",
       "emailPlaceholder": "jan@przyklad.pl",
+      "category": "Kategoria",
+      "categoryPlaceholder": "Wybierz kategorię...",
+      "categories": {
+        "priest": "Ksiądz",
+        "animator": "Animator",
+        "service": "Służba",
+        "choir": "Chór",
+        "baptism": "Chrzest",
+        "wedding": "Ślub",
+        "funeral": "Pogrzeb"
+      },
       "subject": "Temat",
       "subjectPlaceholder": "Zapytanie",
       "message": "Wiadomość",

@@ -121,6 +121,17 @@
       "namePlaceholder": "Jean Dupont",
       "email": "Email",
       "emailPlaceholder": "jean@exemple.fr",
+      "category": "Catégorie",
+      "categoryPlaceholder": "Choisir une catégorie...",
+      "categories": {
+        "priest": "Prêtre",
+        "animator": "Animateur",
+        "service": "Service",
+        "choir": "Chorale",
+        "baptism": "Baptême",
+        "wedding": "Mariage",
+        "funeral": "Obsèques"
+      },
       "subject": "Sujet",
       "subjectPlaceholder": "Demande de renseignements",
       "message": "Message",
