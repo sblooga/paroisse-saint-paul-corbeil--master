@@ -264,7 +264,8 @@
       "schedules": "Messes",
       "messages": "Messages",
       "newsletter": "Newsletter",
-      "footerLinks": "Liens footer"
+      "footerLinks": "Liens footer",
+      "users": "Utilisateurs"
     },
     "stats": {
       "messages": "Messages",
