@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
@@ -164,13 +164,22 @@ const Contact = () => {
                       <div className="p-3 bg-secondary/20 rounded-lg">
                         <Phone className="text-secondary" size={24} />
                       </div>
-                      <div>
+                      <div className="flex-1">
                         <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.phone')}</h4>
                         <a 
                           href="tel:+33164960901" 
                           className="text-muted-foreground text-sm hover:text-primary transition-colors"
                         >
                           01 64 96 09 01
+                        </a>
+                        <a
+                          href="https://wa.me/33164960901"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-full transition-colors"
+                        >
+                          <MessageCircle size={14} />
+                          WhatsApp
                         </a>
                       </div>
                     </div>
