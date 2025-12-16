@@ -300,6 +300,8 @@
     "hint": "Tapez pour rechercher...",
     "articles": "Articles",
     "pages": "Pages",
-    "team": "Équipe"
+    "team": "Équipe",
+    "schedules": "Horaires des messes",
+    "navigation": "Navigation"
   }
 }
