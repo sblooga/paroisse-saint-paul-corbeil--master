@@ -370,7 +370,63 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      team_members_public: {
+        Row: {
+          active: boolean | null
+          bio: string | null
+          bio_fr: string | null
+          bio_pl: string | null
+          category: string | null
+          created_at: string | null
+          id: string | null
+          name: string | null
+          name_fr: string | null
+          name_pl: string | null
+          photo_url: string | null
+          role: string | null
+          role_fr: string | null
+          role_pl: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          active?: boolean | null
+          bio?: string | null
+          bio_fr?: string | null
+          bio_pl?: string | null
+          category?: string | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          name_fr?: string | null
+          name_pl?: string | null
+          photo_url?: string | null
+          role?: string | null
+          role_fr?: string | null
+          role_pl?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          active?: boolean | null
+          bio?: string | null
+          bio_fr?: string | null
+          bio_pl?: string | null
+          category?: string | null
+          created_at?: string | null
+          id?: string | null
+          name?: string | null
+          name_fr?: string | null
+          name_pl?: string | null
+          photo_url?: string | null
+          role?: string | null
+          role_fr?: string | null
+          role_pl?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
