@@ -98,10 +98,10 @@ const FAQ = () => {
                       value={`${category.key}-${index}`}
                       className="card-parish border-none px-6 data-[state=open]:shadow-lg transition-shadow"
                     >
-                      <AccordionTrigger className="text-left text-lg font-semibold text-foreground hover:text-primary hover:no-underline py-5">
+                      <AccordionTrigger className="text-left text-base md:text-lg font-semibold text-foreground hover:text-primary hover:no-underline py-5">
                         {item.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-sm text-muted-foreground pb-5 leading-relaxed">
+                      <AccordionContent className="text-base text-muted-foreground pb-5 leading-relaxed">
                         {item.answer}
                       </AccordionContent>
                     </AccordionItem>
