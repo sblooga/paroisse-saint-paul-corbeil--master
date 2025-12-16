@@ -132,14 +132,14 @@ const Contact = () => {
                 {/* Google Maps */}
                 <div className="rounded-xl overflow-hidden shadow-lg mb-8 aspect-video">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.2922926!3d48.8583701!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1702123456789!5m2!1sfr!2sfr"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2638.5!2d2.4697!3d48.6089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5de7d51c1c8e7%3A0x0!2s118%20Boulevard%20John%20Kennedy%2C%2091100%20Corbeil-Essonnes!5e0!3m2!1sfr!2sfr"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    title={t('contact.info.address')}
+                    title="Église Saint-Paul de Moulin-Galant"
                   />
                 </div>
 
@@ -167,10 +167,10 @@ const Contact = () => {
                       <div>
                         <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.phone')}</h4>
                         <a 
-                          href="tel:+33123456789" 
+                          href="tel:+33164960901" 
                           className="text-muted-foreground text-sm hover:text-primary transition-colors"
                         >
-                          +33 1 23 45 67 89
+                          01 64 96 09 01
                         </a>
                       </div>
                     </div>
@@ -184,10 +184,10 @@ const Contact = () => {
                       <div>
                         <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.email')}</h4>
                         <a 
-                          href="mailto:contact@paroisse-stpaul.fr" 
+                          href="mailto:paroissestpaul.corbeil@gmail.com" 
                           className="text-muted-foreground text-sm hover:text-primary transition-colors"
                         >
-                          contact@paroisse-stpaul.fr
+                          paroissestpaul.corbeil@gmail.com
                         </a>
                       </div>
                     </div>

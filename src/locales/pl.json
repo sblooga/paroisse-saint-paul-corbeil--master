@@ -141,11 +141,11 @@
     },
     "info": {
       "address": "Adres",
-      "addressValue": "12 Rue de l'Église\n75000 Paryż, Francja",
-      "phone": "Telefon",
+      "addressValue": "Kościół Saint-Paul de Moulin-Galant\n118 bv. John Kennedy\nMoulin-Galant, CORBEIL-ESSONNES 91100",
+      "phone": "Centrala",
       "email": "Email",
       "hours": "Godziny",
-      "hoursValue": "Pon-Pt: 9:00-12:00 / 14:00-17:00\nSob: 9:00-12:00"
+      "hoursValue": "Wkrótce"
     }
   },
   "faq": {
