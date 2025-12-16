@@ -131,7 +131,8 @@
         "choir": "Chór",
         "baptism": "Chrzest",
         "wedding": "Ślub",
-        "funeral": "Pogrzeb"
+        "funeral": "Pogrzeb",
+        "other": "Inne"
       },
       "subject": "Temat",
       "subjectPlaceholder": "Zapytanie",

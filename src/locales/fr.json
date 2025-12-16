@@ -131,7 +131,8 @@
         "choir": "Chorale",
         "baptism": "Baptême",
         "wedding": "Mariage",
-        "funeral": "Obsèques"
+        "funeral": "Obsèques",
+        "other": "Autre"
       },
       "subject": "Sujet",
       "subjectPlaceholder": "Demande de renseignements",
