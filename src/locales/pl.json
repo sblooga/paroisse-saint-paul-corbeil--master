@@ -259,9 +259,24 @@
     "noAccount": "Nie masz konta? Zarejestruj się",
     "backToSite": "Powrót do strony",
     "logout": "Wyloguj się",
+    "passwordStrength": {
+      "label": "Siła hasła",
+      "weak": "Słabe",
+      "medium": "Średnie",
+      "strong": "Silne",
+      "veryStrong": "Bardzo silne"
+    },
+    "requirements": {
+      "minLength": "Min. 8 znaków",
+      "uppercase": "1 wielka litera",
+      "lowercase": "1 mała litera",
+      "number": "1 cyfra",
+      "special": "1 znak specjalny"
+    },
     "errors": {
       "invalidCredentials": "Nieprawidłowy email lub hasło.",
       "alreadyRegistered": "Ten email jest już zarejestrowany.",
+      "weakPassword": "Hasło nie jest wystarczająco silne.",
       "generic": "Wystąpił błąd. Spróbuj ponownie."
     }
   },
