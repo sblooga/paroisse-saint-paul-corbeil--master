@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, UserPlus, AlertCircle } from 'lucide-react';
+import { Mail, Lock, LogIn, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,13 +9,12 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -31,36 +30,19 @@ const Auth = () => {
     setIsSubmitting(true);
 
     try {
-      if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            setError('Email ou mot de passe incorrect.');
-          } else {
-            setError(error.message);
-          }
+      const { error } = await signIn(email, password);
+      if (error) {
+        if (error.message.includes('Invalid login credentials')) {
+          setError('Email ou mot de passe incorrect.');
         } else {
-          toast({
-            title: 'Connexion réussie',
-            description: 'Bienvenue dans l\'espace administrateur.',
-          });
-          navigate('/admin');
+          setError(error.message);
         }
       } else {
-        const { error } = await signUp(email, password);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            setError('Cet email est déjà utilisé.');
-          } else {
-            setError(error.message);
-          }
-        } else {
-          toast({
-            title: 'Compte créé',
-            description: 'Votre compte a été créé avec succès.',
-          });
-          navigate('/admin');
-        }
+        toast({
+          title: 'Connexion réussie',
+          description: 'Bienvenue dans l\'espace administrateur.',
+        });
+        navigate('/admin');
       }
     } catch (err) {
       setError('Une erreur est survenue. Veuillez réessayer.');
@@ -85,7 +67,7 @@ const Auth = () => {
               Espace Administrateur
             </h1>
             <p className="text-muted-foreground mt-2">
-              {isLogin ? 'Connectez-vous pour accéder au tableau de bord' : 'Créez votre compte administrateur'}
+              Connectez-vous pour accéder au tableau de bord
             </p>
           </div>
 
@@ -137,32 +119,14 @@ const Auth = () => {
             >
               {isSubmitting ? (
                 <span className="animate-spin">⏳</span>
-              ) : isLogin ? (
+              ) : (
                 <>
                   <LogIn size={18} />
                   Se connecter
                 </>
-              ) : (
-                <>
-                  <UserPlus size={18} />
-                  Créer un compte
-                </>
               )}
             </Button>
           </form>
-
-          <div className="mt-6 text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsLogin(!isLogin);
-                setError('');
-              }}
-              className="text-sm text-primary hover:underline"
-            >
-              {isLogin ? 'Pas encore de compte ? Inscrivez-vous' : 'Déjà un compte ? Connectez-vous'}
-            </button>
-          </div>
         </div>
 
         <p className="text-center mt-6 text-sm text-muted-foreground">

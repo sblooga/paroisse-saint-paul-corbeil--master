@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
 import { Skeleton } from '@/components/ui/skeleton';
-
+import { sanitizeHtml } from '@/lib/sanitize';
 interface DynamicLegalPageProps {
   slug: string;
   fallbackTitleFr: string;
@@ -84,7 +84,7 @@ const DynamicLegalPage = ({ slug, fallbackTitleFr, fallbackTitlePl }: DynamicLeg
                     [&_p]:mb-4
                     [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2
                     [&_li]:text-foreground/80"
-                  dangerouslySetInnerHTML={{ __html: content }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
                 />
               ) : (
                 <p className="text-foreground/60">
