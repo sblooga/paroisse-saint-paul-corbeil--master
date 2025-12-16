@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Mail, Lock, LogIn, UserPlus, AlertCircle, Info, Check, X, Eye, EyeOff, KeyRound } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
+import { Lock, KeyRound, AlertCircle, Check, X, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,90 +35,71 @@ const checkPasswordStrength = (password: string): PasswordStrength => {
   return { score, hasMinLength, hasUppercase, hasLowercase, hasNumber, hasSpecialChar };
 };
 
-type AuthMode = 'login' | 'signup' | 'forgot';
-
-const Auth = () => {
-  const [email, setEmail] = useState('');
+const ResetPassword = () => {
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [mode, setMode] = useState<AuthMode>('login');
-  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [success, setSuccess] = useState(false);
   
-  const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useTranslation();
 
   const passwordStrength = useMemo(() => checkPasswordStrength(password), [password]);
-
   const isPasswordStrong = passwordStrength.score >= 4;
+  const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
 
   useEffect(() => {
-    if (user) {
-      navigate('/admin');
+    // Check if we have an access token in the URL (from the reset email link)
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+    
+    if (!accessToken || type !== 'recovery') {
+      // No valid recovery token, redirect to auth
+      toast({
+        title: t('auth.errors.invalidResetLink', 'Lien invalide'),
+        description: t('auth.errors.invalidResetLinkDesc', 'Ce lien de réinitialisation est invalide ou a expiré.'),
+        variant: 'destructive',
+      });
+      navigate('/auth');
     }
-  }, [user, navigate]);
+  }, [navigate, toast, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    if (mode === 'signup' && !isPasswordStrong) {
+    if (!isPasswordStrong) {
       setError(t('auth.errors.weakPassword', 'Le mot de passe n\'est pas assez fort.'));
+      return;
+    }
+
+    if (!passwordsMatch) {
+      setError(t('auth.errors.passwordsMismatch', 'Les mots de passe ne correspondent pas.'));
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      if (mode === 'forgot') {
-        const redirectUrl = `${window.location.origin}/reset-password`;
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: redirectUrl,
+      const { error } = await supabase.auth.updateUser({ password });
+      
+      if (error) {
+        setError(error.message);
+      } else {
+        setSuccess(true);
+        toast({
+          title: t('auth.passwordUpdated', 'Mot de passe mis à jour'),
+          description: t('auth.passwordUpdatedDesc', 'Votre mot de passe a été modifié avec succès.'),
         });
         
-        if (error) {
-          setError(error.message);
-        } else {
-          setResetEmailSent(true);
-          toast({
-            title: t('auth.resetEmailSent', 'Email envoyé'),
-            description: t('auth.resetEmailSentDesc', 'Vérifiez votre boîte de réception pour réinitialiser votre mot de passe.'),
-          });
-        }
-      } else if (mode === 'signup') {
-        const { error } = await signUp(email, password);
-        if (error) {
-          if (error.message.includes('already registered')) {
-            setError(t('auth.errors.alreadyRegistered', 'Cet email est déjà enregistré.'));
-          } else {
-            setError(error.message);
-          }
-        } else {
-          toast({
-            title: t('auth.signUpSuccess', 'Inscription réussie'),
-            description: t('auth.signUpSuccessDesc', 'Votre compte a été créé. Un administrateur vous attribuera un rôle.'),
-          });
-          setMode('login');
-          setPassword('');
-        }
-      } else {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes('Invalid login credentials')) {
-            setError(t('auth.errors.invalidCredentials', 'Email ou mot de passe incorrect.'));
-          } else {
-            setError(error.message);
-          }
-        } else {
-          toast({
-            title: t('auth.loginSuccess', 'Connexion réussie'),
-            description: t('auth.loginSuccessDesc', 'Bienvenue dans l\'espace administrateur.'),
-          });
+        // Redirect to admin after a short delay
+        setTimeout(() => {
           navigate('/admin');
-        }
+        }, 2000);
       }
     } catch (err) {
       setError(t('auth.errors.generic', 'Une erreur est survenue. Veuillez réessayer.'));
@@ -148,13 +128,6 @@ const Auth = () => {
     </div>
   );
 
-  const switchMode = (newMode: AuthMode) => {
-    setMode(newMode);
-    setError('');
-    setPassword('');
-    setResetEmailSent(false);
-  };
-
   return (
     <div className="min-h-screen bg-muted flex items-center justify-center px-4">
       <motion.div
@@ -165,42 +138,25 @@ const Auth = () => {
         <div className="card-parish p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-3xl">✝️</span>
+              <KeyRound className="text-primary" size={32} />
             </div>
             <h1 className="text-2xl font-heading font-bold text-foreground">
-              {mode === 'forgot' 
-                ? t('auth.forgotPassword', 'Mot de passe oublié')
-                : t('auth.adminSpace', 'Espace Administrateur')
-              }
+              {t('auth.resetPassword', 'Nouveau mot de passe')}
             </h1>
             <p className="text-muted-foreground mt-2">
-              {mode === 'forgot'
-                ? t('auth.forgotSubtitle', 'Entrez votre email pour recevoir un lien de réinitialisation')
-                : mode === 'signup' 
-                  ? t('auth.signUpSubtitle', 'Créez votre compte pour accéder au tableau de bord')
-                  : t('auth.loginSubtitle', 'Connectez-vous pour accéder au tableau de bord')
-              }
+              {t('auth.resetPasswordSubtitle', 'Choisissez un nouveau mot de passe sécurisé')}
             </p>
           </div>
 
-          {mode === 'signup' && (
-            <div className="mb-6 p-4 bg-primary/10 border border-primary/20 rounded-lg flex items-start gap-3 text-foreground">
-              <Info size={20} className="text-primary mt-0.5 flex-shrink-0" />
-              <p className="text-sm">
-                {t('auth.roleInfo', 'Après votre inscription, un administrateur vous attribuera les droits d\'accès nécessaires.')}
-              </p>
-            </div>
-          )}
-
-          {mode === 'forgot' && resetEmailSent && (
+          {success && (
             <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-start gap-3 text-foreground">
               <Check size={20} className="text-green-600 mt-0.5 flex-shrink-0" />
               <div className="text-sm">
                 <p className="font-medium text-green-700 dark:text-green-400">
-                  {t('auth.resetEmailSent', 'Email envoyé !')}
+                  {t('auth.passwordUpdated', 'Mot de passe mis à jour !')}
                 </p>
                 <p className="text-muted-foreground mt-1">
-                  {t('auth.checkInbox', 'Vérifiez votre boîte de réception et cliquez sur le lien pour réinitialiser votre mot de passe.')}
+                  {t('auth.redirecting', 'Redirection en cours...')}
                 </p>
               </div>
             </div>
@@ -213,26 +169,10 @@ const Auth = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@paroisse.fr"
-                  className="pl-10"
-                  required
-                />
-              </div>
-            </div>
-
-            {mode !== 'forgot' && (
+          {!success && (
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="password">{t('auth.password', 'Mot de passe')}</Label>
+                <Label htmlFor="password">{t('auth.newPassword', 'Nouveau mot de passe')}</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
                   <Input
@@ -253,7 +193,7 @@ const Auth = () => {
                   </button>
                 </div>
 
-                {mode === 'signup' && password.length > 0 && (
+                {password.length > 0 && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
@@ -303,74 +243,56 @@ const Auth = () => {
                     </div>
                   </motion.div>
                 )}
+              </div>
 
-                {mode === 'login' && (
-                  <div className="text-right">
-                    <button
-                      type="button"
-                      onClick={() => switchMode('forgot')}
-                      className="text-xs text-primary hover:underline"
-                    >
-                      {t('auth.forgotPasswordLink', 'Mot de passe oublié ?')}
-                    </button>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">{t('auth.confirmPassword', 'Confirmer le mot de passe')}</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                  <Input
+                    id="confirmPassword"
+                    type={showPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+                {confirmPassword.length > 0 && (
+                  <div className={`flex items-center gap-2 text-xs ${passwordsMatch ? 'text-green-600' : 'text-destructive'}`}>
+                    {passwordsMatch ? <Check size={14} /> : <X size={14} />}
+                    <span>
+                      {passwordsMatch 
+                        ? t('auth.passwordsMatch', 'Les mots de passe correspondent')
+                        : t('auth.passwordsDontMatch', 'Les mots de passe ne correspondent pas')
+                      }
+                    </span>
                   </div>
                 )}
               </div>
-            )}
 
-            <Button
-              type="submit"
-              className="w-full btn-parish"
-              disabled={isSubmitting || (mode === 'signup' && !isPasswordStrong) || (mode === 'forgot' && resetEmailSent)}
-            >
-              {isSubmitting ? (
-                <span className="animate-spin">⏳</span>
-              ) : mode === 'forgot' ? (
-                <>
-                  <KeyRound size={18} />
-                  {t('auth.sendResetLink', 'Envoyer le lien')}
-                </>
-              ) : mode === 'signup' ? (
-                <>
-                  <UserPlus size={18} />
-                  {t('auth.signUp', 'S\'inscrire')}
-                </>
-              ) : (
-                <>
-                  <LogIn size={18} />
-                  {t('auth.login', 'Se connecter')}
-                </>
-              )}
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center space-y-2">
-            {mode === 'forgot' ? (
-              <button
-                type="button"
-                onClick={() => switchMode('login')}
-                className="text-sm text-primary hover:underline"
+              <Button
+                type="submit"
+                className="w-full btn-parish"
+                disabled={isSubmitting || !isPasswordStrong || !passwordsMatch}
               >
-                {t('auth.backToLogin', '← Retour à la connexion')}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => switchMode(mode === 'login' ? 'signup' : 'login')}
-                className="text-sm text-primary hover:underline"
-              >
-                {mode === 'signup' 
-                  ? t('auth.alreadyAccount', 'Déjà un compte ? Se connecter')
-                  : t('auth.noAccount', 'Pas de compte ? S\'inscrire')
-                }
-              </button>
-            )}
-          </div>
+                {isSubmitting ? (
+                  <span className="animate-spin">⏳</span>
+                ) : (
+                  <>
+                    <KeyRound size={18} />
+                    {t('auth.updatePassword', 'Mettre à jour le mot de passe')}
+                  </>
+                )}
+              </Button>
+            </form>
+          )}
         </div>
 
         <p className="text-center mt-6 text-sm text-muted-foreground">
-          <Link to="/" className="hover:text-primary transition-colors">
-            ← {t('auth.backToSite', 'Retour au site')}
+          <Link to="/auth" className="hover:text-primary transition-colors">
+            ← {t('auth.backToLogin', 'Retour à la connexion')}
           </Link>
         </p>
       </motion.div>
@@ -378,4 +300,4 @@ const Auth = () => {
   );
 };
 
-export default Auth;
+export default ResetPassword;

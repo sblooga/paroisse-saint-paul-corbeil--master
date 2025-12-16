@@ -13,6 +13,7 @@ import ArticleDetail from "./pages/ArticleDetail";
 import Team from "./pages/Team";
 import MassSchedules from "./pages/MassSchedules";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Admin from "./pages/Admin";
 import LegalNotice from "./pages/LegalNotice";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/equipe" element={<Team />} />
               <Route path="/horaires" element={<MassSchedules />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/mentions-legales" element={<LegalNotice />} />
               <Route path="/confidentialite" element={<PrivacyPolicy />} />
