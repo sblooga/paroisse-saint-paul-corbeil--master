@@ -99,7 +99,7 @@ const HeroSlider = () => {
                         {t('hero.massSchedule')}
                       </HashLink>
                       <HashLink
-                        to="#contact"
+                        to="/contact"
                         className="btn-parish-outline border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
                       >
                         {t('hero.contactUs')}
