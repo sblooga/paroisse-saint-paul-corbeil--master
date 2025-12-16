@@ -88,7 +88,7 @@ const Header = () => {
             <img 
               src={logoImage} 
               alt={t('header.parishName')}
-              className="h-14 w-14 md:h-16 md:w-16 object-contain rounded-full shadow-md"
+              className="h-16 w-16 md:h-20 md:w-20 object-contain rounded-full shadow-md"
             />
             <div className="hidden md:block">
               <h1 className="text-lg font-heading font-bold text-foreground leading-tight">
