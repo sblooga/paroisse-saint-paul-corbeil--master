@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -166,14 +167,25 @@ const Team = () => {
               </div>
             )}
 
-            {/* Contact CTA - Users can contact via the contact form instead */}
+            {/* Contact CTA - Users can contact via the contact form or WhatsApp */}
             <div className="mt-12 text-center">
-              <p className="text-muted-foreground mb-4">
+              <p className="text-muted-foreground mb-6">
                 {t('team.contactInfo')}
               </p>
-              <Link to="/contact" className="btn-parish-outline">
-                {t('common.contact')}
-              </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <Link to="/contact" className="btn-parish-outline">
+                  {t('common.contact')}
+                </Link>
+                <a
+                  href="https://wa.me/33164960901"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  <MessageCircle size={20} />
+                  {t('team.whatsappSecretariat')}
+                </a>
+              </div>
             </div>
           </div>
         </section>
