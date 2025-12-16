@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface TeamMember {
+interface TeamMemberPublic {
   id: string;
   name: string;
   role: string;
   category: string;
   photo_url: string | null;
-  email: string | null;
-  phone: string | null;
   name_fr: string | null;
   name_pl: string | null;
   role_fr: string | null;
@@ -22,7 +19,7 @@ interface TeamMember {
 
 const TeamSection = () => {
   const { t, i18n } = useTranslation();
-  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [members, setMembers] = useState<TeamMemberPublic[]>([]);
   const [loading, setLoading] = useState(true);
 
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
@@ -32,14 +29,14 @@ const TeamSection = () => {
   }, []);
 
   const fetchMembers = async () => {
+    // Use public view that excludes sensitive contact information
     const { data, error } = await supabase
-      .from('team_members')
-      .select('id, name, role, category, photo_url, email, phone, name_fr, name_pl, role_fr, role_pl')
-      .eq('active', true)
+      .from('team_members_public')
+      .select('id, name, role, category, photo_url, name_fr, name_pl, role_fr, role_pl')
       .order('sort_order')
       .limit(6);
 
-    if (data) setMembers(data as TeamMember[]);
+    if (data) setMembers(data as TeamMemberPublic[]);
     if (error) console.error('Error fetching team members:', error);
     setLoading(false);
   };
@@ -48,12 +45,12 @@ const TeamSection = () => {
     return t(`team.categories.${category}`, { defaultValue: category });
   };
 
-  const getLocalizedName = (member: TeamMember) => {
+  const getLocalizedName = (member: TeamMemberPublic) => {
     if (currentLang === 'pl' && member.name_pl) return member.name_pl;
     return member.name_fr || member.name;
   };
 
-  const getLocalizedRole = (member: TeamMember) => {
+  const getLocalizedRole = (member: TeamMemberPublic) => {
     if (currentLang === 'pl' && member.role_pl) return member.role_pl;
     return member.role_fr || member.role;
   };
@@ -84,9 +81,6 @@ const TeamSection = () => {
                 <Skeleton className="w-28 h-28 rounded-full mx-auto mb-4" />
                 <Skeleton className="h-6 w-32 mx-auto mb-2" />
                 <Skeleton className="h-4 w-24 mx-auto mb-4" />
-                <div className="flex justify-center gap-3">
-                  <Skeleton className="w-10 h-10 rounded-full" />
-                </div>
               </div>
             ))}
           </div>
@@ -125,28 +119,7 @@ const TeamSection = () => {
                 <h3 className="text-lg font-heading font-bold text-foreground mt-4">
                   {getLocalizedName(member)}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4">{getLocalizedRole(member)}</p>
-
-                <div className="flex justify-center gap-3">
-                  {member.email && (
-                    <a
-                      href={`mailto:${member.email}`}
-                      className="p-2 bg-primary/10 rounded-full text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-                      aria-label={`Email ${getLocalizedName(member)}`}
-                    >
-                      <Mail size={18} />
-                    </a>
-                  )}
-                  {member.phone && (
-                    <a
-                      href={`tel:${member.phone}`}
-                      className="p-2 bg-secondary/20 rounded-full text-secondary hover:bg-secondary hover:text-secondary-foreground transition-colors"
-                      aria-label={`Call ${getLocalizedName(member)}`}
-                    >
-                      <Phone size={18} />
-                    </a>
-                  )}
-                </div>
+                <p className="text-muted-foreground text-sm">{getLocalizedRole(member)}</p>
               </motion.div>
             ))}
           </div>

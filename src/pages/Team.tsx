@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Phone, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,14 +7,12 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface TeamMember {
+interface TeamMemberPublic {
   id: string;
   name: string;
   role: string;
   category: string;
   photo_url: string | null;
-  email: string | null;
-  phone: string | null;
   bio: string | null;
   name_fr: string | null;
   name_pl: string | null;
@@ -30,7 +27,7 @@ const CATEGORY_ORDER = ['priests', 'team', 'services', 'secretariat', 'choir'];
 
 const Team = () => {
   const { t, i18n } = useTranslation();
-  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [members, setMembers] = useState<TeamMemberPublic[]>([]);
   const [loading, setLoading] = useState(true);
 
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
@@ -40,13 +37,13 @@ const Team = () => {
   }, []);
 
   const fetchMembers = async () => {
+    // Use public view that excludes sensitive contact information (email, phone)
     const { data, error } = await supabase
-      .from('team_members')
+      .from('team_members_public')
       .select('*')
-      .eq('active', true)
       .order('sort_order');
 
-    if (data) setMembers(data as TeamMember[]);
+    if (data) setMembers(data as TeamMemberPublic[]);
     if (error) console.error('Error fetching team members:', error);
     setLoading(false);
   };
@@ -55,17 +52,17 @@ const Team = () => {
     return t(`team.categories.${category}`, { defaultValue: category });
   };
 
-  const getLocalizedName = (member: TeamMember) => {
+  const getLocalizedName = (member: TeamMemberPublic) => {
     if (currentLang === 'pl' && member.name_pl) return member.name_pl;
     return member.name_fr || member.name;
   };
 
-  const getLocalizedRole = (member: TeamMember) => {
+  const getLocalizedRole = (member: TeamMemberPublic) => {
     if (currentLang === 'pl' && member.role_pl) return member.role_pl;
     return member.role_fr || member.role;
   };
 
-  const getLocalizedBio = (member: TeamMember) => {
+  const getLocalizedBio = (member: TeamMemberPublic) => {
     if (currentLang === 'pl' && member.bio_pl) return member.bio_pl;
     return member.bio_fr || member.bio;
   };
@@ -76,7 +73,7 @@ const Team = () => {
       acc[category] = categoryMembers;
     }
     return acc;
-  }, {} as Record<string, TeamMember[]>);
+  }, {} as Record<string, TeamMemberPublic[]>);
 
   return (
     <div className="min-h-screen bg-background">
@@ -112,10 +109,6 @@ const Team = () => {
                     <Skeleton className="w-28 h-28 rounded-full mx-auto mb-4" />
                     <Skeleton className="h-6 w-32 mx-auto mb-2" />
                     <Skeleton className="h-4 w-24 mx-auto mb-4" />
-                    <div className="flex justify-center gap-3">
-                      <Skeleton className="w-10 h-10 rounded-full" />
-                      <Skeleton className="w-10 h-10 rounded-full" />
-                    </div>
                   </div>
                 ))}
               </div>
@@ -164,42 +157,10 @@ const Team = () => {
                           <p className="text-muted-foreground text-sm mb-2">{getLocalizedRole(member)}</p>
                           
                           {getLocalizedBio(member) && (
-                            <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                            <p className="text-muted-foreground text-sm line-clamp-3">
                               {getLocalizedBio(member)}
                             </p>
                           )}
-
-                          <div className="flex justify-center gap-3 mt-4">
-                            {member.email && (
-                              <a
-                                href={`mailto:${member.email}`}
-                                className="p-2 bg-primary/10 rounded-full text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
-                                aria-label={`${t('contact.form.email')} ${getLocalizedName(member)}`}
-                              >
-                                <Mail size={18} />
-                              </a>
-                            )}
-                            {member.phone && (
-                              <a
-                                href={`tel:${member.phone}`}
-                                className="p-2 bg-secondary/20 rounded-full text-secondary hover:bg-secondary hover:text-secondary-foreground transition-colors"
-                                aria-label={`${t('contact.info.phone')} ${getLocalizedName(member)}`}
-                              >
-                                <Phone size={18} />
-                              </a>
-                            )}
-                            {member.phone && (
-                              <a
-                                href={`https://wa.me/${member.phone.replace(/[^0-9]/g, '')}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="p-2 bg-green-100 dark:bg-green-900/30 rounded-full text-green-600 hover:bg-green-600 hover:text-white transition-colors"
-                                aria-label={`WhatsApp ${getLocalizedName(member)}`}
-                              >
-                                <MessageCircle size={18} />
-                              </a>
-                            )}
-                          </div>
                         </motion.div>
                       ))}
                     </div>
@@ -207,6 +168,16 @@ const Team = () => {
                 ))}
               </div>
             )}
+
+            {/* Contact CTA - Users can contact via the contact form instead */}
+            <div className="mt-12 text-center">
+              <p className="text-muted-foreground mb-4">
+                {t('team.contactInfo', 'Pour contacter un membre de l\'équipe, utilisez notre formulaire de contact.')}
+              </p>
+              <Link to="/contact" className="btn-parish-outline">
+                {t('common.contact')}
+              </Link>
+            </div>
           </div>
         </section>
 
