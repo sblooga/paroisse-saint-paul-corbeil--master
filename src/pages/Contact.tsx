@@ -37,6 +37,15 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (!formData.category) {
+      toast({
+        title: t('contact.form.categoryRequired'),
+        description: t('contact.form.categoryRequiredDesc'),
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!formData.rgpd) {
       toast({
         title: t('contact.form.consentRequired'),
@@ -275,7 +284,7 @@ const Contact = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="category">{t('contact.form.category')}</Label>
+                      <Label htmlFor="category">{t('contact.form.category')} *</Label>
                       <Select
                         value={formData.category}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}

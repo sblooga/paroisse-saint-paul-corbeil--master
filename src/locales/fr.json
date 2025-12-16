@@ -148,6 +148,8 @@
       "errorDesc": "Une erreur est survenue. Veuillez réessayer.",
       "consentRequired": "Consentement requis",
       "consentRequiredDesc": "Veuillez accepter la politique de confidentialité.",
+      "categoryRequired": "Catégorie requise",
+      "categoryRequiredDesc": "Veuillez sélectionner une catégorie pour votre demande.",
       "sendMessage": "Envoyez-nous un message",
       "sendMessageDesc": "Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.",
       "responseTime": "Réponse sous 48h ouvrées"
