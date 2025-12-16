@@ -243,13 +243,27 @@
     "admin": "Administracja"
   },
   "auth": {
-    "login": "Zaloguj się",
-    "logout": "Wyloguj się",
-    "email": "Email",
+    "adminSpace": "Panel Administratora",
+    "loginSubtitle": "Zaloguj się, aby uzyskać dostęp do panelu",
+    "signUpSubtitle": "Utwórz konto, aby uzyskać dostęp do panelu",
+    "roleInfo": "Po rejestracji administrator przyzna Ci odpowiednie uprawnienia.",
     "password": "Hasło",
-    "forgotPassword": "Zapomniałeś hasła?",
-    "noAccount": "Nie masz jeszcze konta?",
-    "signUp": "Zarejestruj się"
+    "passwordHint": "Minimum 6 znaków",
+    "login": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "loginSuccess": "Logowanie udane",
+    "loginSuccessDesc": "Witamy w panelu administratora.",
+    "signUpSuccess": "Rejestracja udana",
+    "signUpSuccessDesc": "Twoje konto zostało utworzone. Administrator przyzna Ci rolę.",
+    "alreadyAccount": "Masz już konto? Zaloguj się",
+    "noAccount": "Nie masz konta? Zarejestruj się",
+    "backToSite": "Powrót do strony",
+    "logout": "Wyloguj się",
+    "errors": {
+      "invalidCredentials": "Nieprawidłowy email lub hasło.",
+      "alreadyRegistered": "Ten email jest już zarejestrowany.",
+      "generic": "Wystąpił błąd. Spróbuj ponownie."
+    }
   },
   "admin": {
     "title": "Panel administracyjny",

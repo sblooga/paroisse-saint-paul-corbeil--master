@@ -243,13 +243,27 @@
     "admin": "Administration"
   },
   "auth": {
-    "login": "Connexion",
-    "logout": "Déconnexion",
-    "email": "Email",
+    "adminSpace": "Espace Administrateur",
+    "loginSubtitle": "Connectez-vous pour accéder au tableau de bord",
+    "signUpSubtitle": "Créez votre compte pour accéder au tableau de bord",
+    "roleInfo": "Après votre inscription, un administrateur vous attribuera les droits d'accès nécessaires.",
     "password": "Mot de passe",
-    "forgotPassword": "Mot de passe oublié ?",
-    "noAccount": "Pas encore de compte ?",
-    "signUp": "S'inscrire"
+    "passwordHint": "Minimum 6 caractères",
+    "login": "Se connecter",
+    "signUp": "S'inscrire",
+    "loginSuccess": "Connexion réussie",
+    "loginSuccessDesc": "Bienvenue dans l'espace administrateur.",
+    "signUpSuccess": "Inscription réussie",
+    "signUpSuccessDesc": "Votre compte a été créé. Un administrateur vous attribuera un rôle.",
+    "alreadyAccount": "Déjà un compte ? Se connecter",
+    "noAccount": "Pas de compte ? S'inscrire",
+    "backToSite": "Retour au site",
+    "logout": "Déconnexion",
+    "errors": {
+      "invalidCredentials": "Email ou mot de passe incorrect.",
+      "alreadyRegistered": "Cet email est déjà enregistré.",
+      "generic": "Une erreur est survenue. Veuillez réessayer."
+    }
   },
   "admin": {
     "title": "Tableau de bord",
