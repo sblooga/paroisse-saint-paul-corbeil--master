@@ -180,7 +180,7 @@ const Team = () => {
                   href="https://wa.me/33164960901"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-all hover:scale-105 animate-pulse hover:animate-none"
                 >
                   <MessageCircle size={20} />
                   {t('team.whatsappSecretariat')}
