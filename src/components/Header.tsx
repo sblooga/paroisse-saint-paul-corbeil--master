@@ -6,14 +6,16 @@ import { useTranslation } from 'react-i18next';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelector from './LanguageSelector';
 import HashLink from './HashLink';
+import SearchDialog from './SearchDialog';
 import logoImage from '@/assets/logo.png';
+
 const Header = () => {
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -132,11 +134,13 @@ const Header = () => {
 
           <div className="flex items-center gap-4">
             <button 
+              onClick={() => setIsSearchOpen(true)}
               aria-label={t('common.search')}
               className="p-2 hover:bg-muted rounded-full transition-colors"
             >
               <Search size={20} className="text-foreground" />
             </button>
+            <SearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
             
             {/* Hamburger Menu Button */}
             <button
