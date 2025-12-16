@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface Article {
   id: string;
@@ -182,7 +183,7 @@ const ArticleDetail = () => {
               {content ? (
                 <div 
                   className="prose prose-lg max-w-none dark:prose-invert"
-                  dangerouslySetInnerHTML={{ __html: content }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
                 />
               ) : excerpt ? (
                 <p className="text-lg text-muted-foreground">{excerpt}</p>
