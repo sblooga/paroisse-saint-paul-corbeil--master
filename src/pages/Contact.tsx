@@ -301,6 +301,7 @@ const Contact = () => {
                           <SelectItem value="bapteme">{t('contact.form.categories.baptism')}</SelectItem>
                           <SelectItem value="mariage">{t('contact.form.categories.wedding')}</SelectItem>
                           <SelectItem value="obseques">{t('contact.form.categories.funeral')}</SelectItem>
+                          <SelectItem value="autre">{t('contact.form.categories.other')}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
