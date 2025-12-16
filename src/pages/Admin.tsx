@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
-  Calendar, UsersRound, Newspaper, Link as LinkIcon
+  Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,8 +17,9 @@ import AdminMassSchedules from '@/components/admin/AdminMassSchedules';
 import AdminMessages from '@/components/admin/AdminMessages';
 import AdminNewsletter from '@/components/admin/AdminNewsletter';
 import AdminFooterLinks from '@/components/admin/AdminFooterLinks';
+import AdminUsers from '@/components/admin/AdminUsers';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users';
 
 interface Stats {
   messages: number;
@@ -29,7 +30,7 @@ interface Stats {
 
 const Admin = () => {
   const { t } = useTranslation();
-  const { user, isLoading, isEditor, signOut } = useAuth();
+  const { user, isLoading, isEditor, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<TabType>('articles');
@@ -270,6 +271,16 @@ const Admin = () => {
             <LinkIcon size={16} />
             {t('admin.tabs.footerLinks')}
           </Button>
+          {isAdmin && (
+            <Button
+              variant={activeTab === 'users' ? 'default' : 'outline'}
+              onClick={() => setActiveTab('users')}
+              size="sm"
+            >
+              <ShieldCheck size={16} />
+              {t('admin.tabs.users', 'Utilisateurs')}
+            </Button>
+          )}
         </div>
 
         <div className="card-parish overflow-hidden">
@@ -280,6 +291,7 @@ const Admin = () => {
           {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
           {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
+          {activeTab === 'users' && isAdmin && <AdminUsers refreshKey={refreshKey} />}
         </div>
       </main>
     </div>
