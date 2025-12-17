@@ -155,6 +155,7 @@ export type Database = {
           description_pl: string | null
           id: string
           is_special: boolean | null
+          language: string | null
           location: string | null
           location_fr: string | null
           location_pl: string | null
@@ -174,6 +175,7 @@ export type Database = {
           description_pl?: string | null
           id?: string
           is_special?: boolean | null
+          language?: string | null
           location?: string | null
           location_fr?: string | null
           location_pl?: string | null
@@ -193,6 +195,7 @@ export type Database = {
           description_pl?: string | null
           id?: string
           is_special?: boolean | null
+          language?: string | null
           location?: string | null
           location_fr?: string | null
           location_pl?: string | null
@@ -291,6 +294,7 @@ export type Database = {
           bio_fr: string | null
           bio_pl: string | null
           category: string
+          community: string | null
           created_at: string
           email: string | null
           id: string
@@ -311,6 +315,7 @@ export type Database = {
           bio_fr?: string | null
           bio_pl?: string | null
           category: string
+          community?: string | null
           created_at?: string
           email?: string | null
           id?: string
@@ -331,6 +336,7 @@ export type Database = {
           bio_fr?: string | null
           bio_pl?: string | null
           category?: string
+          community?: string | null
           created_at?: string
           email?: string | null
           id?: string

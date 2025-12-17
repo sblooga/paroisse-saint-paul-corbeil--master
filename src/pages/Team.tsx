@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface TeamMemberPublic {
   id: string;
@@ -22,6 +23,7 @@ interface TeamMemberPublic {
   bio_fr: string | null;
   bio_pl: string | null;
   sort_order: number;
+  community: string | null;
 }
 
 const CATEGORY_ORDER = ['priests', 'team', 'services', 'secretariat', 'choir'];
@@ -30,6 +32,7 @@ const Team = () => {
   const { t, i18n } = useTranslation();
   const [members, setMembers] = useState<TeamMemberPublic[]>([]);
   const [loading, setLoading] = useState(true);
+  const [communityFilter, setCommunityFilter] = useState<'fr' | 'pl'>('fr');
 
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
@@ -65,8 +68,14 @@ const Team = () => {
     return member.bio_fr || member.bio;
   };
 
+  // Filter members by community
+  const filteredMembers = members.filter(m => {
+    if (m.community === 'both') return true;
+    return m.community === communityFilter;
+  });
+
   const groupedMembers = CATEGORY_ORDER.reduce((acc, category) => {
-    const categoryMembers = members.filter(m => m.category === category);
+    const categoryMembers = filteredMembers.filter(m => m.category === category);
     if (categoryMembers.length > 0) {
       acc[category] = categoryMembers;
     }
@@ -100,6 +109,25 @@ const Team = () => {
         {/* Team Members */}
         <section className="section-padding">
           <div className="container-parish">
+            {/* Community Tabs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mb-8"
+            >
+              <Tabs value={communityFilter} onValueChange={(v) => setCommunityFilter(v as 'fr' | 'pl')} className="w-full">
+                <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+                  <TabsTrigger value="fr" className="flex items-center gap-2">
+                    🇫🇷 {t('team.frenchTeam')}
+                  </TabsTrigger>
+                  <TabsTrigger value="pl" className="flex items-center gap-2">
+                    🇵🇱 {t('team.polishTeam')}
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </motion.div>
+
             {loading ? (
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[...Array(6)].map((_, i) => (

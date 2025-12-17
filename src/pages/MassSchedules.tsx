@@ -11,6 +11,7 @@ import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
 interface MassSchedule {
@@ -22,6 +23,7 @@ interface MassSchedule {
   is_special: boolean;
   special_date: string | null;
   sort_order: number;
+  language: string | null;
 }
 
 const DAY_ORDER = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
@@ -32,6 +34,7 @@ const MassSchedules = () => {
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [languageFilter, setLanguageFilter] = useState<'all' | 'fr' | 'pl'>('all');
 
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
   const dateLocale = currentLang === 'pl' ? pl : fr;
@@ -52,9 +55,15 @@ const MassSchedules = () => {
     setLoading(false);
   };
 
+  // Filter schedules by language
+  const filteredSchedules = schedules.filter(s => {
+    if (languageFilter === 'all') return true;
+    return s.language === languageFilter;
+  });
+
   // Group regular schedules by day
-  const regularSchedules = schedules.filter(s => !s.is_special);
-  const specialSchedules = schedules.filter(s => s.is_special && s.special_date);
+  const regularSchedules = filteredSchedules.filter(s => !s.is_special);
+  const specialSchedules = filteredSchedules.filter(s => s.is_special && s.special_date);
 
   const groupedSchedules = DAY_ORDER.reduce((acc, day) => {
     const daySchedules = regularSchedules.filter(s => s.day_of_week === day);
@@ -126,17 +135,31 @@ const MassSchedules = () => {
           </div>
         </section>
 
-        {/* Regular Schedules */}
+        {/* Regular Schedules with Language Tabs */}
         <section className="section-padding">
           <div className="container-parish">
-            <motion.h2
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-2xl font-heading font-bold text-foreground mb-8 text-center"
+              className="mb-8"
             >
-              {t('massSchedule.regularSchedules')}
-            </motion.h2>
+              <h2 className="text-2xl font-heading font-bold text-foreground mb-6 text-center">
+                {t('massSchedule.regularSchedules')}
+              </h2>
+              
+              {/* Language Tabs */}
+              <Tabs value={languageFilter} onValueChange={(v) => setLanguageFilter(v as 'all' | 'fr' | 'pl')} className="w-full">
+                <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+                  <TabsTrigger value="fr" className="flex items-center gap-2">
+                    🇫🇷 {t('massSchedule.frenchMasses')}
+                  </TabsTrigger>
+                  <TabsTrigger value="pl" className="flex items-center gap-2">
+                    🇵🇱 {t('massSchedule.polishMasses')}
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </motion.div>
 
             {loading ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
