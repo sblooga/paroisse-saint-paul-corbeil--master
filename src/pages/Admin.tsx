@@ -18,6 +18,7 @@ import AdminMessages from '@/components/admin/AdminMessages';
 import AdminNewsletter from '@/components/admin/AdminNewsletter';
 import AdminFooterLinks from '@/components/admin/AdminFooterLinks';
 import AdminUsers from '@/components/admin/AdminUsers';
+import ChangePasswordDialog from '@/components/admin/ChangePasswordDialog';
 
 type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users';
 
@@ -128,17 +129,19 @@ const Admin = () => {
               <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 flex-wrap">
             <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isRefreshing}>
               <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
-              {t('admin.actions.refresh')}
+              <span className="hidden sm:inline">{t('admin.actions.refresh')}</span>
             </Button>
+            <ChangePasswordDialog />
             <Button variant="outline" size="sm" onClick={() => navigate('/')}>
-              {t('admin.actions.viewSite')}
+              <span className="hidden sm:inline">{t('admin.actions.viewSite')}</span>
+              <span className="sm:hidden">Site</span>
             </Button>
             <Button variant="destructive" size="sm" onClick={handleSignOut}>
               <LogOut size={16} />
-              {t('auth.logout')}
+              <span className="hidden sm:inline">{t('auth.logout')}</span>
             </Button>
           </div>
         </div>

@@ -359,6 +359,17 @@
       "cancel": "Anuluj",
       "save": "Zapisz",
       "create": "Utwórz"
+    },
+    "changePassword": {
+      "button": "Hasło",
+      "title": "Zmień moje hasło",
+      "description": "Wprowadź nowe hasło. Musi być bezpieczne.",
+      "newPassword": "Nowe hasło",
+      "confirmPassword": "Potwierdź hasło",
+      "passwordsMismatch": "Hasła nie są zgodne",
+      "passwordsMatch": "Hasła są zgodne",
+      "success": "Hasło zmienione",
+      "successDescription": "Twoje hasło zostało pomyślnie zaktualizowane."
     }
   },
   "search": {
