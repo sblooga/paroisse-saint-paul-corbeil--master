@@ -359,6 +359,17 @@
       "cancel": "Annuler",
       "save": "Enregistrer",
       "create": "Créer"
+    },
+    "changePassword": {
+      "button": "Mot de passe",
+      "title": "Changer mon mot de passe",
+      "description": "Entrez votre nouveau mot de passe. Celui-ci doit être sécurisé.",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordsMismatch": "Les mots de passe ne correspondent pas",
+      "passwordsMatch": "Les mots de passe correspondent",
+      "success": "Mot de passe modifié",
+      "successDescription": "Votre mot de passe a été mis à jour avec succès."
     }
   },
   "search": {
