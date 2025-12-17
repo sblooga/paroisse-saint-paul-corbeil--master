@@ -122,59 +122,57 @@ const Articles = () => {
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {articles.map((article, index) => (
-                    <motion.article
-                      key={article.id}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="card-parish group"
-                    >
-                      <div className="relative overflow-hidden aspect-[3/2]">
-                        {article.image_url ? (
-                          <img
-                            src={article.image_url}
-                            alt={getLocalizedTitle(article)}
-                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-muted flex items-center justify-center">
-                            <span className="text-muted-foreground">{t('articles.noImage')}</span>
-                          </div>
-                        )}
-                        {article.category && (
-                          <div className="absolute top-4 left-4">
-                            <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-semibold rounded-full">
-                              {article.category}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="p-6">
-                        <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
-                          <CalendarIcon size={14} />
-                          <time>{formatDate(article.created_at)}</time>
+                    <Link key={article.id} to={`/articles/${article.slug}`} className="block">
+                      <motion.article
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="card-parish group cursor-pointer h-full"
+                      >
+                        <div className="relative overflow-hidden aspect-[3/2]">
+                          {article.image_url ? (
+                            <img
+                              src={article.image_url}
+                              alt={getLocalizedTitle(article)}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-muted flex items-center justify-center">
+                              <span className="text-muted-foreground">{t('articles.noImage')}</span>
+                            </div>
+                          )}
+                          {article.category && (
+                            <div className="absolute top-4 left-4">
+                              <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-semibold rounded-full">
+                                {article.category}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
-                        <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                          {getLocalizedTitle(article)}
-                        </h3>
+                        <div className="p-6">
+                          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-3">
+                            <CalendarIcon size={14} />
+                            <time>{formatDate(article.created_at)}</time>
+                          </div>
 
-                        {getLocalizedExcerpt(article) && (
-                          <p className="text-muted-foreground line-clamp-3 mb-4">
-                            {getLocalizedExcerpt(article)}
-                          </p>
-                        )}
+                          <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                            {getLocalizedTitle(article)}
+                          </h3>
 
-                        <Link
-                          to={`/articles/${article.slug}`}
-                          className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
-                        >
-                          {t('articles.readMore')}
-                          <ArrowRight size={18} />
-                        </Link>
-                      </div>
-                    </motion.article>
+                          {getLocalizedExcerpt(article) && (
+                            <p className="text-muted-foreground line-clamp-3 mb-4">
+                              {getLocalizedExcerpt(article)}
+                            </p>
+                          )}
+
+                          <span className="inline-flex items-center gap-2 text-primary font-semibold group-hover:gap-3 transition-all">
+                            {t('articles.readMore')}
+                            <ArrowRight size={18} />
+                          </span>
+                        </div>
+                      </motion.article>
+                    </Link>
                   ))}
                 </div>
 
