@@ -106,7 +106,7 @@
     "today": "Dziś",
     "specialEvent": "Wydarzenie specjalne",
     "nextEvent": "Następne wydarzenie",
-    "confessions": "📢 Spowiedź możliwa przed każdą Mszą lub po umówieniu.",
+    "noNextEvent": "Brak kolejnych wydarzeń",
     "notice": "📢 Godziny mogą ulec zmianie w święta liturgiczne",
     "viewAll": "Zobacz pełny kalendarz",
     "cta": "Przyjdź się z nami modlić",

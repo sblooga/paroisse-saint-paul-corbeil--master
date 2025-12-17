@@ -295,18 +295,20 @@ const MassSchedules = () => {
                       <Home size={16} />
                       {t('massSchedule.today')}
                     </Button>
-                    {nextEventDate && (
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={goToNextEvent}
-                        className="flex items-center gap-2"
-                      >
-                        <Star size={16} />
-                        {t('massSchedule.nextEvent')}
-                        <ChevronRight size={16} />
-                      </Button>
-                    )}
+
+                    <Button
+                      variant={nextEventDate ? 'secondary' : 'outline'}
+                      size="sm"
+                      onClick={nextEventDate ? goToNextEvent : undefined}
+                      disabled={!nextEventDate}
+                      className="flex items-center gap-2"
+                      aria-disabled={!nextEventDate}
+                      title={!nextEventDate ? t('massSchedule.noNextEvent') : undefined}
+                    >
+                      <Star size={16} />
+                      {nextEventDate ? t('massSchedule.nextEvent') : t('massSchedule.noNextEvent')}
+                      <ChevronRight size={16} />
+                    </Button>
                   </div>
                 </div>
 
