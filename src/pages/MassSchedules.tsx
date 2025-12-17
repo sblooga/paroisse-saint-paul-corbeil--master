@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, MapPin, Calendar as CalendarIcon, Star, ChevronRight } from 'lucide-react';
+import { Clock, MapPin, Calendar as CalendarIcon, Star, ChevronRight, Home } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, isAfter, startOfDay } from 'date-fns';
 import { fr, pl } from 'date-fns/locale';
@@ -284,19 +284,30 @@ const MassSchedules = () => {
                     </Button>
                   </div>
                   
-                  {/* Next Event Button */}
-                  {nextEventDate && (
+                  {/* Navigation Buttons */}
+                  <div className="flex items-center justify-center gap-3 flex-wrap">
                     <Button
-                      variant="secondary"
+                      variant="outline"
                       size="sm"
-                      onClick={goToNextEvent}
-                      className="mx-auto flex items-center gap-2"
+                      onClick={() => setCurrentMonth(startOfMonth(new Date()))}
+                      className="flex items-center gap-2"
                     >
-                      <Star size={16} />
-                      {t('massSchedule.nextEvent')}
-                      <ChevronRight size={16} />
+                      <Home size={16} />
+                      {t('massSchedule.today')}
                     </Button>
-                  )}
+                    {nextEventDate && (
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={goToNextEvent}
+                        className="flex items-center gap-2"
+                      >
+                        <Star size={16} />
+                        {t('massSchedule.nextEvent')}
+                        <ChevronRight size={16} />
+                      </Button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Calendar Grid */}
