@@ -26,7 +26,7 @@ const Header = () => {
 
   const navLinks = [
     { name: t('common.home'), href: '/' },
-    { name: t('common.parish'), href: isHomePage ? '#paroisse' : '/#paroisse', isHash: true },
+    { name: t('common.parish'), href: '/paroisse' },
     { name: t('common.team'), href: '/equipe' },
     { name: t('common.schedule'), href: '/horaires' },
     { name: t('common.news'), href: '/articles' },
