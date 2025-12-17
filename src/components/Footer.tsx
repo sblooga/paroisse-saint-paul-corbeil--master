@@ -48,7 +48,7 @@ const Footer = () => {
               <img
                 src={logoImage}
                 alt={t('footer.parishName')}
-                className="h-12 w-12 object-contain"
+                className="h-12 w-12 object-cover rounded-full"
               />
               <h3 className="text-xl font-heading font-bold">
                 {t('footer.parishName')}
@@ -81,18 +81,18 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-primary-foreground/70">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-accent shrink-0 mt-0.5" />
-                <span>12 Rue de l'Église<br />75000 Paris, France</span>
+                <span>118 boulevard John Kennedy<br />Moulin-Galant, 91100 Corbeil-Essonnes</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={18} className="text-accent shrink-0" />
-                <a href="tel:+33123456789" className="hover:text-accent transition-colors">
-                  +33 1 23 45 67 89
+                <a href="tel:+33164960901" className="hover:text-accent transition-colors">
+                  01 64 96 09 01
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-accent shrink-0" />
-                <a href="mailto:contact@paroisse-stpaul.fr" className="hover:text-accent transition-colors">
-                  contact@paroisse-stpaul.fr
+                <a href="mailto:paroissestpaul.corbeil@gmail.com" className="hover:text-accent transition-colors">
+                  paroissestpaul.corbeil@gmail.com
                 </a>
               </li>
             </ul>
