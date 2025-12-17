@@ -79,10 +79,10 @@ const Header = () => {
 
       {/* Main Header */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 z-50 transition-all duration-300 bg-background ${
           isScrolled 
-            ? 'bg-card/95 backdrop-blur-md shadow-soft' 
-            : 'bg-transparent'
+            ? 'shadow-soft backdrop-blur-md bg-background/98' 
+            : ''
         }`}
       >
         <div className="container-parish flex items-center justify-between py-4 px-4">
