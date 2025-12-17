@@ -150,7 +150,10 @@ const MassSchedules = () => {
               
               {/* Language Tabs */}
               <Tabs value={languageFilter} onValueChange={(v) => setLanguageFilter(v as 'all' | 'fr' | 'pl')} className="w-full">
-                <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+                <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
+                  <TabsTrigger value="all" className="flex items-center gap-2">
+                    {t('massSchedule.allMasses')}
+                  </TabsTrigger>
                   <TabsTrigger value="fr" className="flex items-center gap-2">
                     🇫🇷 {t('massSchedule.frenchMasses')}
                   </TabsTrigger>
