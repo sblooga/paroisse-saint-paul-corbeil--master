@@ -6,6 +6,7 @@ import { AuthProvider } from "@/hooks/useAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Parish from "./pages/Parish";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Articles from "./pages/Articles";
@@ -33,6 +34,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/paroisse" element={<Parish />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/articles" element={<Articles />} />
