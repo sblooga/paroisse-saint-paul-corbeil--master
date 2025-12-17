@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, MapPin, Calendar as CalendarIcon, Star } from 'lucide-react';
+import { Clock, MapPin, Calendar as CalendarIcon, Star, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths } from 'date-fns';
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, isAfter, startOfDay } from 'date-fns';
 import { fr, pl } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -94,6 +94,24 @@ const MassSchedules = () => {
 
   const hasSpecialEvent = (date: Date) => {
     return getSpecialEventsForDate(date).length > 0;
+  };
+
+  // Get the next special event date from today
+  const getNextSpecialEvent = () => {
+    const today = startOfDay(new Date());
+    const futureEvents = specialSchedules
+      .filter(s => s.special_date && isAfter(new Date(s.special_date), today))
+      .sort((a, b) => new Date(a.special_date!).getTime() - new Date(b.special_date!).getTime());
+    return futureEvents.length > 0 ? new Date(futureEvents[0].special_date!) : null;
+  };
+
+  const nextEventDate = getNextSpecialEvent();
+
+  const goToNextEvent = () => {
+    if (nextEventDate) {
+      setCurrentMonth(startOfMonth(nextEventDate));
+      setSelectedDate(nextEventDate);
+    }
   };
 
   const getDayName = (day: string) => {
@@ -245,24 +263,40 @@ const MassSchedules = () => {
                 className="card-parish p-6"
               >
                 {/* Calendar Header */}
-                <div className="flex items-center justify-between mb-6">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                  >
-                    ←
-                  </Button>
-                  <h3 className="text-xl font-heading font-bold text-foreground capitalize">
-                    {format(currentMonth, 'MMMM yyyy', { locale: dateLocale })}
-                  </h3>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                  >
-                    →
-                  </Button>
+                <div className="flex flex-col gap-4 mb-6">
+                  <div className="flex items-center justify-between">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                    >
+                      ←
+                    </Button>
+                    <h3 className="text-xl font-heading font-bold text-foreground capitalize">
+                      {format(currentMonth, 'MMMM yyyy', { locale: dateLocale })}
+                    </h3>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                    >
+                      →
+                    </Button>
+                  </div>
+                  
+                  {/* Next Event Button */}
+                  {nextEventDate && (
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={goToNextEvent}
+                      className="mx-auto flex items-center gap-2"
+                    >
+                      <Star size={16} />
+                      {t('massSchedule.nextEvent')}
+                      <ChevronRight size={16} />
+                    </Button>
+                  )}
                 </div>
 
                 {/* Calendar Grid */}
