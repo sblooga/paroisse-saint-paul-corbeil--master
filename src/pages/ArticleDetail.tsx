@@ -145,19 +145,21 @@ const ArticleDetail = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Link
-                to="/articles"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8"
-              >
-                <ArrowLeft size={18} />
-                {t('articles.backToArticles')}
-              </Link>
+              <div className="flex items-center gap-4 mb-8">
+                <Link
+                  to="/articles"
+                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <ArrowLeft size={18} />
+                  {t('articles.backToArticles')}
+                </Link>
 
-              {article.category && (
-                <span className="inline-block px-3 py-1 bg-accent text-accent-foreground text-sm font-semibold rounded-full mb-4">
-                  {article.category}
-                </span>
-              )}
+                {article.category && (
+                  <span className="inline-block px-3 py-1 bg-accent text-accent-foreground text-sm font-semibold rounded-full">
+                    {article.category}
+                  </span>
+                )}
+              </div>
 
               <h1 className="text-3xl md:text-4xl font-heading font-bold text-foreground mb-4">
                 {getLocalizedTitle(article)}
