@@ -9,9 +9,71 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
   folder?: string;
   className?: string;
+  maxWidth?: number;
+  maxHeight?: number;
+  quality?: number;
 }
 
-export function ImageUpload({ value, onChange, folder = 'uploads', className }: ImageUploadProps) {
+// Compress image using Canvas API
+async function compressImage(
+  file: File,
+  maxWidth: number = 1200,
+  maxHeight: number = 630,
+  quality: number = 0.8
+): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+
+      // Calculate new dimensions maintaining aspect ratio
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
+      }
+
+      // Create canvas and draw resized image
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        reject(new Error('Could not get canvas context'));
+        return;
+      }
+
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // Convert to blob with compression
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            console.log(`Image compressed: ${(file.size / 1024).toFixed(1)}KB → ${(blob.size / 1024).toFixed(1)}KB`);
+            resolve(blob);
+          } else {
+            reject(new Error('Failed to compress image'));
+          }
+        },
+        'image/webp',
+        quality
+      );
+    };
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+export function ImageUpload({ 
+  value, 
+  onChange, 
+  folder = 'uploads', 
+  className,
+  maxWidth = 1200,
+  maxHeight = 630,
+  quality = 0.8
+}: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,12 +99,23 @@ export function ImageUpload({ value, onChange, folder = 'uploads', className }: 
     setUploading(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
+      // Compress image (skip for GIFs to preserve animation)
+      let imageToUpload: Blob = file;
+      let fileExt = 'webp';
+      
+      if (file.type !== 'image/gif') {
+        imageToUpload = await compressImage(file, maxWidth, maxHeight, quality);
+      } else {
+        fileExt = 'gif';
+      }
+
       const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
-        .upload(fileName, file);
+        .upload(fileName, imageToUpload, {
+          contentType: file.type === 'image/gif' ? 'image/gif' : 'image/webp'
+        });
 
       if (uploadError) throw uploadError;
 
@@ -106,7 +179,7 @@ export function ImageUpload({ value, onChange, folder = 'uploads', className }: 
           {uploading ? (
             <>
               <Loader2 className="h-5 w-5 animate-spin mr-2" />
-              Téléchargement...
+              Compression & téléchargement...
             </>
           ) : (
             <>
