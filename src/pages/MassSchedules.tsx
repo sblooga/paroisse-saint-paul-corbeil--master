@@ -96,16 +96,17 @@ const MassSchedules = () => {
     return getSpecialEventsForDate(date).length > 0;
   };
 
-  // Get the next special event date from today
-  const getNextSpecialEvent = () => {
+  // Get future special events sorted by date
+  const getFutureEvents = () => {
     const today = startOfDay(new Date());
-    const futureEvents = specialSchedules
+    return specialSchedules
       .filter(s => s.special_date && isAfter(new Date(s.special_date), today))
       .sort((a, b) => new Date(a.special_date!).getTime() - new Date(b.special_date!).getTime());
-    return futureEvents.length > 0 ? new Date(futureEvents[0].special_date!) : null;
   };
 
-  const nextEventDate = getNextSpecialEvent();
+  const futureEvents = getFutureEvents();
+  const nextEventDate = futureEvents.length > 0 ? new Date(futureEvents[0].special_date!) : null;
+  const upcomingEvents = futureEvents.slice(0, 5);
 
   const goToNextEvent = () => {
     if (nextEventDate) {
@@ -409,7 +410,80 @@ const MassSchedules = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* Upcoming Events List */}
+        {upcomingEvents.length > 0 && (
+          <section className="section-padding">
+            <div className="container-parish">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-2xl font-heading font-bold text-foreground mb-8 text-center"
+              >
+                {t('massSchedule.upcomingEvents')}
+              </motion.h2>
+
+              <div className="max-w-2xl mx-auto space-y-4">
+                {upcomingEvents.map((event, index) => (
+                  <motion.div
+                    key={event.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className="card-parish p-4 flex items-center gap-4 cursor-pointer hover:shadow-lg transition-shadow"
+                    onClick={() => {
+                      if (event.special_date) {
+                        const eventDate = new Date(event.special_date);
+                        setCurrentMonth(startOfMonth(eventDate));
+                        setSelectedDate(eventDate);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                  >
+                    {/* Date Badge */}
+                    <div className="flex-shrink-0 bg-primary/10 rounded-lg p-3 text-center min-w-[70px]">
+                      <div className="text-2xl font-bold text-primary">
+                        {event.special_date ? format(new Date(event.special_date), 'd', { locale: dateLocale }) : ''}
+                      </div>
+                      <div className="text-xs text-muted-foreground uppercase">
+                        {event.special_date ? format(new Date(event.special_date), 'MMM', { locale: dateLocale }) : ''}
+                      </div>
+                    </div>
+
+                    {/* Event Info */}
+                    <div className="flex-grow">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-semibold text-foreground">{event.day_of_week}</span>
+                        <Badge variant="outline" className="text-xs">
+                          {event.language === 'pl' ? '🇵🇱' : '🇫🇷'}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Clock size={14} />
+                        <span>{event.time}</span>
+                        {event.location && (
+                          <>
+                            <span>•</span>
+                            <MapPin size={14} />
+                            <span>{event.location}</span>
+                          </>
+                        )}
+                      </div>
+                      {event.description && (
+                        <p className="text-sm text-muted-foreground mt-1">{event.description}</p>
+                      )}
+                    </div>
+
+                    <ChevronRight size={20} className="text-muted-foreground flex-shrink-0" />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         <section className="section-padding">
           <div className="container-parish text-center">
             <motion.div
