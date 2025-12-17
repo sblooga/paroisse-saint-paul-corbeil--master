@@ -35,6 +35,7 @@ interface MassSchedule {
   special_date: string | null;
   active: boolean;
   sort_order: number;
+  language: string | null;
 }
 
 const DAYS = [
@@ -68,6 +69,7 @@ const AdminMassSchedules = () => {
     special_date: '',
     active: true,
     sort_order: 0,
+    language: 'fr',
   });
 
   useEffect(() => {
@@ -103,6 +105,7 @@ const AdminMassSchedules = () => {
       special_date: '',
       active: true,
       sort_order: 0,
+      language: 'fr',
     });
     setEditingSchedule(null);
   };
@@ -124,6 +127,7 @@ const AdminMassSchedules = () => {
       special_date: schedule.special_date || '',
       active: schedule.active,
       sort_order: schedule.sort_order,
+      language: schedule.language || 'fr',
     });
     setDialogOpen(true);
   };
@@ -151,6 +155,7 @@ const AdminMassSchedules = () => {
       special_date: formData.special_date || null,
       active: formData.active,
       sort_order: formData.sort_order,
+      language: formData.language,
     };
 
     if (editingSchedule) {
@@ -236,7 +241,7 @@ const AdminMassSchedules = () => {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="day_of_week">Jour (clé système) *</Label>
                   <Select
@@ -263,6 +268,21 @@ const AdminMassSchedules = () => {
                     onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
                     placeholder="10h30"
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="language">Langue de la messe *</Label>
+                  <Select
+                    value={formData.language}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, language: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fr">🇫🇷 Français</SelectItem>
+                      <SelectItem value="pl">🇵🇱 Polski</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
@@ -398,6 +418,7 @@ const AdminMassSchedules = () => {
             <TableRow>
               <TableHead>Jour</TableHead>
               <TableHead>Heure</TableHead>
+              <TableHead>Langue</TableHead>
               <TableHead>Lieu (FR)</TableHead>
               <TableHead>Type</TableHead>
               <TableHead>Statut</TableHead>
@@ -407,7 +428,7 @@ const AdminMassSchedules = () => {
           <TableBody>
             {schedules.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   Aucun horaire
                 </TableCell>
               </TableRow>
@@ -418,6 +439,11 @@ const AdminMassSchedules = () => {
                     {schedule.day_of_week_fr || getDayLabel(schedule.day_of_week)}
                   </TableCell>
                   <TableCell>{schedule.time}</TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={schedule.language === 'pl' ? 'border-red-500 text-red-600' : 'border-blue-500 text-blue-600'}>
+                      {schedule.language === 'pl' ? '🇵🇱 PL' : '🇫🇷 FR'}
+                    </Badge>
+                  </TableCell>
                   <TableCell>{schedule.location_fr || schedule.location || '-'}</TableCell>
                   <TableCell>
                     {schedule.is_special ? (

@@ -37,6 +37,7 @@ interface TeamMember {
   bio_pl: string | null;
   sort_order: number;
   active: boolean;
+  community: string | null;
   created_at: string;
 }
 
@@ -70,6 +71,7 @@ const AdminTeam = () => {
     bio_pl: '',
     sort_order: 0,
     active: true,
+    community: 'fr',
   });
 
   useEffect(() => {
@@ -106,6 +108,7 @@ const AdminTeam = () => {
       bio_pl: '',
       sort_order: 0,
       active: true,
+      community: 'fr',
     });
     setEditingMember(null);
   };
@@ -128,6 +131,7 @@ const AdminTeam = () => {
       bio_pl: member.bio_pl || '',
       sort_order: member.sort_order,
       active: member.active,
+      community: member.community || 'fr',
     });
     setDialogOpen(true);
   };
@@ -156,6 +160,7 @@ const AdminTeam = () => {
       bio_pl: formData.bio_pl || null,
       sort_order: formData.sort_order,
       active: formData.active,
+      community: formData.community,
     };
 
     if (editingMember) {
@@ -241,7 +246,7 @@ const AdminTeam = () => {
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="category">Catégorie *</Label>
                   <Select
@@ -257,6 +262,22 @@ const AdminTeam = () => {
                           {cat.label}
                         </SelectItem>
                       ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="community">Communauté *</Label>
+                  <Select
+                    value={formData.community}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, community: value }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fr">🇫🇷 Française</SelectItem>
+                      <SelectItem value="pl">🇵🇱 Polonaise</SelectItem>
+                      <SelectItem value="both">🇫🇷🇵🇱 Les deux</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -409,6 +430,7 @@ const AdminTeam = () => {
               <TableHead>Traductions</TableHead>
               <TableHead>Fonction</TableHead>
               <TableHead>Catégorie</TableHead>
+              <TableHead>Communauté</TableHead>
               <TableHead>Statut</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -416,7 +438,7 @@ const AdminTeam = () => {
           <TableBody>
             {members.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   Aucun membre
                 </TableCell>
               </TableRow>
@@ -433,6 +455,15 @@ const AdminTeam = () => {
                   <TableCell>{member.role_fr || member.role}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{getCategoryLabel(member.category)}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className={
+                      member.community === 'pl' ? 'border-red-500 text-red-600' : 
+                      member.community === 'both' ? 'border-purple-500 text-purple-600' : 
+                      'border-blue-500 text-blue-600'
+                    }>
+                      {member.community === 'pl' ? '🇵🇱 PL' : member.community === 'both' ? '🇫🇷🇵🇱' : '🇫🇷 FR'}
+                    </Badge>
                   </TableCell>
                   <TableCell>
                     {member.active ? (

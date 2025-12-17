@@ -23,7 +23,7 @@ interface TeamMemberPublic {
   bio_fr: string | null;
   bio_pl: string | null;
   sort_order: number;
-  community: string | null;
+  community?: string | null;
 }
 
 const CATEGORY_ORDER = ['priests', 'team', 'services', 'secretariat', 'choir'];
