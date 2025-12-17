@@ -387,6 +387,7 @@ export type Database = {
           bio_fr: string
           bio_pl: string
           category: string
+          community: string
           created_at: string
           id: string
           name: string
