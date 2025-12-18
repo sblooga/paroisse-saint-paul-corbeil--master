@@ -1,72 +1,133 @@
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { FileText, Download, ExternalLink, Calendar, BookOpen } from 'lucide-react';
+import { Folder, FolderOpen, FileText, Download, ExternalLink, ChevronRight, ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+
+interface FolderItem {
+  name: string;
+  namePl: string;
+  url: string;
+  children?: FolderItem[];
+}
 
 const Downloads = () => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
+  const [expandedFolders, setExpandedFolders] = useState<string[]>(['root']);
 
   const content = {
     fr: {
       title: 'Téléchargements',
       subtitle: 'Documents paroissiaux',
-      description: 'Retrouvez ici les annonces paroissiales et les bulletins de messe à télécharger.',
-      announcements: {
-        title: 'Annonces Paroissiales',
-        description: 'Les dernières annonces et informations de la paroisse.',
-        buttonText: 'Voir les annonces',
-      },
-      bulletins: {
-        title: 'Bulletins de Messe',
-        description: 'Les feuilles de messe hebdomadaires et documents liturgiques.',
-        buttonText: 'Voir les bulletins',
-      },
-      instructions: 'Cliquez sur un dossier pour accéder aux documents sur Google Drive.',
+      description: 'Retrouvez ici les documents de la paroisse. Cliquez sur un dossier pour l\'ouvrir, puis sur un document pour le télécharger.',
+      instructions: 'Les documents s\'ouvrent dans Google Drive. Vous pouvez les consulter en ligne ou les télécharger.',
+      openFolder: 'Ouvrir dans Google Drive',
     },
     pl: {
       title: 'Pliki do pobrania',
       subtitle: 'Dokumenty parafialne',
-      description: 'Znajdziesz tutaj ogłoszenia parafialne i biuletyny mszalne do pobrania.',
-      announcements: {
-        title: 'Ogłoszenia Parafialne',
-        description: 'Najnowsze ogłoszenia i informacje z parafii.',
-        buttonText: 'Zobacz ogłoszenia',
-      },
-      bulletins: {
-        title: 'Biuletyny Mszalne',
-        description: 'Cotygodniowe kartki mszalne i dokumenty liturgiczne.',
-        buttonText: 'Zobacz biuletyny',
-      },
-      instructions: 'Kliknij folder, aby uzyskać dostęp do dokumentów na Google Drive.',
+      description: 'Znajdziesz tutaj dokumenty parafii. Kliknij folder, aby go otworzyć, a następnie dokument, aby go pobrać.',
+      instructions: 'Dokumenty otwierają się w Google Drive. Możesz je przeglądać online lub pobierać.',
+      openFolder: 'Otwórz w Google Drive',
     },
   };
 
   const t = content[currentLang];
 
-  // Replace these with your actual Google Drive folder URLs
-  const announcementsFolderUrl = 'https://drive.google.com/drive/folders/YOUR_ANNOUNCEMENTS_FOLDER_ID';
-  const bulletinsFolderUrl = 'https://drive.google.com/drive/folders/YOUR_BULLETINS_FOLDER_ID';
+  // ⚠️ REMPLACEZ CES URLS PAR VOS VRAIS LIENS GOOGLE DRIVE
+  const folderStructure: FolderItem = {
+    name: 'Doc Paroisse St. Paul',
+    namePl: 'Dokumenty Parafii St. Paul',
+    url: 'https://drive.google.com/drive/folders/VOTRE_DOSSIER_RACINE_ID',
+    children: [
+      {
+        name: 'Bulletin de messe',
+        namePl: 'Biuletyn mszalny',
+        url: 'https://drive.google.com/drive/folders/VOTRE_DOSSIER_BULLETIN_ID',
+      },
+      {
+        name: 'Infos paroisse',
+        namePl: 'Informacje parafialne',
+        url: 'https://drive.google.com/drive/folders/VOTRE_DOSSIER_INFOS_ID',
+      },
+    ],
+  };
 
-  const categories = [
-    {
-      icon: Calendar,
-      title: t.announcements.title,
-      description: t.announcements.description,
-      buttonText: t.announcements.buttonText,
-      url: announcementsFolderUrl,
-      color: 'bg-primary',
-    },
-    {
-      icon: BookOpen,
-      title: t.bulletins.title,
-      description: t.bulletins.description,
-      buttonText: t.bulletins.buttonText,
-      url: bulletinsFolderUrl,
-      color: 'bg-secondary',
-    },
-  ];
+  const toggleFolder = (folderName: string) => {
+    setExpandedFolders(prev => 
+      prev.includes(folderName) 
+        ? prev.filter(f => f !== folderName)
+        : [...prev, folderName]
+    );
+  };
+
+  const FolderNode = ({ folder, level = 0 }: { folder: FolderItem; level?: number }) => {
+    const isExpanded = expandedFolders.includes(folder.name);
+    const hasChildren = folder.children && folder.children.length > 0;
+    const displayName = currentLang === 'pl' ? folder.namePl : folder.name;
+
+    return (
+      <div className="select-none">
+        <div 
+          className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-primary/10 group ${level === 0 ? 'bg-card border border-border' : ''}`}
+          style={{ marginLeft: `${level * 24}px` }}
+        >
+          {hasChildren ? (
+            <button 
+              onClick={() => toggleFolder(folder.name)}
+              className="p-1 hover:bg-primary/20 rounded transition-colors"
+            >
+              {isExpanded ? (
+                <ChevronDown className="w-4 h-4 text-primary" />
+              ) : (
+                <ChevronRight className="w-4 h-4 text-muted-foreground" />
+              )}
+            </button>
+          ) : (
+            <div className="w-6" />
+          )}
+          
+          <div className="flex items-center gap-2 flex-1" onClick={() => hasChildren && toggleFolder(folder.name)}>
+            {isExpanded ? (
+              <FolderOpen className="w-6 h-6 text-amber-500" />
+            ) : (
+              <Folder className="w-6 h-6 text-amber-500" />
+            )}
+            <span className={`font-medium ${level === 0 ? 'text-lg text-foreground' : 'text-foreground'}`}>
+              {displayName}
+            </span>
+          </div>
+
+          <a
+            href={folder.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 hover:bg-primary hover:text-primary-foreground rounded-md text-sm font-medium text-primary transition-all duration-200 opacity-0 group-hover:opacity-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ExternalLink className="w-4 h-4" />
+            <span className="hidden sm:inline">{t.openFolder}</span>
+          </a>
+        </div>
+
+        {hasChildren && isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="mt-1 space-y-1"
+          >
+            {folder.children!.map((child) => (
+              <FolderNode key={child.name} folder={child} level={level + 1} />
+            ))}
+          </motion.div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -102,7 +163,7 @@ const Downloads = () => {
 
         {/* Downloads Section */}
         <section className="section-padding">
-          <div className="container-parish max-w-4xl">
+          <div className="container-parish max-w-3xl">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -112,46 +173,20 @@ const Downloads = () => {
               {t.description}
             </motion.p>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {categories.map((category, index) => (
-                <motion.div
-                  key={category.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="card-parish p-8 text-center"
-                >
-                  <div className={`inline-flex p-4 ${category.color} rounded-full mb-6`}>
-                    <category.icon className="w-8 h-8 text-white" />
-                  </div>
-                  
-                  <h2 className="text-2xl font-heading font-bold text-foreground mb-3">
-                    {category.title}
-                  </h2>
-                  
-                  <p className="text-muted-foreground mb-6">
-                    {category.description}
-                  </p>
-                  
-                  <a
-                    href={category.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-parish inline-flex items-center gap-2"
-                  >
-                    <FileText size={18} />
-                    {category.buttonText}
-                    <ExternalLink size={16} />
-                  </a>
-                </motion.div>
-              ))}
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="card-parish p-6"
+            >
+              <FolderNode folder={folderStructure} />
+            </motion.div>
 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-sm text-muted-foreground text-center mt-12"
+              className="text-sm text-muted-foreground text-center mt-8"
             >
               {t.instructions}
             </motion.p>
