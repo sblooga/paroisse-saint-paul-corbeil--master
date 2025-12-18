@@ -25,6 +25,7 @@ export type Database = {
           excerpt: string | null
           excerpt_fr: string | null
           excerpt_pl: string | null
+          featured: boolean | null
           id: string
           image_url: string | null
           published: boolean | null
@@ -44,6 +45,7 @@ export type Database = {
           excerpt?: string | null
           excerpt_fr?: string | null
           excerpt_pl?: string | null
+          featured?: boolean | null
           id?: string
           image_url?: string | null
           published?: boolean | null
@@ -63,6 +65,7 @@ export type Database = {
           excerpt?: string | null
           excerpt_fr?: string | null
           excerpt_pl?: string | null
+          featured?: boolean | null
           id?: string
           image_url?: string | null
           published?: boolean | null

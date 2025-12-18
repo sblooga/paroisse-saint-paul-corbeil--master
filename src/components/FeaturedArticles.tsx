@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Calendar as CalendarIcon } from 'lucide-react';
+import { ArrowRight, Calendar as CalendarIcon, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,10 +9,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface Article {
   id: string;
   title: string;
+  title_fr: string | null;
+  title_pl: string | null;
   slug: string;
   excerpt: string | null;
+  excerpt_fr: string | null;
+  excerpt_pl: string | null;
   image_url: string | null;
   category: string | null;
+  featured: boolean | null;
   created_at: string;
 }
 
@@ -20,22 +25,37 @@ const FeaturedArticles = () => {
   const { t, i18n } = useTranslation();
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
   useEffect(() => {
     fetchArticles();
   }, []);
 
   const fetchArticles = async () => {
+    // Fetch featured articles first, then recent ones
     const { data, error } = await supabase
       .from('articles')
-      .select('id, title, slug, excerpt, image_url, category, created_at')
+      .select('id, title, title_fr, title_pl, slug, excerpt, excerpt_fr, excerpt_pl, image_url, category, featured, created_at')
       .eq('published', true)
+      .order('featured', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false })
       .limit(3);
 
-    if (data) setArticles(data);
+    if (data) setArticles(data as Article[]);
     if (error) console.error('Error fetching articles:', error);
     setLoading(false);
+  };
+
+  const getLocalizedTitle = (article: Article) => {
+    if (currentLang === 'pl' && article.title_pl) return article.title_pl;
+    if (article.title_fr) return article.title_fr;
+    return article.title;
+  };
+
+  const getLocalizedExcerpt = (article: Article) => {
+    if (currentLang === 'pl' && article.excerpt_pl) return article.excerpt_pl;
+    if (article.excerpt_fr) return article.excerpt_fr;
+    return article.excerpt;
   };
 
   const formatDate = (dateString: string) => {
@@ -107,13 +127,19 @@ const FeaturedArticles = () => {
                       <span className="text-muted-foreground text-sm">{t('common.noResults')}</span>
                     </div>
                   )}
-                  {article.category && (
-                    <div className="absolute top-4 left-4">
+                  <div className="absolute top-4 left-4 flex gap-2">
+                    {article.featured && (
+                      <span className="px-3 py-1 bg-primary text-primary-foreground text-xs font-semibold rounded-full flex items-center gap-1">
+                        <Star size={12} className="fill-current" />
+                        {t('articles.featured')}
+                      </span>
+                    )}
+                    {article.category && (
                       <span className="px-3 py-1 bg-accent text-accent-foreground text-xs font-semibold rounded-full">
                         {article.category}
                       </span>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 <div className="p-6">
@@ -123,12 +149,12 @@ const FeaturedArticles = () => {
                   </div>
 
                   <h3 className="text-xl font-heading font-bold text-foreground mb-3 line-clamp-2 group-hover:text-primary transition-colors">
-                    {article.title}
+                    {getLocalizedTitle(article)}
                   </h3>
 
-                  {article.excerpt && (
+                  {getLocalizedExcerpt(article) && (
                     <p className="text-muted-foreground line-clamp-3 mb-4">
-                      {article.excerpt}
+                      {getLocalizedExcerpt(article)}
                     </p>
                   )}
 

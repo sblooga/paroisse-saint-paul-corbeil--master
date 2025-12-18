@@ -33,6 +33,7 @@ interface Article {
   image_url: string | null;
   category: string | null;
   published: boolean;
+  featured: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -57,6 +58,7 @@ const AdminArticles = () => {
     image_url: '',
     category: '',
     published: false,
+    featured: false,
   });
 
   useEffect(() => {
@@ -115,6 +117,7 @@ const AdminArticles = () => {
       image_url: '',
       category: '',
       published: false,
+      featured: false,
     });
     setEditingArticle(null);
   };
@@ -135,6 +138,7 @@ const AdminArticles = () => {
       image_url: article.image_url || '',
       category: article.category || '',
       published: article.published,
+      featured: article.featured || false,
     });
     setDialogOpen(true);
   };
@@ -161,6 +165,7 @@ const AdminArticles = () => {
       image_url: formData.image_url || null,
       category: formData.category || null,
       published: formData.published,
+      featured: formData.featured,
     };
 
     if (editingArticle) {
@@ -347,13 +352,25 @@ const AdminArticles = () => {
                 </TabsContent>
               </Tabs>
 
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="published"
-                  checked={formData.published}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, published: checked }))}
-                />
-                <Label htmlFor="published">Publier immédiatement</Label>
+              <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="published"
+                    checked={formData.published}
+                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, published: checked }))}
+                  />
+                  <Label htmlFor="published">Publier immédiatement</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="featured"
+                    checked={formData.featured}
+                    onCheckedChange={(checked) => setFormData(prev => ({ ...prev, featured: checked }))}
+                  />
+                  <Label htmlFor="featured" className="flex items-center gap-1">
+                    ⭐ Mettre à la une
+                  </Label>
+                </div>
               </div>
 
               <div className="flex gap-2 justify-end">
@@ -381,6 +398,7 @@ const AdminArticles = () => {
               <TableHead>Traductions</TableHead>
               <TableHead>Catégorie</TableHead>
               <TableHead>Statut</TableHead>
+              <TableHead>À la une</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -388,7 +406,7 @@ const AdminArticles = () => {
           <TableBody>
             {articles.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                   Aucun article
                 </TableCell>
               </TableRow>
@@ -408,6 +426,11 @@ const AdminArticles = () => {
                       <Badge variant="default" className="bg-green-600">Publié</Badge>
                     ) : (
                       <Badge variant="secondary">Brouillon</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {article.featured && (
+                      <Badge variant="outline" className="border-primary text-primary">⭐</Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-sm">{formatDate(article.created_at)}</TableCell>
