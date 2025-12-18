@@ -19,6 +19,7 @@ import Admin from "./pages/Admin";
 import LegalNotice from "./pages/LegalNotice";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import CookiePolicy from "./pages/CookiePolicy";
+import Downloads from "./pages/Downloads";
 import NotFound from "./pages/NotFound";
 import CookieConsent from "./components/CookieConsent";
 
@@ -47,6 +48,7 @@ const App = () => (
               <Route path="/mentions-legales" element={<LegalNotice />} />
               <Route path="/confidentialite" element={<PrivacyPolicy />} />
               <Route path="/cookies" element={<CookiePolicy />} />
+              <Route path="/telechargements" element={<Downloads />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
