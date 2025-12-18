@@ -433,6 +433,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin_or_editor: { Args: { _user_id: string }; Returns: boolean }
+      is_default_docs_password: { Args: never; Returns: boolean }
       update_docs_password: { Args: { new_password: string }; Returns: boolean }
       verify_docs_password: {
         Args: { input_password: string }
