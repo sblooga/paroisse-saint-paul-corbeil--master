@@ -22,7 +22,7 @@ html {
     --background: 45 40% 94%;
     --foreground: 24 31% 12%;
 
-    --card: 0 0% 100%;
+    --card: 45 35% 98%;
     --card-foreground: 24 31% 12%;
 
     --popover: 0 0% 100%;
@@ -37,8 +37,8 @@ html {
     --accent: 37 90% 55%;
     --accent-foreground: 24 31% 12%;
 
-    --muted: 45 30% 92%;
-    --muted-foreground: 24 20% 40%;
+    --muted: 45 25% 88%;
+    --muted-foreground: 24 25% 35%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
