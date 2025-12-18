@@ -7,6 +7,7 @@
     "news": "Actualités",
     "contact": "Contact",
     "faq": "FAQ",
+    "lifeStages": "Étapes de vie",
     "downloads": "Docs Équipes",
     "donate": "Don",
     "search": "Rechercher",
@@ -393,5 +394,46 @@
     "team": "Équipe",
     "schedules": "Horaires des messes",
     "navigation": "Navigation"
+  },
+  "lifeStages": {
+    "title": "Étapes de vie",
+    "description": "Vous souhaitez recevoir un sacrement ou préparer un événement important de votre vie spirituelle ? Retrouvez ici toutes les informations pour vous accompagner.",
+    "moreQuestions": "Besoin d'accompagnement ?",
+    "moreQuestionsDesc": "Notre équipe pastorale est à votre disposition pour vous guider dans vos démarches.",
+    "contactUs": "Nous contacter",
+    "items": {
+      "baptism": {
+        "question": "Je veux baptiser mon enfant ?",
+        "answer": "Le baptême est le premier sacrement de l'initiation chrétienne. Pour baptiser votre enfant, contactez le secrétariat paroissial au moins 3 mois à l'avance. Une préparation avec l'équipe baptême est obligatoire. Vous aurez besoin d'un extrait d'acte de naissance et de choisir un parrain et/ou une marraine baptisé(e) et confirmé(e). Des réunions de préparation sont organisées régulièrement."
+      },
+      "communion": {
+        "question": "Je veux préparer mon enfant à la communion ?",
+        "answer": "La première communion est une étape importante dans la vie de foi de votre enfant. La préparation se fait dans le cadre du catéchisme, généralement en classe de CE2 ou CM1. Les inscriptions au catéchisme se font en septembre. Contactez la responsable de la catéchèse pour plus d'informations sur le parcours et les dates de célébration."
+      },
+      "confirmation": {
+        "question": "Je veux préparer mon enfant au sacrement de la Confirmation ?",
+        "answer": "La Confirmation est le sacrement qui confirme et renforce la grâce du baptême. Elle se prépare généralement à l'aumônerie pour les collégiens et lycéens. La préparation comprend des temps de catéchèse, de prière et de service. Contactez l'aumônerie pour connaître les conditions et les dates de célébration."
+      },
+      "reconciliation": {
+        "question": "Je veux me préparer au sacrement de la Réconciliation ?",
+        "answer": "Le sacrement de la Réconciliation (confession) est disponible 30 minutes avant chaque messe ou sur rendez-vous auprès d'un prêtre. Si c'est votre première confession, n'hésitez pas à le signaler au prêtre qui vous guidera avec bienveillance. Des temps de réconciliation communautaires sont également proposés pendant l'Avent et le Carême."
+      },
+      "marriage": {
+        "question": "Je veux me marier ?",
+        "answer": "Félicitations ! Pour un mariage à l'église, prenez contact avec la paroisse au moins un an avant la date souhaitée. Vous suivrez une préparation au mariage comprenant plusieurs rencontres avec d'autres couples et avec un prêtre ou diacre. Les documents nécessaires incluent : extraits d'acte de naissance, certificats de baptême et attestation de préparation."
+      },
+      "vocation": {
+        "question": "Je me pose la question sur une éventuelle vocation ?",
+        "answer": "Vous vous interrogez sur votre vocation ? C'est une question importante qui mérite d'être accompagnée. Nous vous invitons à rencontrer un prêtre de la paroisse pour en parler librement. Le Service diocésain des vocations propose également des temps de discernement, des retraites et un accompagnement personnel. N'hésitez pas à nous contacter."
+      },
+      "anointingSick": {
+        "question": "Je voudrais bénéficier du sacrement de l'onction des malades ?",
+        "answer": "Le sacrement de l'onction des malades apporte force et réconfort aux personnes gravement malades ou fragilisées par l'âge. Contactez le secrétariat ou directement un prêtre pour demander ce sacrement. Il peut être donné à domicile, à l'hôpital ou lors de célébrations communautaires organisées dans l'année. Ne tardez pas à le demander."
+      },
+      "funerals": {
+        "question": "Je voudrais me préparer pour les obsèques d'un proche ?",
+        "answer": "Dans ces moments difficiles, l'Église vous accompagne avec compassion. Contactez le secrétariat paroissial dès que possible pour organiser les obsèques. L'équipe funérailles vous aidera à préparer la célébration et à choisir les lectures et les chants. Nous proposons également un accompagnement pour le deuil avec des groupes de parole."
+      }
+    }
   }
 }

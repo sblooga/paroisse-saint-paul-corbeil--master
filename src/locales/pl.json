@@ -7,6 +7,7 @@
     "news": "Aktualności",
     "contact": "Kontakt",
     "faq": "FAQ",
+    "lifeStages": "Etapy życia",
     "downloads": "Dokumenty Zespołów",
     "donate": "Darowizna",
     "search": "Szukaj",
@@ -393,5 +394,46 @@
     "team": "Zespół",
     "schedules": "Godziny Mszy",
     "navigation": "Nawigacja"
+  },
+  "lifeStages": {
+    "title": "Etapy życia",
+    "description": "Chcesz przyjąć sakrament lub przygotować się do ważnego wydarzenia w życiu duchowym? Znajdziesz tu wszystkie informacje, które Ci pomogą.",
+    "moreQuestions": "Potrzebujesz wsparcia?",
+    "moreQuestionsDesc": "Nasz zespół duszpasterski jest do Twojej dyspozycji, aby Ci pomóc.",
+    "contactUs": "Skontaktuj się z nami",
+    "items": {
+      "baptism": {
+        "question": "Chcę ochrzcić moje dziecko?",
+        "answer": "Chrzest jest pierwszym sakramentem inicjacji chrześcijańskiej. Aby ochrzcić dziecko, skontaktuj się z sekretariatem parafii co najmniej 3 miesiące wcześniej. Przygotowanie z zespołem chrzcielnym jest obowiązkowe. Potrzebujesz aktu urodzenia i wyboru chrzestnych, którzy są ochrzczeni i bierzmowani."
+      },
+      "communion": {
+        "question": "Chcę przygotować moje dziecko do komunii?",
+        "answer": "Pierwsza Komunia Święta jest ważnym etapem w życiu wiary dziecka. Przygotowanie odbywa się w ramach katechezy, zwykle w klasie 3 lub 4. Zapisy na katechezę odbywają się we wrześniu. Skontaktuj się z odpowiedzialną za katechezę."
+      },
+      "confirmation": {
+        "question": "Chcę przygotować moje dziecko do sakramentu bierzmowania?",
+        "answer": "Bierzmowanie jest sakramentem, który potwierdza i umacnia łaskę chrztu. Przygotowuje się je zwykle w duszpasterstwie młodzieży. Przygotowanie obejmuje katechezę, modlitwę i służbę. Skontaktuj się z duszpasterstwem."
+      },
+      "reconciliation": {
+        "question": "Chcę przygotować się do sakramentu pojednania?",
+        "answer": "Sakrament pojednania (spowiedź) jest dostępny 30 minut przed każdą Mszą lub po umówieniu się z księdzem. Jeśli to twoja pierwsza spowiedź, powiedz o tym księdzu, który cię poprowadzi. Rekolekcje wspólnotowe są organizowane w Adwencie i Wielkim Poście."
+      },
+      "marriage": {
+        "question": "Chcę wziąć ślub?",
+        "answer": "Gratulacje! Aby wziąć ślub kościelny, skontaktuj się z parafią co najmniej rok przed planowaną datą. Przejdziesz przygotowanie do małżeństwa obejmujące kilka spotkań. Wymagane dokumenty to: akty urodzenia, świadectwa chrztu i zaświadczenie o przygotowaniu."
+      },
+      "vocation": {
+        "question": "Zastanawiam się nad ewentualnym powołaniem?",
+        "answer": "Zastanawiasz się nad swoim powołaniem? To ważne pytanie, które zasługuje na towarzyszenie. Zapraszamy do spotkania z księdzem parafii. Diecezjalna Służba Powołań oferuje również rekolekcje i indywidualne towarzyszenie."
+      },
+      "anointingSick": {
+        "question": "Chciałbym otrzymać sakrament namaszczenia chorych?",
+        "answer": "Sakrament namaszczenia chorych daje siłę i pocieszenie osobom ciężko chorym lub osłabionym wiekiem. Skontaktuj się z sekretariatem lub bezpośrednio z księdzem. Może być udzielony w domu, w szpitalu lub podczas wspólnotowych celebracji."
+      },
+      "funerals": {
+        "question": "Chciałbym przygotować pogrzeb bliskiej osoby?",
+        "answer": "W tych trudnych chwilach Kościół towarzyszy wam z współczuciem. Skontaktuj się z sekretariatem parafii jak najszybciej. Zespół pogrzebowy pomoże przygotować celebrację. Oferujemy również wsparcie w żałobie."
+      }
+    }
   }
 }
