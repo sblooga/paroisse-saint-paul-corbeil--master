@@ -12,6 +12,15 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
+import baptismImg from '@/assets/sacrament-baptism.jpg';
+import communionImg from '@/assets/sacrament-communion.jpg';
+import confirmationImg from '@/assets/sacrament-confirmation.jpg';
+import reconciliationImg from '@/assets/sacrament-reconciliation.jpg';
+import marriageImg from '@/assets/sacrament-marriage.jpg';
+import vocationImg from '@/assets/sacrament-vocation.jpg';
+import anointingImg from '@/assets/sacrament-anointing.jpg';
+import funeralsImg from '@/assets/sacrament-funerals.jpg';
+
 const LifeStages = () => {
   const { t } = useTranslation();
 
@@ -19,48 +28,56 @@ const LifeStages = () => {
     {
       key: 'baptism',
       icon: Droplets,
+      image: baptismImg,
       question: t('lifeStages.items.baptism.question'),
       answer: t('lifeStages.items.baptism.answer'),
     },
     {
       key: 'communion',
       icon: BookOpen,
+      image: communionImg,
       question: t('lifeStages.items.communion.question'),
       answer: t('lifeStages.items.communion.answer'),
     },
     {
       key: 'confirmation',
       icon: Flame,
+      image: confirmationImg,
       question: t('lifeStages.items.confirmation.question'),
       answer: t('lifeStages.items.confirmation.answer'),
     },
     {
       key: 'reconciliation',
       icon: RefreshCw,
+      image: reconciliationImg,
       question: t('lifeStages.items.reconciliation.question'),
       answer: t('lifeStages.items.reconciliation.answer'),
     },
     {
       key: 'marriage',
       icon: Heart,
+      image: marriageImg,
       question: t('lifeStages.items.marriage.question'),
       answer: t('lifeStages.items.marriage.answer'),
     },
     {
       key: 'vocation',
       icon: HelpCircle,
+      image: vocationImg,
       question: t('lifeStages.items.vocation.question'),
       answer: t('lifeStages.items.vocation.answer'),
     },
     {
       key: 'anointingSick',
       icon: HeartHandshake,
+      image: anointingImg,
       question: t('lifeStages.items.anointingSick.question'),
       answer: t('lifeStages.items.anointingSick.answer'),
     },
     {
       key: 'funerals',
       icon: Flower2,
+      image: funeralsImg,
       question: t('lifeStages.items.funerals.question'),
       answer: t('lifeStages.items.funerals.answer'),
     },
@@ -116,8 +133,21 @@ const LifeStages = () => {
                         </span>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="text-base text-muted-foreground pb-5 leading-relaxed pl-16">
-                      {stage.answer}
+                    <AccordionContent className="pb-5 pl-16">
+                      <div className="flex flex-col md:flex-row gap-6">
+                        <div className="md:w-1/3 flex-shrink-0">
+                          <img
+                            src={stage.image}
+                            alt={stage.question}
+                            className="w-full h-48 md:h-40 object-cover rounded-xl shadow-md"
+                          />
+                        </div>
+                        <div className="md:w-2/3">
+                          <p className="text-base text-muted-foreground leading-relaxed">
+                            {stage.answer}
+                          </p>
+                        </div>
+                      </div>
                     </AccordionContent>
                   </AccordionItem>
                 </motion.div>

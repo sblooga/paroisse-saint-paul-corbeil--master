@@ -27,13 +27,13 @@ const Header = () => {
   const navLinks = [
     { name: t('common.home'), href: '/' },
     { name: t('common.parish'), href: '/paroisse' },
+    { name: t('common.lifeStages'), href: '/etapes-de-vie' },
     { name: t('common.team'), href: '/equipe' },
     { name: t('common.schedule'), href: '/horaires' },
     { name: t('common.news'), href: '/articles' },
     { name: t('common.downloads'), href: '/telechargements' },
     { name: t('common.contact'), href: '/contact' },
     { name: t('common.faq'), href: '/faq' },
-    { name: t('common.lifeStages'), href: '/etapes-de-vie' },
   ];
 
   const socialLinks = [
