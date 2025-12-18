@@ -166,7 +166,8 @@ html {
 
   .card-parish {
     @apply bg-card rounded-xl overflow-hidden shadow-card;
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+    @apply border border-border/50 ring-1 ring-border/20;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-primary/10;
   }
 
   .section-padding {
