@@ -36,21 +36,20 @@ const Downloads = () => {
 
   const t = content[currentLang];
 
-  // ⚠️ REMPLACEZ CES URLS PAR VOS VRAIS LIENS GOOGLE DRIVE
   const folderStructure: FolderItem = {
     name: 'Doc Paroisse St. Paul',
     namePl: 'Dokumenty Parafii St. Paul',
-    url: 'https://drive.google.com/drive/folders/VOTRE_DOSSIER_RACINE_ID',
+    url: 'https://drive.google.com/drive/folders/1aUwQM5-uiI38nphqYmzaBqlyIFrJDpU5',
     children: [
       {
         name: 'Bulletin de messe',
         namePl: 'Biuletyn mszalny',
-        url: 'https://drive.google.com/drive/folders/VOTRE_DOSSIER_BULLETIN_ID',
+        url: 'https://drive.google.com/drive/folders/1aUwQM5-uiI38nphqYmzaBqlyIFrJDpU5',
       },
       {
         name: 'Infos paroisse',
         namePl: 'Informacje parafialne',
-        url: 'https://drive.google.com/drive/folders/VOTRE_DOSSIER_INFOS_ID',
+        url: 'https://drive.google.com/drive/folders/1aUwQM5-uiI38nphqYmzaBqlyIFrJDpU5',
       },
     ],
   };
