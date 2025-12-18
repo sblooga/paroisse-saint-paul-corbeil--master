@@ -152,7 +152,7 @@ const Contact = () => {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 {/* Google Maps */}
-                <div className="rounded-xl overflow-hidden shadow-lg mb-8 aspect-video">
+                <div className="rounded-xl overflow-hidden shadow-lg mb-8 aspect-video relative group">
                   <iframe
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2638.5!2d2.4697!3d48.6089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5de7ed64a8b3f%3A0x3d1b1c1c1c1c1c1c!2s%C3%89glise+Saint-Paul+de+Moulin-Galant!5e0!3m2!1sfr!2sfr!4v1702656000000"
                     width="100%"
@@ -162,16 +162,35 @@ const Contact = () => {
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Église Saint-Paul de Moulin-Galant"
+                    className="pointer-events-none md:pointer-events-auto"
                   />
+                  {/* Overlay cliquable pour tablettes/mobiles */}
+                  <a
+                    href="https://www.google.com/maps/place/%C3%89glise+Saint-Paul+de+Moulin-Galant/@48.6089,2.4697,17z"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center bg-primary/0 hover:bg-primary/10 transition-colors md:hidden"
+                    aria-label={t('contact.info.openMap')}
+                  >
+                    <span className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+                      {t('contact.info.openMap')}
+                    </span>
+                  </a>
                 </div>
 
                 {/* Contact Info Cards */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="card-parish p-5">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
+                      <a
+                        href="https://www.google.com/maps/place/%C3%89glise+Saint-Paul+de+Moulin-Galant/@48.6089,2.4697,17z"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-3 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors cursor-pointer"
+                        aria-label={t('contact.info.openMap')}
+                      >
                         <MapPin className="text-primary" size={24} />
-                      </div>
+                      </a>
                       <div>
                         <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.address')}</h4>
                         <p className="text-muted-foreground text-sm whitespace-pre-line">
