@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
-  Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck
+  Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck, Lock
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,9 +18,10 @@ import AdminMessages from '@/components/admin/AdminMessages';
 import AdminNewsletter from '@/components/admin/AdminNewsletter';
 import AdminFooterLinks from '@/components/admin/AdminFooterLinks';
 import AdminUsers from '@/components/admin/AdminUsers';
+import AdminDocsPassword from '@/components/admin/AdminDocsPassword';
 import ChangePasswordDialog from '@/components/admin/ChangePasswordDialog';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users' | 'docsPassword';
 
 interface Stats {
   messages: number;
@@ -284,6 +285,16 @@ const Admin = () => {
               {t('admin.tabs.users', 'Utilisateurs')}
             </Button>
           )}
+          {isAdmin && (
+            <Button
+              variant={activeTab === 'docsPassword' ? 'default' : 'outline'}
+              onClick={() => setActiveTab('docsPassword')}
+              size="sm"
+            >
+              <Lock size={16} />
+              {t('admin.tabs.docsPassword', 'Docs Équipes')}
+            </Button>
+          )}
         </div>
 
         <div className="card-parish overflow-hidden">
@@ -295,6 +306,7 @@ const Admin = () => {
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
           {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
           {activeTab === 'users' && isAdmin && <AdminUsers refreshKey={refreshKey} />}
+          {activeTab === 'docsPassword' && isAdmin && <AdminDocsPassword />}
         </div>
       </main>
     </div>
