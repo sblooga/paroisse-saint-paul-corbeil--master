@@ -154,7 +154,7 @@ const Contact = () => {
                 {/* Google Maps */}
                 <div className="rounded-xl overflow-hidden shadow-lg mb-8 aspect-video relative group">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2638.5!2d2.4697!3d48.6089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e5de7ed64a8b3f%3A0x3d1b1c1c1c1c1c1c!2s%C3%89glise+Saint-Paul+de+Moulin-Galant!5e0!3m2!1sfr!2sfr!4v1702656000000"
+                    src="https://www.google.com/maps?q=118+Boulevard+John+Kennedy,+91100+Corbeil-Essonnes,+France&output=embed"
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
@@ -166,7 +166,7 @@ const Contact = () => {
                   />
                   {/* Overlay cliquable pour tablettes/mobiles */}
                   <a
-                    href="https://www.google.com/maps/place/%C3%89glise+Saint-Paul+de+Moulin-Galant/@48.6089,2.4697,17z"
+                    href="https://www.google.com/maps/search/?api=1&query=118+Boulevard+John+Kennedy+91100+Corbeil-Essonnes+France"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="absolute inset-0 flex items-center justify-center bg-primary/0 hover:bg-primary/10 transition-colors md:hidden"
@@ -183,7 +183,7 @@ const Contact = () => {
                   <div className="card-parish p-5">
                     <div className="flex items-start gap-4">
                       <a
-                        href="https://www.google.com/maps/place/%C3%89glise+Saint-Paul+de+Moulin-Galant/@48.6089,2.4697,17z"
+                        href="https://www.google.com/maps/search/?api=1&query=118+Boulevard+John+Kennedy+91100+Corbeil-Essonnes+France"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="p-3 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors cursor-pointer"
