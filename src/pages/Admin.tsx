@@ -5,7 +5,8 @@ import { useTranslation } from 'react-i18next';
 import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
-  Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck, Lock
+  Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck, Lock,
+  HelpCircle, Heart
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -19,9 +20,11 @@ import AdminNewsletter from '@/components/admin/AdminNewsletter';
 import AdminFooterLinks from '@/components/admin/AdminFooterLinks';
 import AdminUsers from '@/components/admin/AdminUsers';
 import AdminDocsPassword from '@/components/admin/AdminDocsPassword';
+import AdminFAQ from '@/components/admin/AdminFAQ';
+import AdminLifeStages from '@/components/admin/AdminLifeStages';
 import ChangePasswordDialog from '@/components/admin/ChangePasswordDialog';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users' | 'docsPassword';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
 
 interface Stats {
   messages: number;
@@ -275,6 +278,22 @@ const Admin = () => {
             <LinkIcon size={16} />
             {t('admin.tabs.footerLinks')}
           </Button>
+          <Button
+            variant={activeTab === 'faq' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('faq')}
+            size="sm"
+          >
+            <HelpCircle size={16} />
+            FAQ
+          </Button>
+          <Button
+            variant={activeTab === 'lifeStages' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('lifeStages')}
+            size="sm"
+          >
+            <Heart size={16} />
+            Étapes de vie
+          </Button>
           {isAdmin && (
             <Button
               variant={activeTab === 'users' ? 'default' : 'outline'}
@@ -305,6 +324,8 @@ const Admin = () => {
           {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
           {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
+          {activeTab === 'faq' && <AdminFAQ key={`faq-${refreshKey}`} />}
+          {activeTab === 'lifeStages' && <AdminLifeStages key={`lifeStages-${refreshKey}`} />}
           {activeTab === 'users' && isAdmin && <AdminUsers refreshKey={refreshKey} />}
           {activeTab === 'docsPassword' && isAdmin && <AdminDocsPassword />}
         </div>
