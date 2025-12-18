@@ -56,6 +56,11 @@ const Downloads = () => {
         namePl: 'Dokumenty (Odpowiedzialni)',
         url: 'https://drive.google.com/drive/folders/1Rw3ZZ3wkNHMHXvK-aTcQTFQL_fYj4oJB',
       },
+      {
+        name: 'Équipes (Pastorale)',
+        namePl: 'Zespoły (Duszpasterstwo)',
+        url: 'https://drive.google.com/drive/folders/1_tEHHKcF4UaDcUYReHrGcDsSAQ-btXZy',
+      },
     ],
   };
 
