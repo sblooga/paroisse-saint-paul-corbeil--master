@@ -110,6 +110,95 @@ export type Database = {
         }
         Relationships: []
       }
+      faq_categories: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          icon: string
+          id: string
+          sort_order: number | null
+          title: string
+          title_fr: string | null
+          title_pl: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          icon?: string
+          id?: string
+          sort_order?: number | null
+          title: string
+          title_fr?: string | null
+          title_pl?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          icon?: string
+          id?: string
+          sort_order?: number | null
+          title?: string
+          title_fr?: string | null
+          title_pl?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      faq_items: {
+        Row: {
+          active: boolean | null
+          answer: string
+          answer_fr: string | null
+          answer_pl: string | null
+          category_id: string
+          created_at: string
+          id: string
+          question: string
+          question_fr: string | null
+          question_pl: string | null
+          sort_order: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          answer: string
+          answer_fr?: string | null
+          answer_pl?: string | null
+          category_id: string
+          created_at?: string
+          id?: string
+          question: string
+          question_fr?: string | null
+          question_pl?: string | null
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          answer?: string
+          answer_fr?: string | null
+          answer_pl?: string | null
+          category_id?: string
+          created_at?: string
+          id?: string
+          question?: string
+          question_fr?: string | null
+          question_pl?: string | null
+          sort_order?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faq_items_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "faq_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       footer_links: {
         Row: {
           active: boolean | null
@@ -143,6 +232,54 @@ export type Database = {
           sort_order?: number | null
           updated_at?: string
           url?: string
+        }
+        Relationships: []
+      }
+      life_stages: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          description: string
+          description_fr: string | null
+          description_pl: string | null
+          icon: string
+          id: string
+          image_url: string | null
+          sort_order: number | null
+          title: string
+          title_fr: string | null
+          title_pl: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          description: string
+          description_fr?: string | null
+          description_pl?: string | null
+          icon?: string
+          id?: string
+          image_url?: string | null
+          sort_order?: number | null
+          title: string
+          title_fr?: string | null
+          title_pl?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          description?: string
+          description_fr?: string | null
+          description_pl?: string | null
+          icon?: string
+          id?: string
+          image_url?: string | null
+          sort_order?: number | null
+          title?: string
+          title_fr?: string | null
+          title_pl?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
