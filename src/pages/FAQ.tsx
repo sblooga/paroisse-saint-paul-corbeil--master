@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { HelpCircle, Mail, Phone } from 'lucide-react';
+import { HelpCircle, Mail, Phone, Church, Users, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -19,6 +19,7 @@ const FAQ = () => {
     {
       title: t('faq.categories.sacraments'),
       key: 'sacraments',
+      icon: Church,
       questions: [
         { question: t('faq.sacraments.q1'), answer: t('faq.sacraments.a1') },
         { question: t('faq.sacraments.q2'), answer: t('faq.sacraments.a2') },
@@ -29,6 +30,7 @@ const FAQ = () => {
     {
       title: t('faq.categories.parishLife'),
       key: 'parishLife',
+      icon: Users,
       questions: [
         { question: t('faq.parishLife.q1'), answer: t('faq.parishLife.a1') },
         { question: t('faq.parishLife.q2'), answer: t('faq.parishLife.a2') },
@@ -39,6 +41,7 @@ const FAQ = () => {
     {
       title: t('faq.categories.practicalInfo'),
       key: 'practicalInfo',
+      icon: Info,
       questions: [
         { question: t('faq.practicalInfo.q1'), answer: t('faq.practicalInfo.a1') },
         { question: t('faq.practicalInfo.q2'), answer: t('faq.practicalInfo.a2') },
@@ -75,40 +78,43 @@ const FAQ = () => {
         {/* FAQ Content */}
         <section className="section-padding">
           <div className="container-parish max-w-4xl">
-            {faqCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={category.key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
-                className="mb-12"
-              >
-                <h2 className="text-2xl font-heading font-bold text-foreground mb-6 flex items-center gap-3">
-                  <span className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary text-lg">
-                    {categoryIndex + 1}
-                  </span>
-                  {category.title}
-                </h2>
+            {faqCategories.map((category, categoryIndex) => {
+              const IconComponent = category.icon;
+              return (
+                <motion.div
+                  key={category.key}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
+                  className="mb-12"
+                >
+                  <h2 className="text-2xl font-heading font-bold text-soft-blue mb-6 flex items-center gap-3">
+                    <span className="w-12 h-12 bg-soft-blue/10 rounded-xl flex items-center justify-center">
+                      <IconComponent className="text-soft-blue" size={24} />
+                    </span>
+                    {category.title}
+                  </h2>
 
-                <Accordion type="single" collapsible className="space-y-3">
-                  {category.questions.map((item, index) => (
-                    <AccordionItem
-                      key={index}
-                      value={`${category.key}-${index}`}
-                      className="card-parish border-none px-6 data-[state=open]:shadow-lg transition-shadow"
-                    >
-                      <AccordionTrigger className="text-left text-base md:text-lg font-semibold text-foreground hover:text-primary hover:no-underline py-5">
-                        {item.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-base text-muted-foreground pb-5 leading-relaxed">
-                        {item.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </motion.div>
-            ))}
+                  <Accordion type="single" collapsible className="space-y-3">
+                    {category.questions.map((item, index) => (
+                      <AccordionItem
+                        key={index}
+                        value={`${category.key}-${index}`}
+                        className="card-parish border-none px-6 data-[state=open]:shadow-lg transition-shadow"
+                      >
+                        <AccordionTrigger className="text-left text-base md:text-lg font-semibold text-foreground hover:text-soft-blue hover:no-underline py-5">
+                          {item.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="text-base text-muted-foreground pb-5 leading-relaxed">
+                          {item.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </motion.div>
+              );
+            })}
 
             {/* Contact CTA */}
             <motion.div
