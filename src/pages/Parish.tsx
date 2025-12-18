@@ -4,6 +4,7 @@ import { Church, History, Users, Heart, MapPin, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
+import churchImage from '@/assets/hero-church-1.jpg';
 
 const Parish = () => {
   const { t, i18n } = useTranslation();
@@ -153,7 +154,7 @@ const Parish = () => {
           </div>
         </section>
 
-        {/* Location & Info */}
+        {/* Church Photo & Description */}
         <section className="section-padding">
           <div className="container-parish">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -164,10 +165,44 @@ const Parish = () => {
                 transition={{ duration: 0.6 }}
               >
                 <h2 className="text-foreground mb-6">
-                  {currentLang === 'pl' ? 'Informacje praktyczne' : 'Informations pratiques'}
+                  {currentLang === 'pl' ? 'Nasz kościół' : 'Notre église'}
                 </h2>
                 
-                <div className="space-y-6">
+                <div className="prose prose-lg max-w-none text-muted-foreground space-y-4">
+                  {currentLang === 'pl' ? (
+                    <>
+                      <p>
+                        Kościół Saint-Paul de Moulin-Galant to miejsce kultu o wyjątkowej architekturze, 
+                        położone przy bulwarze John Kennedy w spokojnej dzielnicy Corbeil-Essonnes.
+                      </p>
+                      <p>
+                        Zbudowany w XX wieku, nasz kościół wyróżnia się prostą, ale elegancką fasadą 
+                        z charakterystycznym dachem dwuspadowym i wysokim krzyżem wieńczącym wieżę dzwonniczą.
+                      </p>
+                      <p>
+                        Wnętrze kościoła zaprasza do modlitwy i skupienia, oferując ciepłą i przyjazną 
+                        atmosferę zarówno dla codziennych nabożeństw, jak i wielkich uroczystości liturgicznych.
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p>
+                        L'église Saint-Paul de Moulin-Galant est un lieu de culte à l'architecture singulière, 
+                        située sur le boulevard John Kennedy dans le quartier paisible de Corbeil-Essonnes.
+                      </p>
+                      <p>
+                        Construite au XXe siècle, notre église se distingue par sa façade simple mais élégante, 
+                        avec son toit à deux pentes caractéristique et sa haute croix surmontant le clocher.
+                      </p>
+                      <p>
+                        L'intérieur de l'église invite à la prière et au recueillement, offrant une atmosphère 
+                        chaleureuse et accueillante tant pour les offices quotidiens que pour les grandes célébrations liturgiques.
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                <div className="mt-8 space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <MapPin className="text-primary" size={24} />
@@ -190,7 +225,7 @@ const Parish = () => {
                     </div>
                     <div>
                       <h4 className="font-heading font-bold text-foreground mb-1">
-                        {currentLang === 'pl' ? 'Godziny otwarcia' : 'Horaires d\'ouverture'}
+                        {currentLang === 'pl' ? 'Godziny otwarcia' : "Horaires d'ouverture"}
                       </h4>
                       <p className="text-muted-foreground">
                         {currentLang === 'pl' 
@@ -209,16 +244,10 @@ const Parish = () => {
                 transition={{ duration: 0.6 }}
                 className="rounded-2xl overflow-hidden shadow-lg"
               >
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2635.8!2d2.4847!3d48.6089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDjCsDM2JzMyLjAiTiAywrAyOScwNC45IkU!5e0!3m2!1sfr!2sfr!4v1234567890"
-                  width="100%"
-                  height="350"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title={currentLang === 'pl' ? 'Lokalizacja parafii' : 'Localisation de la paroisse'}
-                  className="w-full"
+                <img
+                  src={churchImage}
+                  alt={currentLang === 'pl' ? 'Kościół Saint-Paul de Moulin-Galant' : 'Église Saint-Paul de Moulin-Galant'}
+                  className="w-full h-[450px] object-cover"
                 />
               </motion.div>
             </div>
