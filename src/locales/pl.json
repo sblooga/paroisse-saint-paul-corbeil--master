@@ -88,7 +88,8 @@
     "readMore": "Czytaj więcej",
     "notFound": "Artykuł nie znaleziony",
     "notFoundDesc": "Ten artykuł nie istnieje lub nie jest już dostępny.",
-    "backToArticles": "Powrót do aktualności"
+    "backToArticles": "Powrót do aktualności",
+    "featured": "Wyróżnione"
   },
   "massSchedule": {
     "title": "Godziny Mszy Świętych",

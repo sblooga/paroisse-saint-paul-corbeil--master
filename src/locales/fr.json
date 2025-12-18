@@ -88,7 +88,8 @@
     "readMore": "Lire la suite",
     "notFound": "Article non trouvé",
     "notFoundDesc": "Cet article n'existe pas ou n'est plus disponible.",
-    "backToArticles": "Retour aux actualités"
+    "backToArticles": "Retour aux actualités",
+    "featured": "À la une"
   },
   "massSchedule": {
     "title": "Horaires des Messes",
