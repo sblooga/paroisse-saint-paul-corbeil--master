@@ -42,14 +42,19 @@ const Downloads = () => {
     url: 'https://drive.google.com/drive/folders/1aUwQM5-uiI38nphqYmzaBqlyIFrJDpU5',
     children: [
       {
-        name: 'Bulletin de messe',
-        namePl: 'Biuletyn mszalny',
-        url: 'https://drive.google.com/drive/folders/1aUwQM5-uiI38nphqYmzaBqlyIFrJDpU5',
+        name: 'Bulletins (Infos)',
+        namePl: 'Biuletyny (Informacje)',
+        url: 'https://drive.google.com/drive/folders/1cspN3-vFm1gLz2QcG3ihGxAz5CU3H7ha',
       },
       {
-        name: 'Infos paroisse',
-        namePl: 'Informacje parafialne',
-        url: 'https://drive.google.com/drive/folders/1aUwQM5-uiI38nphqYmzaBqlyIFrJDpU5',
+        name: 'Bulletins (Messe)',
+        namePl: 'Biuletyny (Msza)',
+        url: 'https://drive.google.com/drive/folders/1p6L2UDbvqRM7I09bYEusY2ni2LNHJVBP',
+      },
+      {
+        name: 'Docs (Responsables)',
+        namePl: 'Dokumenty (Odpowiedzialni)',
+        url: 'https://drive.google.com/drive/folders/1Rw3ZZ3wkNHMHXvK-aTcQTFQL_fYj4oJB',
       },
     ],
   };
