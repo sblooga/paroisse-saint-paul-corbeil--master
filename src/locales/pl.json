@@ -171,7 +171,8 @@
       "phone": "Centrala",
       "email": "Email",
       "hours": "Godziny",
-      "hoursValue": "Wkrótce"
+      "hoursValue": "Wkrótce",
+      "openMap": "Otwórz w Mapach Google"
     }
   },
   "faq": {

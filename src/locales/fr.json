@@ -171,7 +171,8 @@
       "phone": "Standard",
       "email": "Email",
       "hours": "Horaires",
-      "hoursValue": "À venir"
+      "hoursValue": "À venir",
+      "openMap": "Ouvrir dans Google Maps"
     }
   },
   "faq": {
