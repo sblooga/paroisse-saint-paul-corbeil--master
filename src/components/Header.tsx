@@ -33,6 +33,7 @@ const Header = () => {
     { name: t('common.downloads'), href: '/telechargements' },
     { name: t('common.contact'), href: '/contact' },
     { name: t('common.faq'), href: '/faq' },
+    { name: t('common.lifeStages'), href: '/etapes-de-vie' },
   ];
 
   const socialLinks = [

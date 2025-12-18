@@ -41,6 +41,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
     { id: 'nav-news', title: t('common.news'), url: '/articles', keywords: ['actualités', 'news', 'aktualności', 'articles'] },
     { id: 'nav-contact', title: t('common.contact'), url: '/contact', keywords: ['contact', 'kontakt', 'email', 'téléphone'] },
     { id: 'nav-faq', title: t('common.faq'), url: '/faq', keywords: ['faq', 'questions', 'pytania', 'aide', 'help'] },
+    { id: 'nav-life-stages', title: t('common.lifeStages'), url: '/etapes-de-vie', keywords: ['étapes', 'vie', 'sacrements', 'baptême', 'mariage', 'communion', 'confirmation', 'sacramenty', 'chrzest', 'ślub'] },
     { id: 'nav-donate', title: t('common.donate'), url: '/#don', keywords: ['don', 'darowizna', 'donate', 'soutenir'] },
   ], [t]);
 

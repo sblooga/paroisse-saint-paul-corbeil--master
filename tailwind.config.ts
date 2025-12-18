@@ -68,6 +68,7 @@ export default {
           cream: "hsl(var(--cream))",
           brown: "hsl(var(--brown-dark))",
         },
+        "dusty-rose": "hsl(var(--dusty-rose))",
       },
       borderRadius: {
         lg: "var(--radius)",
