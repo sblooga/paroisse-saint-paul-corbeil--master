@@ -30,6 +30,7 @@ const Header = () => {
     { name: t('common.team'), href: '/equipe' },
     { name: t('common.schedule'), href: '/horaires' },
     { name: t('common.news'), href: '/articles' },
+    { name: t('common.downloads'), href: '/telechargements' },
     { name: t('common.contact'), href: '/contact' },
     { name: t('common.faq'), href: '/faq' },
   ];
