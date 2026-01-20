@@ -1,5 +1,5 @@
 import { useEditor, EditorContent } from '@tiptap/react';
-import React, { useEffect, useRef, forwardRef, useState } from 'react';
+import React, { useEffect, useRef, forwardRef, useState, lazy, Suspense } from 'react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
@@ -29,6 +29,7 @@ import {
   Video,
   FileAudio,
   FileText,
+  Eye,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,8 +55,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select';
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
+import { ScrollArea } from './scroll-area';
+import { sanitizeHtml } from '@/lib/sanitize';
+
+// Lazy load emoji picker to avoid build issues
+const EmojiPicker = lazy(() => import('./emoji-picker'));
 
 interface RichTextEditorProps {
   content: string;
@@ -159,6 +163,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   const [showPodcastDialog, setShowPodcastDialog] = useState(false);
   const [showDriveDialog, setShowDriveDialog] = useState(false);
   const [showImageSettings, setShowImageSettings] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
   const [podcastUrl, setPodcastUrl] = useState('');
   const [driveUrl, setDriveUrl] = useState('');
@@ -591,14 +596,9 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
-            <Picker 
-              data={data} 
-              onEmojiSelect={insertEmoji}
-              locale="fr"
-              theme="light"
-              previewPosition="none"
-              skinTonePosition="none"
-            />
+            <Suspense fallback={<div className="p-4">Chargement...</div>}>
+              <EmojiPicker onEmojiSelect={insertEmoji} />
+            </Suspense>
           </PopoverContent>
         </Popover>
         
@@ -677,9 +677,44 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
         >
           <Redo className="h-4 w-4" />
         </Button>
+        
+        <div className="w-px h-6 bg-border mx-1" />
+        
+        {/* Preview button */}
+        <Button
+          type="button"
+          variant={showPreview ? "default" : "ghost"}
+          size="sm"
+          onClick={() => setShowPreview(!showPreview)}
+          title="Prévisualiser"
+          className={showPreview ? "bg-primary text-primary-foreground" : ""}
+        >
+          <Eye className="h-4 w-4 mr-1" />
+          <span className="text-xs">Aperçu</span>
+        </Button>
       </div>
       
-      <EditorContent editor={editor} />
+      {/* Editor or Preview */}
+      {showPreview ? (
+        <div className="min-h-[200px] p-4 bg-background">
+          <div className="prose prose-lg max-w-none text-foreground
+            [&_h1]:font-playfair [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:text-foreground [&_h1]:mb-6 [&_h1]:mt-4
+            [&_h2]:font-playfair [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mb-4 [&_h2]:mt-6
+            [&_h3]:font-playfair [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mt-4 [&_h3]:mb-3
+            [&_p]:font-lato [&_p]:mb-4 [&_p]:leading-relaxed [&_p]:text-foreground/90
+            [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:space-y-2 [&_ul]:font-lato
+            [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:space-y-2 [&_ol]:font-lato
+            [&_li]:text-foreground/90
+            [&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80
+            [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4
+            [&_img]:rounded-lg [&_img]:shadow-md [&_img]:my-6
+            [&_iframe]:rounded-lg [&_iframe]:my-4"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(editor?.getHTML() || '') }}
+          />
+        </div>
+      ) : (
+        <EditorContent editor={editor} />
+      )}
       
       {/* Video Dialog */}
       <Dialog open={showVideoDialog} onOpenChange={setShowVideoDialog}>
