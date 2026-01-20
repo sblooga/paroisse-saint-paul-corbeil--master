@@ -184,7 +184,11 @@ const ArticleDetail = () => {
 
               {content ? (
                 <div 
-                  className="prose prose-lg max-w-none dark:prose-invert"
+                  className="prose prose-lg max-w-none dark:prose-invert
+                    [&_iframe]:w-full [&_iframe]:rounded-lg [&_iframe]:my-4
+                    [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2
+                    [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2
+                    [&_img[data-align='center']]:mx-auto [&_img[data-align='center']]:block"
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
                 />
               ) : excerpt ? (
