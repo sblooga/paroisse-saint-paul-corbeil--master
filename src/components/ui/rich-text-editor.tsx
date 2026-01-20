@@ -196,7 +196,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   const [driveUrl, setDriveUrl] = useState('');
   const [imageWidth, setImageWidth] = useState('100%');
   const [imageAlign, setImageAlign] = useState('center');
-  const [lastImagePos, setLastImagePos] = useState<number | null>(null);
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
 
   const editor = useEditor({
     extensions: [
@@ -274,7 +274,8 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
     }
   }, [content, editor]);
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Step 1: User picks a file -> show settings dialog BEFORE upload
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !editor) return;
 
@@ -290,13 +291,29 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
       return;
     }
 
+    // Store file and show settings dialog
+    setPendingImageFile(file);
+    setImageWidth('100%');
+    setImageAlign('center');
+    setShowImageSettings(true);
+
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Step 2: User confirms settings -> upload and insert with chosen settings
+  const confirmImageUpload = async () => {
+    if (!pendingImageFile || !editor) return;
+
     try {
       toast.loading('Téléchargement de l\'image...');
       
       // Compress image (skip for GIFs)
-      let fileToUpload: Blob | File = file;
-      if (!file.type.includes('gif')) {
-        fileToUpload = await compressImage(file);
+      let fileToUpload: Blob | File = pendingImageFile;
+      if (!pendingImageFile.type.includes('gif')) {
+        fileToUpload = await compressImage(pendingImageFile);
       }
 
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.webp`;
@@ -311,64 +328,34 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
       if (uploadError) throw uploadError;
 
-       const { data: urlData } = supabase.storage
-         .from('media')
-         .getPublicUrl(filePath);
+      const { data: urlData } = supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
 
-       const insertPos = editor.state.selection.from;
-       editor.chain().focus().setImage({
-         src: urlData.publicUrl,
-         alt: file.name,
-       }).run();
-       setLastImagePos(insertPos);
+      // Insert image WITH the chosen settings directly
+      editor.chain().focus().setImage({
+        src: urlData.publicUrl,
+        alt: pendingImageFile.name,
+        width: imageWidth,
+        align: imageAlign,
+      } as any).run();
 
-       setShowImageSettings(true);
-       toast.dismiss();
-       toast.success('Image ajoutée - Configurez la taille et l\'alignement');
+      toast.dismiss();
+      toast.success('Image ajoutée');
     } catch (error) {
       toast.dismiss();
       toast.error('Erreur lors du téléchargement');
       console.error(error);
     }
 
-    // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    // Cleanup
+    setPendingImageFile(null);
+    setShowImageSettings(false);
   };
 
-  const applyImageSettings = () => {
-    if (!editor) return;
-
-    const selection = editor.state.selection;
-
-    // 1) If an image is currently selected, update it directly
-    const selectedNode = editor.state.doc.nodeAt(selection.from);
-    if (selectedNode?.type?.name === 'image') {
-      editor.chain().focus().updateAttributes('image', {
-        width: imageWidth,
-        align: imageAlign,
-      }).run();
-      setShowImageSettings(false);
-      toast.success('Image mise à jour');
-      return;
-    }
-
-    // 2) Otherwise, fall back to the last inserted image position
-    if (lastImagePos != null) {
-      const nodeAtPos = editor.state.doc.nodeAt(lastImagePos);
-      if (nodeAtPos?.type?.name === 'image') {
-        editor.chain().focus().setNodeSelection(lastImagePos).updateAttributes('image', {
-          width: imageWidth,
-          align: imageAlign,
-        }).run();
-        setShowImageSettings(false);
-        toast.success('Image mise à jour');
-        return;
-      }
-    }
-
-    toast.error('Sélectionnez une image avant d\'appliquer les réglages');
+  const cancelImageUpload = () => {
+    setPendingImageFile(null);
+    setShowImageSettings(false);
   };
 
   const insertVideo = () => {
@@ -938,10 +925,10 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowImageSettings(false)}>
+            <Button variant="outline" onClick={cancelImageUpload}>
               Annuler
             </Button>
-            <Button onClick={applyImageSettings}>Appliquer</Button>
+            <Button onClick={confirmImageUpload}>Insérer l'image</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
