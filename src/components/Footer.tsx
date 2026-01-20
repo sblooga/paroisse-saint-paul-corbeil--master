@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Heart } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Youtube, Heart, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import logoImage from '@/assets/logo.png';
@@ -59,19 +59,30 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               {[
-                { icon: Facebook, label: 'Facebook' },
-                { icon: Instagram, label: 'Instagram' },
-                { icon: Youtube, label: 'YouTube' },
-              ].map((social) => (
-                <a
-                  key={social.label}
-                  href="#"
-                  aria-label={social.label}
-                  className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
-                >
-                  <social.icon size={18} />
-                </a>
-              ))}
+                { icon: Facebook, href: 'https://www.facebook.com/stpaulcorbeil', label: 'Facebook' },
+                { icon: Instagram, href: '#', label: 'Instagram' },
+                { icon: Youtube, href: 'https://www.youtube.com/@eglise-st.paul-corbeil-essonne', label: 'YouTube' },
+                { icon: () => (
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px]">
+                    <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                  </svg>
+                ), href: 'https://www.flickr.com/photos/paroissesaintpaul/albums/', label: 'Flickr' },
+                { icon: MessageCircle, href: 'https://wa.me/33986346726', label: 'WhatsApp' },
+              ].map((social) => {
+                const IconComponent = social.icon;
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
+                  >
+                    {typeof IconComponent === 'function' && IconComponent.length === 0 ? <IconComponent /> : <IconComponent size={18} />}
+                  </a>
+                );
+              })}
             </div>
           </div>
 
