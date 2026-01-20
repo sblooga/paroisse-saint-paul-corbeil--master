@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Calendar as CalendarIcon, Facebook, Twitter, Linkedin, Share2 } from 'lucide-react';
+import { ArrowLeft, Calendar as CalendarIcon, Facebook, Share2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
@@ -216,24 +216,6 @@ const ArticleDetail = () => {
                       aria-label="Partager sur Facebook"
                     >
                       <Facebook size={20} />
-                    </a>
-                    <a
-                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(getLocalizedTitle(article))}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1DA1F2] text-white hover:opacity-90 transition-opacity"
-                      aria-label="Partager sur Twitter"
-                    >
-                      <Twitter size={20} />
-                    </a>
-                    <a
-                      href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-10 h-10 rounded-full bg-[#0A66C2] text-white hover:opacity-90 transition-opacity"
-                      aria-label="Partager sur LinkedIn"
-                    >
-                      <Linkedin size={20} />
                     </a>
                     <a
                       href={`https://api.whatsapp.com/send?text=${encodeURIComponent(getLocalizedTitle(article) + ' ' + window.location.href)}`}
