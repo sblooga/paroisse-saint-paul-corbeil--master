@@ -1,5 +1,6 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import React, { useEffect, useRef, forwardRef, useState, lazy, Suspense } from 'react';
+import { Node, mergeAttributes } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
@@ -78,7 +79,7 @@ const CustomImage = Image.extend({
         parseHTML: element => element.getAttribute('data-width') || element.style.width || '100%',
         renderHTML: attributes => {
           const width = attributes.width || '100%';
-          return { 
+          return {
             'data-width': width,
           };
         },
@@ -101,6 +102,36 @@ const CustomImage = Image.extend({
         },
       },
     };
+  },
+});
+
+// Generic iframe node (Spotify / Apple Podcasts / SoundCloud / Deezer embeds)
+const Iframe = Node.create({
+  name: 'iframe',
+  group: 'block',
+  atom: true,
+  selectable: true,
+
+  addAttributes() {
+    return {
+      src: { default: null },
+      width: { default: '100%' },
+      height: { default: '152' },
+      frameborder: { default: '0' },
+      allow: { default: null },
+      allowfullscreen: { default: true },
+      sandbox: { default: null },
+      scrolling: { default: null },
+      class: { default: null },
+    };
+  },
+
+  parseHTML() {
+    return [{ tag: 'iframe' }];
+  },
+
+  renderHTML({ HTMLAttributes }) {
+    return ['iframe', mergeAttributes(HTMLAttributes)];
   },
 });
 
@@ -165,6 +196,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   const [driveUrl, setDriveUrl] = useState('');
   const [imageWidth, setImageWidth] = useState('100%');
   const [imageAlign, setImageAlign] = useState('center');
+  const [lastImagePos, setLastImagePos] = useState<number | null>(null);
 
   const editor = useEditor({
     extensions: [
@@ -210,6 +242,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
         inline: false,
         allowBase64: false,
       }),
+      Iframe,
       Youtube.configure({
         width: 640,
         height: 360,
@@ -278,18 +311,20 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from('media')
-        .getPublicUrl(filePath);
+       const { data: urlData } = supabase.storage
+         .from('media')
+         .getPublicUrl(filePath);
 
-      editor.chain().focus().setImage({ 
-        src: urlData.publicUrl,
-        alt: file.name,
-      }).run();
-      
-      setShowImageSettings(true);
-      toast.dismiss();
-      toast.success('Image ajoutée - Configurez la taille et l\'alignement');
+       const insertPos = editor.state.selection.from;
+       editor.chain().focus().setImage({
+         src: urlData.publicUrl,
+         alt: file.name,
+       }).run();
+       setLastImagePos(insertPos);
+
+       setShowImageSettings(true);
+       toast.dismiss();
+       toast.success('Image ajoutée - Configurez la taille et l\'alignement');
     } catch (error) {
       toast.dismiss();
       toast.error('Erreur lors du téléchargement');
@@ -304,22 +339,36 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   const applyImageSettings = () => {
     if (!editor) return;
-    
-    const { state } = editor;
-    const { from, to } = state.selection;
-    
-    // Find image node in selection
-    state.doc.nodesBetween(from, to, (node, pos) => {
-      if (node.type.name === 'image') {
-        editor.chain().focus().setNodeSelection(pos).updateAttributes('image', {
+
+    const selection = editor.state.selection;
+
+    // 1) If an image is currently selected, update it directly
+    const selectedNode = editor.state.doc.nodeAt(selection.from);
+    if (selectedNode?.type?.name === 'image') {
+      editor.chain().focus().updateAttributes('image', {
+        width: imageWidth,
+        align: imageAlign,
+      }).run();
+      setShowImageSettings(false);
+      toast.success('Image mise à jour');
+      return;
+    }
+
+    // 2) Otherwise, fall back to the last inserted image position
+    if (lastImagePos != null) {
+      const nodeAtPos = editor.state.doc.nodeAt(lastImagePos);
+      if (nodeAtPos?.type?.name === 'image') {
+        editor.chain().focus().setNodeSelection(lastImagePos).updateAttributes('image', {
           width: imageWidth,
           align: imageAlign,
         }).run();
+        setShowImageSettings(false);
+        toast.success('Image mise à jour');
+        return;
       }
-    });
-    
-    setShowImageSettings(false);
-    toast.success('Image mise à jour');
+    }
+
+    toast.error('Sélectionnez une image avant d\'appliquer les réglages');
   };
 
   const insertVideo = () => {
@@ -355,42 +404,92 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   const insertPodcast = () => {
     if (!editor || !podcastUrl) return;
-    
-    let embedHtml = '';
-    
+
     // Spotify
     if (podcastUrl.includes('spotify.com')) {
       const spotifyMatch = podcastUrl.match(/(?:episode|show|track)\/([a-zA-Z0-9]+)/);
       if (spotifyMatch) {
         const type = podcastUrl.includes('/episode/') ? 'episode' : podcastUrl.includes('/show/') ? 'show' : 'track';
-        embedHtml = `<div class="my-4"><iframe src="https://open.spotify.com/embed/${type}/${spotifyMatch[1]}" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" class="rounded-lg"></iframe></div>`;
+        editor.chain().focus().insertContent({
+          type: 'iframe',
+          attrs: {
+            src: `https://open.spotify.com/embed/${type}/${spotifyMatch[1]}`,
+            width: '100%',
+            height: '152',
+            frameborder: '0',
+            allow: 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture',
+            class: 'rounded-lg',
+          },
+        }).run();
+        setPodcastUrl('');
+        setShowPodcastDialog(false);
+        toast.success('Podcast ajouté');
+        return;
       }
     }
+
     // Apple Podcasts
-    else if (podcastUrl.includes('podcasts.apple.com')) {
-      embedHtml = `<div class="my-4"><iframe src="${podcastUrl.replace('podcasts.apple.com', 'embed.podcasts.apple.com')}" height="175" frameborder="0" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" allow="autoplay *; encrypted-media *; clipboard-write" class="w-full rounded-lg"></iframe></div>`;
-    }
-    // SoundCloud
-    else if (podcastUrl.includes('soundcloud.com')) {
-      embedHtml = `<div class="my-4"><iframe width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(podcastUrl)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true" class="rounded-lg"></iframe></div>`;
-    }
-    // Deezer
-    else if (podcastUrl.includes('deezer.com')) {
-      const deezerMatch = podcastUrl.match(/(?:episode|podcast)\/(\d+)/);
-      if (deezerMatch) {
-        const type = podcastUrl.includes('/episode/') ? 'episode' : 'podcast';
-        embedHtml = `<div class="my-4"><iframe src="https://widget.deezer.com/widget/dark/${type}/${deezerMatch[1]}" width="100%" height="152" frameborder="0" allow="encrypted-media; clipboard-write" class="rounded-lg"></iframe></div>`;
-      }
-    }
-    
-    if (embedHtml) {
-      editor.chain().focus().insertContent(embedHtml).run();
+    if (podcastUrl.includes('podcasts.apple.com')) {
+      editor.chain().focus().insertContent({
+        type: 'iframe',
+        attrs: {
+          src: podcastUrl.replace('podcasts.apple.com', 'embed.podcasts.apple.com'),
+          height: '175',
+          frameborder: '0',
+          sandbox: 'allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation',
+          allow: 'autoplay *; encrypted-media *; clipboard-write',
+          class: 'w-full rounded-lg',
+        },
+      }).run();
       setPodcastUrl('');
       setShowPodcastDialog(false);
       toast.success('Podcast ajouté');
-    } else {
-      toast.error('URL de podcast non reconnue (Spotify, Apple Podcasts, SoundCloud, Deezer)');
+      return;
     }
+
+    // SoundCloud
+    if (podcastUrl.includes('soundcloud.com')) {
+      editor.chain().focus().insertContent({
+        type: 'iframe',
+        attrs: {
+          src: `https://w.soundcloud.com/player/?url=${encodeURIComponent(podcastUrl)}&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`,
+          width: '100%',
+          height: '166',
+          scrolling: 'no',
+          frameborder: 'no',
+          class: 'rounded-lg',
+        },
+      }).run();
+      setPodcastUrl('');
+      setShowPodcastDialog(false);
+      toast.success('Podcast ajouté');
+      return;
+    }
+
+    // Deezer
+    if (podcastUrl.includes('deezer.com')) {
+      const deezerMatch = podcastUrl.match(/(?:episode|podcast)\/(\d+)/);
+      if (deezerMatch) {
+        const type = podcastUrl.includes('/episode/') ? 'episode' : 'podcast';
+        editor.chain().focus().insertContent({
+          type: 'iframe',
+          attrs: {
+            src: `https://widget.deezer.com/widget/dark/${type}/${deezerMatch[1]}`,
+            width: '100%',
+            height: '152',
+            frameborder: '0',
+            allow: 'encrypted-media; clipboard-write',
+            class: 'rounded-lg',
+          },
+        }).run();
+        setPodcastUrl('');
+        setShowPodcastDialog(false);
+        toast.success('Podcast ajouté');
+        return;
+      }
+    }
+
+    toast.error('URL de podcast non reconnue (Spotify, Apple Podcasts, SoundCloud, Deezer)');
   };
 
   const insertGoogleDrive = () => {
