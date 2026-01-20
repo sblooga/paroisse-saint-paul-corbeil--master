@@ -215,7 +215,46 @@ html {
 
 /* Iframe styling in editor */
 .ProseMirror iframe {
-  @apply rounded-lg my-4;
+  @apply rounded-lg my-4 w-full max-w-full;
+}
+
+/* Image width and alignment in editor */
+.ProseMirror img[data-width="25%"] {
+  width: 25%;
+}
+.ProseMirror img[data-width="33%"] {
+  width: 33%;
+}
+.ProseMirror img[data-width="50%"] {
+  width: 50%;
+}
+.ProseMirror img[data-width="66%"] {
+  width: 66%;
+}
+.ProseMirror img[data-width="75%"] {
+  width: 75%;
+}
+.ProseMirror img[data-width="100%"] {
+  width: 100%;
+}
+
+.ProseMirror img[data-align="left"] {
+  float: left;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+  clear: left;
+}
+.ProseMirror img[data-align="right"] {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  clear: right;
+}
+.ProseMirror img[data-align="center"] {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
 }
 
 @layer utilities {
