@@ -184,11 +184,14 @@ const ArticleDetail = () => {
 
               {content ? (
                 <div 
-                  className="prose prose-lg max-w-none dark:prose-invert
+                  className="prose prose-lg max-w-none dark:prose-invert overflow-hidden
                     [&_iframe]:w-full [&_iframe]:rounded-lg [&_iframe]:my-4
-                    [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2
-                    [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2
-                    [&_img[data-align='center']]:mx-auto [&_img[data-align='center']]:block"
+                    [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-4
+                    [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2 [&_img[data-align='left']]:clear-left
+                    [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2 [&_img[data-align='right']]:clear-right
+                    [&_img[data-align='center']]:mx-auto [&_img[data-align='center']]:block [&_img[data-align='center']]:clear-both
+                    [&_img[data-width='25%']]:w-1/4 [&_img[data-width='33%']]:w-1/3 [&_img[data-width='50%']]:w-1/2 
+                    [&_img[data-width='66%']]:w-2/3 [&_img[data-width='75%']]:w-3/4 [&_img[data-width='100%']]:w-full"
                   dangerouslySetInnerHTML={{ __html: sanitizeHtml(content) }}
                 />
               ) : excerpt ? (

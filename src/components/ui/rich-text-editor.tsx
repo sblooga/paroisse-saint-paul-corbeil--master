@@ -74,11 +74,13 @@ const CustomImage = Image.extend({
     return {
       ...this.parent?.(),
       width: {
-        default: null,
-        parseHTML: element => element.getAttribute('width') || element.style.width,
+        default: '100%',
+        parseHTML: element => element.getAttribute('data-width') || element.style.width || '100%',
         renderHTML: attributes => {
-          if (!attributes.width) return {};
-          return { width: attributes.width, style: `width: ${attributes.width}` };
+          const width = attributes.width || '100%';
+          return { 
+            'data-width': width,
+          };
         },
       },
       height: {
@@ -86,21 +88,15 @@ const CustomImage = Image.extend({
         parseHTML: element => element.getAttribute('height') || element.style.height,
         renderHTML: attributes => {
           if (!attributes.height) return {};
-          return { height: attributes.height, style: `height: ${attributes.height}` };
+          return { height: attributes.height };
         },
       },
       align: {
         default: 'center',
         parseHTML: element => element.getAttribute('data-align') || 'center',
         renderHTML: attributes => {
-          const alignClasses: Record<string, string> = {
-            left: 'float-left mr-4 mb-2',
-            right: 'float-right ml-4 mb-2',
-            center: 'mx-auto block',
-          };
           return {
-            'data-align': attributes.align,
-            class: `max-w-full h-auto rounded-md my-4 ${alignClasses[attributes.align] || alignClasses.center}`,
+            'data-align': attributes.align || 'center',
           };
         },
       },
@@ -697,7 +693,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
       {/* Editor or Preview */}
       {showPreview ? (
         <div className="min-h-[200px] p-4 bg-background">
-          <div className="prose prose-lg max-w-none text-foreground
+          <div className="prose prose-lg max-w-none text-foreground overflow-hidden
             [&_h1]:font-playfair [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:text-foreground [&_h1]:mb-6 [&_h1]:mt-4
             [&_h2]:font-playfair [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-foreground [&_h2]:mb-4 [&_h2]:mt-6
             [&_h3]:font-playfair [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-foreground [&_h3]:mt-4 [&_h3]:mb-3
@@ -707,10 +703,12 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
             [&_li]:text-foreground/90
             [&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80
             [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4
-            [&_img]:rounded-lg [&_img]:shadow-md [&_img]:my-6
-            [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2
-            [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2
-            [&_img[data-align='center']]:mx-auto [&_img[data-align='center']]:block
+            [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-4 [&_img]:shadow-md
+            [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2 [&_img[data-align='left']]:clear-left
+            [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2 [&_img[data-align='right']]:clear-right
+            [&_img[data-align='center']]:mx-auto [&_img[data-align='center']]:block [&_img[data-align='center']]:clear-both
+            [&_img[data-width='25%']]:w-1/4 [&_img[data-width='33%']]:w-1/3 [&_img[data-width='50%']]:w-1/2 
+            [&_img[data-width='66%']]:w-2/3 [&_img[data-width='75%']]:w-3/4 [&_img[data-width='100%']]:w-full
             [&_iframe]:rounded-lg [&_iframe]:my-4 [&_iframe]:w-full [&_iframe]:max-w-full"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(editor?.getHTML() || '') }}
           />

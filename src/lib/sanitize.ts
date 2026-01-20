@@ -40,7 +40,7 @@ export const sanitizeHtml = (html: string): string => {
     ALLOWED_ATTR: [
       'href', 'target', 'rel', 'src', 'alt', 'class', 'style',
       'width', 'height', 'frameborder', 'allow', 'allowfullscreen',
-      'scrolling', 'sandbox', 'data-align',
+      'scrolling', 'sandbox', 'data-align', 'data-width',
       // SVG attributes
       'xmlns', 'viewBox', 'fill', 'stroke', 'stroke-width', 
       'stroke-linecap', 'stroke-linejoin', 'd', 'points', 
