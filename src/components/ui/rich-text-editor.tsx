@@ -1,5 +1,5 @@
 import { useEditor, EditorContent } from '@tiptap/react';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, forwardRef } from 'react';
 import StarterKit from '@tiptap/starter-kit';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
@@ -61,12 +61,12 @@ const compressImage = async (file: File, maxWidth = 800, maxHeight = 600, qualit
   });
 };
 
-export function RichTextEditor({
+export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   content,
   onChange,
   placeholder = 'Commencez à écrire...',
   className,
-}: RichTextEditorProps) {
+}, ref) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
@@ -332,4 +332,6 @@ export function RichTextEditor({
       <EditorContent editor={editor} />
     </div>
   );
-}
+});
+
+RichTextEditor.displayName = 'RichTextEditor';
