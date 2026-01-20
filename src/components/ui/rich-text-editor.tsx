@@ -708,7 +708,10 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
             [&_a]:text-primary [&_a]:underline [&_a]:hover:text-primary/80
             [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4
             [&_img]:rounded-lg [&_img]:shadow-md [&_img]:my-6
-            [&_iframe]:rounded-lg [&_iframe]:my-4"
+            [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2
+            [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2
+            [&_img[data-align='center']]:mx-auto [&_img[data-align='center']]:block
+            [&_iframe]:rounded-lg [&_iframe]:my-4 [&_iframe]:w-full [&_iframe]:max-w-full"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(editor?.getHTML() || '') }}
           />
         </div>
