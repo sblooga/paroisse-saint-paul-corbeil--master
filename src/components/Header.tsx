@@ -44,14 +44,6 @@ const Header = () => {
     { name: t('common.faq'), href: '/faq' },
   ];
 
-  const socialLinks = [
-    { icon: Facebook, href: 'https://www.facebook.com/stpaulcorbeil', label: 'Facebook' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Youtube, href: 'https://www.youtube.com/@eglise-st.paul-corbeil-essonne', label: 'YouTube' },
-    { icon: FlickrIcon, href: 'https://www.flickr.com/photos/paroissesaintpaul/albums/', label: 'Flickr' },
-    { icon: WhatsAppIcon, href: 'https://wa.me/33986346726', label: 'WhatsApp' },
-  ];
-
   return (
     <>
       {/* Top Bar */}
@@ -70,21 +62,21 @@ const Header = () => {
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              {socialLinks.map((social) => {
-                const IconComponent = social.icon;
-                return (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="hover:text-accent transition-colors hover:scale-110 transform"
-                  >
-                    <IconComponent size={16} />
-                  </a>
-                );
-              })}
+              <a href="https://www.facebook.com/stpaulcorbeil" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-accent transition-colors hover:scale-110 transform">
+                <Facebook size={16} />
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-accent transition-colors hover:scale-110 transform">
+                <Instagram size={16} />
+              </a>
+              <a href="https://www.youtube.com/@eglise-st.paul-corbeil-essonne" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-accent transition-colors hover:scale-110 transform">
+                <Youtube size={16} />
+              </a>
+              <a href="https://www.flickr.com/photos/paroissesaintpaul/albums/" target="_blank" rel="noopener noreferrer" aria-label="Flickr" className="hover:text-accent transition-colors hover:scale-110 transform">
+                <FlickrIcon size={16} />
+              </a>
+              <a href="https://wa.me/33986346726" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="hover:text-accent transition-colors hover:scale-110 transform">
+                <WhatsAppIcon size={16} />
+              </a>
             </div>
             <LanguageSelector variant="compact" className="ml-4" />
             <div className="ml-3">
