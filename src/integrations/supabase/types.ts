@@ -451,6 +451,27 @@ export type Database = {
         }
         Relationships: []
       }
+      submission_rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          identifier: string
+          table_name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identifier: string
+          table_name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identifier?: string
+          table_name?: string
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           active: boolean | null
@@ -543,6 +564,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_rate_limit: {
+        Args: { p_identifier: string; p_table_name: string }
+        Returns: boolean
+      }
       get_team_members_public: {
         Args: never
         Returns: {
