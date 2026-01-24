@@ -6,7 +6,7 @@ import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
   Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck, Lock,
-  HelpCircle, Heart, Star
+  HelpCircle, Heart, Star, Share2
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +18,7 @@ import AdminMassSchedules from '@/components/admin/AdminMassSchedules';
 import AdminMessages from '@/components/admin/AdminMessages';
 import AdminNewsletter from '@/components/admin/AdminNewsletter';
 import AdminFooterLinks from '@/components/admin/AdminFooterLinks';
+import AdminSocialLinks from '@/components/admin/AdminSocialLinks';
 import AdminUsers from '@/components/admin/AdminUsers';
 import AdminDocsPassword from '@/components/admin/AdminDocsPassword';
 import AdminFAQ from '@/components/admin/AdminFAQ';
@@ -25,7 +26,7 @@ import AdminLifeStages from '@/components/admin/AdminLifeStages';
 import AdminEvents from '@/components/admin/AdminEvents';
 import ChangePasswordDialog from '@/components/admin/ChangePasswordDialog';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'events' | 'footerLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'events' | 'footerLinks' | 'socialLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
 
 interface Stats {
   messages: number;
@@ -297,6 +298,14 @@ const Admin = () => {
             {t('admin.tabs.footerLinks')}
           </Button>
           <Button
+            variant={activeTab === 'socialLinks' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('socialLinks')}
+            size="sm"
+          >
+            <Share2 size={16} />
+            Réseaux sociaux
+          </Button>
+          <Button
             variant={activeTab === 'faq' ? 'default' : 'outline'}
             onClick={() => setActiveTab('faq')}
             size="sm"
@@ -343,6 +352,7 @@ const Admin = () => {
           {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
           {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
+          {activeTab === 'socialLinks' && <AdminSocialLinks key={`socialLinks-${refreshKey}`} />}
           {activeTab === 'faq' && <AdminFAQ key={`faq-${refreshKey}`} />}
           {activeTab === 'lifeStages' && <AdminLifeStages key={`lifeStages-${refreshKey}`} />}
           {activeTab === 'users' && isAdmin && <AdminUsers refreshKey={refreshKey} />}
