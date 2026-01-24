@@ -77,14 +77,21 @@ export default function AdminUsers({ refreshKey }: AdminUsersProps) {
   };
 
   const addRole = async (userId: string, role: 'admin' | 'editor') => {
-    if (!role) return;
+    console.log('addRole called with userId:', userId, 'role:', role);
+    if (!role) {
+      console.log('No role selected, returning early');
+      return;
+    }
     
     setActionLoading(`add-${userId}`);
     try {
-      const { error } = await supabase
+      console.log('Attempting to insert role:', { user_id: userId, role });
+      const { data, error } = await supabase
         .from('user_roles')
-        .insert({ user_id: userId, role: role as 'admin' | 'editor' });
-
+        .insert({ user_id: userId, role: role as 'admin' | 'editor' })
+        .select();
+      
+      console.log('Insert result - data:', data, 'error:', error);
       if (error) {
         if (error.code === '23505') {
           toast({
