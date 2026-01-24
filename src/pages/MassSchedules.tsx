@@ -17,16 +17,22 @@ import { cn } from '@/lib/utils';
 interface MassSchedule {
   id: string;
   day_of_week: string;
+  day_of_week_fr: string | null;
+  day_of_week_pl: string | null;
   time: string;
   location: string | null;
+  location_fr: string | null;
+  location_pl: string | null;
   description: string | null;
+  description_fr: string | null;
+  description_pl: string | null;
   is_special: boolean;
   special_date: string | null;
   sort_order: number;
   language: string | null;
 }
 
-const DAY_ORDER = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+const DAY_GROUP_ORDER = ['Dimanche', 'Samedi', 'En semaine'];
 
 const MassSchedules = () => {
   const { t, i18n } = useTranslation();
@@ -34,7 +40,7 @@ const MassSchedules = () => {
   const [loading, setLoading] = useState(true);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [languageFilter, setLanguageFilter] = useState<'all' | 'fr' | 'pl'>('all');
+  const [selectedCommunity, setSelectedCommunity] = useState<'fr' | 'pl'>('fr');
 
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
   const dateLocale = currentLang === 'pl' ? pl : fr;
@@ -55,23 +61,50 @@ const MassSchedules = () => {
     setLoading(false);
   };
 
-  // Filter schedules by language
-  const filteredSchedules = schedules.filter(s => {
-    if (languageFilter === 'all') return true;
-    return s.language === languageFilter;
-  });
+  // Helper to get localized content
+  const getLocalizedField = (schedule: MassSchedule, field: 'day_of_week' | 'location' | 'description') => {
+    if (currentLang === 'pl') {
+      const plField = schedule[`${field}_pl` as keyof MassSchedule] as string | null;
+      if (plField) return plField;
+    }
+    const frField = schedule[`${field}_fr` as keyof MassSchedule] as string | null;
+    if (frField) return frField;
+    return schedule[field] as string | null;
+  };
 
-  // Group regular schedules by day
+  // Filter schedules by selected community language
+  const filteredSchedules = schedules.filter(s => 
+    s.language === selectedCommunity || s.language === null
+  );
+
+  // Group regular schedules by day type (like homepage)
   const regularSchedules = filteredSchedules.filter(s => !s.is_special);
   const specialSchedules = filteredSchedules.filter(s => s.is_special && s.special_date);
 
-  const groupedSchedules = DAY_ORDER.reduce((acc, day) => {
-    const daySchedules = regularSchedules.filter(s => s.day_of_week === day);
+  const groupedSchedules = DAY_GROUP_ORDER.reduce((acc, dayType) => {
+    let daySchedules: MassSchedule[];
+    
+    if (dayType === 'Dimanche') {
+      daySchedules = regularSchedules.filter(s => s.day_of_week.toLowerCase() === 'dimanche');
+    } else if (dayType === 'Samedi') {
+      daySchedules = regularSchedules.filter(s => s.day_of_week.toLowerCase() === 'samedi');
+    } else {
+      daySchedules = regularSchedules.filter(s => 
+        !['dimanche', 'samedi'].includes(s.day_of_week.toLowerCase())
+      );
+    }
+    
     if (daySchedules.length > 0) {
-      acc[day] = daySchedules;
+      acc.push({
+        day: dayType,
+        schedules: daySchedules,
+        type: dayType === 'Dimanche' ? t('massSchedule.sundayMass') : 
+              dayType === 'Samedi' ? t('massSchedule.saturdayMass') : 
+              t('massSchedule.weekdayMass'),
+      });
     }
     return acc;
-  }, {} as Record<string, MassSchedule[]>);
+  }, [] as { day: string; schedules: MassSchedule[]; type: string }[]);
 
   // Calendar logic
   const monthStart = startOfMonth(currentMonth);
@@ -115,20 +148,82 @@ const MassSchedules = () => {
     }
   };
 
-  const getDayName = (day: string) => {
+  const getDayLabel = (day: string) => {
+    if (day === 'En semaine') return t('massSchedule.weekdays');
     const dayMap: Record<string, string> = {
       'Dimanche': t('massSchedule.sunday'),
-      'Lundi': t('massSchedule.monday'),
-      'Mardi': t('massSchedule.tuesday'),
-      'Mercredi': t('massSchedule.wednesday'),
-      'Jeudi': t('massSchedule.thursday'),
-      'Vendredi': t('massSchedule.friday'),
       'Samedi': t('massSchedule.saturday'),
     };
     return dayMap[day] || day;
   };
 
   const selectedDateEvents = selectedDate ? getSpecialEventsForDate(selectedDate) : [];
+
+  const renderScheduleCards = () => (
+    groupedSchedules.length === 0 ? (
+      <div className="text-center py-12">
+        <p className="text-muted-foreground">{t('massSchedule.noSchedules')}</p>
+      </div>
+    ) : (
+      <div className="grid md:grid-cols-3 gap-6">
+        {groupedSchedules.map((group, index) => (
+          <motion.div
+            key={group.day}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="card-parish p-6"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-3 bg-primary/10 rounded-lg">
+                <CalendarIcon className="text-primary" size={24} />
+              </div>
+              <div>
+                <h3 className="text-xl font-heading font-bold text-foreground">
+                  {getDayLabel(group.day)}
+                </h3>
+                <p className="text-sm text-muted-foreground">{group.type}</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {group.schedules.map((schedule) => {
+                const localizedLocation = getLocalizedField(schedule, 'location');
+                const localizedDayOfWeek = getLocalizedField(schedule, 'day_of_week');
+                const localizedDescription = getLocalizedField(schedule, 'description');
+                
+                return (
+                  <div key={schedule.id} className="flex items-start gap-3">
+                    <Clock size={18} className="text-accent mt-0.5" />
+                    <div>
+                      <p className="text-foreground font-medium">
+                        {schedule.time}
+                        {schedule.day_of_week.toLowerCase() !== group.day.toLowerCase() && group.day === 'En semaine' && (
+                          <span className="text-sm text-muted-foreground ml-2">
+                            ({localizedDayOfWeek?.slice(0, 3) || schedule.day_of_week.slice(0, 3)})
+                          </span>
+                        )}
+                      </p>
+                      {localizedLocation && (
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <MapPin size={14} />
+                          <span>{localizedLocation}</span>
+                        </div>
+                      )}
+                      {localizedDescription && (
+                        <p className="text-sm text-muted-foreground mt-1">{localizedDescription}</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    )
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -166,26 +261,11 @@ const MassSchedules = () => {
               <h2 className="text-2xl font-heading font-bold text-foreground mb-6 text-center">
                 {t('massSchedule.regularSchedules')}
               </h2>
-              
-              {/* Language Tabs */}
-              <Tabs value={languageFilter} onValueChange={(v) => setLanguageFilter(v as 'all' | 'fr' | 'pl')} className="w-full">
-                <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
-                  <TabsTrigger value="all" className="flex items-center gap-2">
-                    {t('massSchedule.allMasses')}
-                  </TabsTrigger>
-                  <TabsTrigger value="fr" className="flex items-center gap-2">
-                    🇫🇷 {t('massSchedule.frenchMasses')}
-                  </TabsTrigger>
-                  <TabsTrigger value="pl" className="flex items-center gap-2">
-                    🇵🇱 {t('massSchedule.polishMasses')}
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
             </motion.div>
 
             {loading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[...Array(6)].map((_, i) => (
+              <div className="grid md:grid-cols-3 gap-6">
+                {[...Array(3)].map((_, i) => (
                   <div key={i} className="card-parish p-6">
                     <Skeleton className="h-8 w-32 mb-4" />
                     <Skeleton className="h-4 w-full mb-2" />
@@ -193,51 +273,21 @@ const MassSchedules = () => {
                   </div>
                 ))}
               </div>
-            ) : Object.keys(groupedSchedules).length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">{t('massSchedule.noSchedules')}</p>
-              </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {Object.entries(groupedSchedules).map(([day, daySchedules], index) => (
-                  <motion.div
-                    key={day}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="card-parish p-6"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
-                        <CalendarIcon className="text-primary" size={24} />
-                      </div>
-                      <h3 className="text-xl font-heading font-bold text-foreground">
-                        {getDayName(day)}
-                      </h3>
-                    </div>
-
-                    <div className="space-y-4">
-                      {daySchedules.map((schedule) => (
-                        <div key={schedule.id} className="border-l-2 border-primary/30 pl-4">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Clock size={16} className="text-accent" />
-                            <span className="font-semibold text-foreground">{schedule.time}</span>
-                          </div>
-                          {schedule.location && (
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                              <MapPin size={14} />
-                              <span>{schedule.location}</span>
-                            </div>
-                          )}
-                          {schedule.description && (
-                            <p className="text-sm text-muted-foreground mt-1">{schedule.description}</p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <Tabs value={selectedCommunity} onValueChange={(v) => setSelectedCommunity(v as 'fr' | 'pl')} className="w-full">
+                <div className="flex justify-center mb-8">
+                  <TabsList className="bg-background">
+                    <TabsTrigger value="fr" className="px-6 gap-2">
+                      🇫🇷 {t('massSchedule.frenchMasses')}
+                    </TabsTrigger>
+                    <TabsTrigger value="pl" className="px-6 gap-2">
+                      🇵🇱 {t('massSchedule.polishMasses')}
+                    </TabsTrigger>
+                  </TabsList>
+                </div>
+                <TabsContent value="fr">{renderScheduleCards()}</TabsContent>
+                <TabsContent value="pl">{renderScheduleCards()}</TabsContent>
+              </Tabs>
             )}
           </div>
         </section>
