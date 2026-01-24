@@ -6,6 +6,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
+  isRoleLoading: boolean;
   isAdmin: boolean;
   isEditor: boolean;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
@@ -19,10 +20,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRoleLoading, setIsRoleLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditor, setIsEditor] = useState(false);
 
   const checkUserRole = async (userId: string) => {
+    setIsRoleLoading(true);
     try {
       console.log('Checking role for user:', userId);
       const { data, error } = await supabase
@@ -49,6 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Exception checking user role:', err);
       setIsAdmin(false);
       setIsEditor(false);
+    } finally {
+      setIsRoleLoading(false);
     }
   };
 
@@ -67,6 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } else {
           setIsAdmin(false);
           setIsEditor(false);
+          setIsRoleLoading(false);
         }
       }
     );
@@ -77,6 +83,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
         checkUserRole(session.user.id);
+      } else {
+        setIsRoleLoading(false);
       }
       setIsLoading(false);
     });
@@ -110,6 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       user,
       session,
       isLoading,
+      isRoleLoading,
       isAdmin,
       isEditor,
       signIn,

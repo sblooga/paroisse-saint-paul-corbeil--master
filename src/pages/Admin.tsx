@@ -36,7 +36,7 @@ interface Stats {
 
 const Admin = () => {
   const { t } = useTranslation();
-  const { user, isLoading, isEditor, isAdmin, signOut } = useAuth();
+  const { user, isLoading, isRoleLoading, isEditor, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<TabType>('articles');
@@ -86,7 +86,7 @@ const Admin = () => {
     navigate('/');
   };
 
-  if (isLoading) {
+  if (isLoading || isRoleLoading) {
     return (
       <div className="min-h-screen bg-muted flex items-center justify-center">
         <div className="animate-spin text-4xl">⏳</div>
