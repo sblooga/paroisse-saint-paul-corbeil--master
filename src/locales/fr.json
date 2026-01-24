@@ -172,8 +172,8 @@
       "addressValue": "Église Saint-Paul de Moulin-Galant\n118 bv. John Kennedy\nMoulin-Galant, CORBEIL-ESSONNES 91100",
       "phone": "Standard",
       "email": "Email",
-      "hours": "Horaires",
-      "hoursValue": "À venir",
+      "massSchedules": "Horaires des messes",
+      "massSchedulesLink": "Consulter les horaires des messes",
       "openMap": "Ouvrir dans Google Maps"
     }
   },

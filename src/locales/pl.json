@@ -172,8 +172,8 @@
       "addressValue": "Kościół Saint-Paul de Moulin-Galant\n118 bv. John Kennedy\nMoulin-Galant, CORBEIL-ESSONNES 91100",
       "phone": "Centrala",
       "email": "Email",
-      "hours": "Godziny",
-      "hoursValue": "Wkrótce",
+      "massSchedules": "Godziny Mszy",
+      "massSchedulesLink": "Sprawdź godziny Mszy",
       "openMap": "Otwórz w Mapach Google"
     }
   },
