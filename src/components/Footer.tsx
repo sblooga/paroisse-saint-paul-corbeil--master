@@ -131,16 +131,21 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-heading font-bold mb-4">{t('footer.quickLinks')}</h4>
             <ul className="space-y-2 text-sm">
-              {footerLinks.map((link) => (
-                <li key={link.id}>
-                  <a
-                    href={link.url}
-                    className="text-primary-foreground/70 hover:text-accent transition-colors"
-                  >
-                    {getLinkLabel(link)}
-                  </a>
-                </li>
-              ))}
+              {footerLinks.map((link) => {
+                const isExternal = link.url.startsWith('http') || link.url.startsWith('mailto:');
+                return (
+                  <li key={link.id}>
+                    <a
+                      href={link.url}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                      className="text-primary-foreground/70 hover:text-accent transition-colors"
+                    >
+                      {getLinkLabel(link)}
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
