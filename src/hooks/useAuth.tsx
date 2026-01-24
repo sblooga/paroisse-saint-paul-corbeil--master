@@ -23,19 +23,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isEditor, setIsEditor] = useState(false);
 
   const checkUserRole = async (userId: string) => {
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId);
+    try {
+      console.log('Checking role for user:', userId);
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
 
-    if (error) {
-      console.error('Error checking user role:', error);
-      return;
+      if (error) {
+        console.error('Error checking user role:', error);
+        setIsAdmin(false);
+        setIsEditor(false);
+        return;
+      }
+
+      console.log('Roles found:', data);
+      const roles = data?.map(r => r.role) || [];
+      const hasAdmin = roles.includes('admin');
+      const hasEditor = roles.includes('editor') || hasAdmin;
+      
+      console.log('Setting isAdmin:', hasAdmin, 'isEditor:', hasEditor);
+      setIsAdmin(hasAdmin);
+      setIsEditor(hasEditor);
+    } catch (err) {
+      console.error('Exception checking user role:', err);
+      setIsAdmin(false);
+      setIsEditor(false);
     }
-
-    const roles = data?.map(r => r.role) || [];
-    setIsAdmin(roles.includes('admin'));
-    setIsEditor(roles.includes('editor') || roles.includes('admin'));
   };
 
   useEffect(() => {
