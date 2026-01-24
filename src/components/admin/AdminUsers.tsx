@@ -280,7 +280,20 @@ export default function AdminUsers({ refreshKey }: AdminUsersProps) {
                         </Select>
                         <Button
                           size="sm"
-                          onClick={() => addRole(user.id, selectedRole[user.id] as 'admin' | 'editor')}
+                          onClick={() => {
+                            const roleToAdd = selectedRole[user.id] as 'admin' | 'editor';
+                            console.log('[DEBUG] Button clicked! userId:', user.id, 'roleToAdd:', roleToAdd, 'selectedRole:', JSON.stringify(selectedRole));
+                            if (!roleToAdd) {
+                              console.error('[DEBUG] No role selected!');
+                              toast({
+                                title: 'Erreur',
+                                description: 'Veuillez sélectionner un rôle',
+                                variant: 'destructive',
+                              });
+                              return;
+                            }
+                            addRole(user.id, roleToAdd);
+                          }}
                           disabled={!selectedRole[user.id] || actionLoading === `add-${user.id}`}
                         >
                           {actionLoading === `add-${user.id}` ? (
