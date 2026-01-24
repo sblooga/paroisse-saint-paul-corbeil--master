@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Church, History, Users, Heart, MapPin, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -203,12 +204,12 @@ const Parish = () => {
                 </div>
 
                 <div className="mt-8 space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Link to="/contact" className="flex items-start gap-4 group cursor-pointer">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                       <MapPin className="text-primary" size={24} />
                     </div>
                     <div>
-                      <h4 className="font-heading font-bold text-foreground mb-1">
+                      <h4 className="font-heading font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                         {currentLang === 'pl' ? 'Adres' : 'Adresse'}
                       </h4>
                       <p className="text-muted-foreground">
@@ -217,14 +218,14 @@ const Parish = () => {
                         91100 Corbeil-Essonnes
                       </p>
                     </div>
-                  </div>
+                  </Link>
                   
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Link to="/horaires" className="flex items-start gap-4 group cursor-pointer">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
                       <Calendar className="text-primary" size={24} />
                     </div>
                     <div>
-                      <h4 className="font-heading font-bold text-foreground mb-1">
+                      <h4 className="font-heading font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
                         {currentLang === 'pl' ? 'Godziny otwarcia' : "Horaires d'ouverture"}
                       </h4>
                       <p className="text-muted-foreground">
@@ -233,7 +234,7 @@ const Parish = () => {
                           : 'Église ouverte pendant les messes et sur demande'}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 </div>
               </motion.div>
               
