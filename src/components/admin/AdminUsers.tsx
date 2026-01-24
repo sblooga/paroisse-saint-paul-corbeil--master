@@ -17,8 +17,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
-import { Shield, ShieldCheck, User, Trash2, Plus, Loader2 } from 'lucide-react';
+import { Shield, ShieldCheck, User, Trash2, Plus, Loader2, UserX } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface UserWithRoles {
@@ -131,7 +142,6 @@ export default function AdminUsers({ refreshKey }: AdminUsersProps) {
         .eq('user_id', userId)
         .eq('role', roleToRemove);
 
-
       if (error) throw error;
 
       toast({
@@ -144,6 +154,47 @@ export default function AdminUsers({ refreshKey }: AdminUsersProps) {
       toast({
         title: t('admin.users.error', 'Erreur'),
         description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const deleteUser = async (userId: string) => {
+    setActionLoading(`delete-${userId}`);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await supabase.functions.invoke('delete-user', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: { userId },
+      });
+
+      if (response.error) {
+        throw response.error;
+      }
+
+      if (response.data?.error) {
+        throw new Error(response.data.error);
+      }
+
+      toast({
+        title: t('admin.users.userDeleted', 'Utilisateur supprimé'),
+        description: t('admin.users.userDeletedDesc', 'L\'utilisateur a été supprimé avec succès'),
+      });
+      fetchUsers();
+    } catch (error: any) {
+      console.error('Error deleting user:', error);
+      toast({
+        title: t('admin.users.error', 'Erreur'),
+        description: error.message || 'Impossible de supprimer l\'utilisateur',
         variant: 'destructive',
       });
     } finally {
@@ -259,51 +310,91 @@ export default function AdminUsers({ refreshKey }: AdminUsersProps) {
                     })}
                   </TableCell>
                   <TableCell className="text-right">
-                    {getAvailableRoles(user.roles).length > 0 && (
-                      <div className="flex items-center justify-end gap-2">
-                        <Select
-                          value={selectedRole[user.id] || ''}
-                          onValueChange={(value) =>
-                            setSelectedRole((prev) => ({ ...prev, [user.id]: value }))
-                          }
-                        >
-                          <SelectTrigger className="w-[130px]">
-                            <SelectValue placeholder={t('admin.users.selectRole', 'Choisir...')} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {getAvailableRoles(user.roles).map((role) => (
-                              <SelectItem key={role} value={role}>
-                                {role === 'admin' ? 'Admin' : 'Éditeur'}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Button
-                          size="sm"
-                          onClick={() => {
-                            const roleToAdd = selectedRole[user.id] as 'admin' | 'editor';
-                            console.log('[DEBUG] Button clicked! userId:', user.id, 'roleToAdd:', roleToAdd, 'selectedRole:', JSON.stringify(selectedRole));
-                            if (!roleToAdd) {
-                              console.error('[DEBUG] No role selected!');
-                              toast({
-                                title: 'Erreur',
-                                description: 'Veuillez sélectionner un rôle',
-                                variant: 'destructive',
-                              });
-                              return;
+                    <div className="flex items-center justify-end gap-2 flex-wrap">
+                      {getAvailableRoles(user.roles).length > 0 && (
+                        <>
+                          <Select
+                            value={selectedRole[user.id] || ''}
+                            onValueChange={(value) =>
+                              setSelectedRole((prev) => ({ ...prev, [user.id]: value }))
                             }
-                            addRole(user.id, roleToAdd);
-                          }}
-                          disabled={!selectedRole[user.id] || actionLoading === `add-${user.id}`}
-                        >
-                          {actionLoading === `add-${user.id}` ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Plus className="h-4 w-4" />
-                          )}
-                        </Button>
-                      </div>
-                    )}
+                          >
+                            <SelectTrigger className="w-[130px]">
+                              <SelectValue placeholder={t('admin.users.selectRole', 'Choisir...')} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {getAvailableRoles(user.roles).map((role) => (
+                                <SelectItem key={role} value={role}>
+                                  {role === 'admin' ? 'Admin' : 'Éditeur'}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Button
+                            size="sm"
+                            onClick={() => {
+                              const roleToAdd = selectedRole[user.id] as 'admin' | 'editor';
+                              console.log('[DEBUG] Button clicked! userId:', user.id, 'roleToAdd:', roleToAdd, 'selectedRole:', JSON.stringify(selectedRole));
+                              if (!roleToAdd) {
+                                console.error('[DEBUG] No role selected!');
+                                toast({
+                                  title: 'Erreur',
+                                  description: 'Veuillez sélectionner un rôle',
+                                  variant: 'destructive',
+                                });
+                                return;
+                              }
+                              addRole(user.id, roleToAdd);
+                            }}
+                            disabled={!selectedRole[user.id] || actionLoading === `add-${user.id}`}
+                          >
+                            {actionLoading === `add-${user.id}` ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Plus className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </>
+                      )}
+                      
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            disabled={actionLoading === `delete-${user.id}`}
+                            title={t('admin.users.deleteUser', 'Supprimer l\'utilisateur')}
+                          >
+                            {actionLoading === `delete-${user.id}` ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <UserX className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              {t('admin.users.confirmDeleteTitle', 'Supprimer cet utilisateur ?')}
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {t('admin.users.confirmDeleteDesc', 'Cette action est irréversible. L\'utilisateur {{email}} sera définitivement supprimé.', { email: user.email })}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>
+                              {t('common.cancel', 'Annuler')}
+                            </AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => deleteUser(user.id)}
+                              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                            >
+                              {t('common.delete', 'Supprimer')}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))
