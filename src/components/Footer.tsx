@@ -89,10 +89,12 @@ const Footer = () => {
               {t('footer.description')}
             </p>
             <div className="flex gap-3 flex-wrap">
-              {socialLinks.map((social) => (
+              {socialLinks.filter(s => s.url && s.url !== '#').map((social) => (
                 <a
                   key={social.id}
                   href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.name}
                   className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
