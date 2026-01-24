@@ -35,6 +35,16 @@ const ArticleDetail = () => {
 
   const currentLang = i18n.language?.startsWith('pl') ? 'pl' : 'fr';
 
+  // Dynamic target for external links (avoid iframe blocking in preview)
+  const isInIframe = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
+  const externalTarget = isInIframe ? undefined : '_blank';
+
   useEffect(() => {
     if (slug) {
       fetchArticle(slug);
@@ -210,7 +220,7 @@ const ArticleDetail = () => {
                   <div className="flex items-center gap-3">
                     <a
                       href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`}
-                      target="_blank"
+                      target={externalTarget}
                       rel="noopener noreferrer"
                       className="flex items-center justify-center w-10 h-10 rounded-full bg-[#1877F2] text-white hover:opacity-90 transition-opacity"
                       aria-label="Partager sur Facebook"
@@ -219,7 +229,7 @@ const ArticleDetail = () => {
                     </a>
                     <a
                       href={`https://api.whatsapp.com/send?text=${encodeURIComponent(getLocalizedTitle(article) + ' ' + window.location.href)}`}
-                      target="_blank"
+                      target={externalTarget}
                       rel="noopener noreferrer"
                       className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:opacity-90 transition-opacity"
                       aria-label="Partager sur WhatsApp"
