@@ -4,7 +4,7 @@ import { Church, History, Users, Heart, MapPin, Calendar } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
-import churchImage from '@/assets/church-exterior.jpg';
+import churchImage from '@/assets/church-exterior.webp';
 
 const Parish = () => {
   const { t, i18n } = useTranslation();
