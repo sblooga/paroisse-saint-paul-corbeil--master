@@ -24,6 +24,16 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === '/';
+  
+  // Dynamic target for external links (avoid iframe blocking in preview)
+  const isInIframe = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
+  const externalTarget = isInIframe ? undefined : '_blank';
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -62,19 +72,16 @@ const Header = () => {
           
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
-              <a href="https://www.facebook.com/stpaulcorbeil" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-accent transition-colors hover:scale-110 transform">
+              <a href="https://www.facebook.com/stpaulcorbeil" target={externalTarget} rel="noopener noreferrer" aria-label="Facebook" className="hover:text-accent transition-colors hover:scale-110 transform">
                 <Facebook size={16} />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-accent transition-colors hover:scale-110 transform">
-                <Instagram size={16} />
-              </a>
-              <a href="https://www.youtube.com/@eglise-st.paul-corbeil-essonne" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-accent transition-colors hover:scale-110 transform">
+              <a href="https://www.youtube.com/@eglise-st.paul-corbeil-essonne" target={externalTarget} rel="noopener noreferrer" aria-label="YouTube" className="hover:text-accent transition-colors hover:scale-110 transform">
                 <Youtube size={16} />
               </a>
-              <a href="https://www.flickr.com/photos/paroissesaintpaul/albums/" target="_blank" rel="noopener noreferrer" aria-label="Flickr" className="hover:text-accent transition-colors hover:scale-110 transform">
+              <a href="https://www.flickr.com/photos/paroissesaintpaul/albums/" target={externalTarget} rel="noopener noreferrer" aria-label="Flickr" className="hover:text-accent transition-colors hover:scale-110 transform">
                 <FlickrIcon size={16} />
               </a>
-              <a href="https://wa.me/33986346726" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="hover:text-accent transition-colors hover:scale-110 transform">
+              <a href="https://wa.me/33986346726" target={externalTarget} rel="noopener noreferrer" aria-label="WhatsApp" className="hover:text-accent transition-colors hover:scale-110 transform">
                 <WhatsAppIcon size={16} />
               </a>
             </div>
