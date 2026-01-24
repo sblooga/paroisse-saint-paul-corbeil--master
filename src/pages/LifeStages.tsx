@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import { Baby, Cross, Heart, Sparkles, HandHeart, Users, Flower2, BookHeart, Church, Droplets, Handshake, Star, Crown, Flame, LucideIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 // Images par défaut pour chaque étape
 import baptismImg from '@/assets/sacrament-baptism.jpg';
@@ -56,16 +59,16 @@ const LifeStages = () => {
     }
   });
 
-  // Données par défaut si pas de données en base
+  // Données par défaut basées sur les traductions
   const defaultStages = [
-    { icon: 'Droplets', title: t('lifestages.baptism.title'), description: t('lifestages.baptism.description'), image_url: null },
-    { icon: 'Sparkles', title: t('lifestages.communion.title'), description: t('lifestages.communion.description'), image_url: null },
-    { icon: 'Flame', title: t('lifestages.confirmation.title'), description: t('lifestages.confirmation.description'), image_url: null },
-    { icon: 'Heart', title: t('lifestages.marriage.title'), description: t('lifestages.marriage.description'), image_url: null },
-    { icon: 'Handshake', title: t('lifestages.reconciliation.title'), description: t('lifestages.reconciliation.description'), image_url: null },
-    { icon: 'HandHeart', title: t('lifestages.anointing.title'), description: t('lifestages.anointing.description'), image_url: null },
-    { icon: 'Church', title: t('lifestages.vocation.title'), description: t('lifestages.vocation.description'), image_url: null },
-    { icon: 'Cross', title: t('lifestages.funerals.title'), description: t('lifestages.funerals.description'), image_url: null },
+    { icon: 'Droplets', key: 'baptism', image_url: null },
+    { icon: 'Sparkles', key: 'communion', image_url: null },
+    { icon: 'Flame', key: 'confirmation', image_url: null },
+    { icon: 'Handshake', key: 'reconciliation', image_url: null },
+    { icon: 'Heart', key: 'marriage', image_url: null },
+    { icon: 'Church', key: 'vocation', image_url: null },
+    { icon: 'HandHeart', key: 'anointingSick', image_url: null },
+    { icon: 'Cross', key: 'funerals', image_url: null },
   ];
 
   const getLocalizedContent = (stage: any) => {
@@ -86,7 +89,11 @@ const LifeStages = () => {
         ...stage,
         ...getLocalizedContent(stage)
       }))
-    : defaultStages;
+    : defaultStages.map(stage => ({
+        ...stage,
+        title: t(`lifeStages.items.${stage.key}.question`),
+        description: t(`lifeStages.items.${stage.key}.answer`)
+      }));
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -94,7 +101,7 @@ const LifeStages = () => {
       
       <main className="flex-grow pt-20">
         <section className="py-16 md:py-24">
-          <div className="container mx-auto px-4 max-w-6xl">
+          <div className="container mx-auto px-4 max-w-4xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -102,10 +109,10 @@ const LifeStages = () => {
               className="text-center mb-12"
             >
               <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-                {t('lifestages.title')}
+                {t('lifeStages.title')}
               </h1>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                {t('lifestages.subtitle')}
+                {t('lifeStages.description')}
               </p>
             </motion.div>
 
@@ -114,46 +121,74 @@ const LifeStages = () => {
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {stages.map((stage, index) => {
-                  const IconComponent = iconMap[stage.icon] || Church;
-                  const imageUrl = stage.image_url || defaultImages[stage.icon] || baptismImg;
-                  
-                  return (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="group bg-card rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-2"
-                    >
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={imageUrl}
-                          alt={stage.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                          <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                            <IconComponent className="w-5 h-5 text-white" />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Accordion type="single" collapsible className="space-y-4">
+                  {stages.map((stage, index) => {
+                    const IconComponent = iconMap[stage.icon] || Church;
+                    const imageUrl = stage.image_url || defaultImages[stage.icon] || baptismImg;
+                    
+                    return (
+                      <AccordionItem 
+                        key={stage.id || index} 
+                        value={`item-${index}`}
+                        className="border rounded-xl overflow-hidden bg-card shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <AccordionTrigger className="px-6 py-4 hover:no-underline group">
+                          <div className="flex items-center gap-4 text-left">
+                            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                              <IconComponent className="w-6 h-6 text-primary" />
+                            </div>
+                            <span className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                              {stage.title}
+                            </span>
                           </div>
-                        </div>
-                      </div>
-                      
-                      <div className="p-5">
-                        <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
-                          {stage.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground line-clamp-3">
-                          {stage.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="px-0 pb-0">
+                          <div className="flex flex-col md:flex-row">
+                            <div className="md:w-1/3 h-48 md:h-auto">
+                              <img
+                                src={imageUrl}
+                                alt={stage.title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="p-6 md:w-2/3">
+                              <p className="text-muted-foreground leading-relaxed">
+                                {stage.description}
+                              </p>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  })}
+                </Accordion>
+              </motion.div>
             )}
+
+            {/* Section Contact */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-16 text-center bg-primary/5 rounded-2xl p-8"
+            >
+              <h2 className="text-2xl font-semibold text-foreground mb-3">
+                {t('lifeStages.moreQuestions')}
+              </h2>
+              <p className="text-muted-foreground mb-6">
+                {t('lifeStages.moreQuestionsDesc')}
+              </p>
+              <Link to="/contact">
+                <Button size="lg" className="gap-2">
+                  {t('lifeStages.contactUs')}
+                </Button>
+              </Link>
+            </motion.div>
           </div>
         </section>
       </main>
