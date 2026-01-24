@@ -52,20 +52,45 @@ const ResetPassword = () => {
   const passwordsMatch = password === confirmPassword && confirmPassword.length > 0;
 
   useEffect(() => {
-    // Check if we have an access token in the URL (from the reset email link)
+    // Check URL for error parameters first (Supabase redirects with error in query or hash)
+    const urlParams = new URLSearchParams(window.location.search);
     const hashParams = new URLSearchParams(window.location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const type = hashParams.get('type');
     
-    if (!accessToken || type !== 'recovery') {
-      // No valid recovery token, redirect to auth
+    const errorCode = urlParams.get('error_code') || hashParams.get('error_code');
+    const errorDescription = urlParams.get('error_description') || hashParams.get('error_description');
+    
+    if (errorCode || errorDescription) {
       toast({
         title: t('auth.errors.invalidResetLink', 'Lien invalide'),
-        description: t('auth.errors.invalidResetLinkDesc', 'Ce lien de réinitialisation est invalide ou a expiré.'),
+        description: errorDescription || t('auth.errors.invalidResetLinkDesc', 'Ce lien de réinitialisation est invalide ou a expiré.'),
         variant: 'destructive',
       });
       navigate('/auth');
+      return;
     }
+
+    // Check if we have a valid session (Supabase exchanges the token automatically)
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        // Also check for access_token in hash (legacy check)
+        const accessToken = hashParams.get('access_token');
+        const type = hashParams.get('type');
+        
+        if (!accessToken && !type) {
+          toast({
+            title: t('auth.errors.invalidResetLink', 'Lien invalide'),
+            description: t('auth.errors.invalidResetLinkDesc', 'Ce lien de réinitialisation est invalide ou a expiré.'),
+            variant: 'destructive',
+          });
+          navigate('/auth');
+        }
+        // If there's a token in the URL, Supabase will exchange it via onAuthStateChange
+      }
+    };
+    
+    checkSession();
   }, [navigate, toast, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
