@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle, MessageCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Calendar, Send, CheckCircle, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/hooks/use-toast';
@@ -202,9 +203,13 @@ const Contact = () => {
 
                   <div className="card-parish p-5">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-secondary/20 rounded-lg">
+                      <a
+                        href="tel:+33164960901"
+                        className="p-3 bg-secondary/20 rounded-lg hover:bg-secondary/30 transition-colors cursor-pointer"
+                        aria-label={t('contact.info.phone')}
+                      >
                         <Phone className="text-secondary" size={24} />
-                      </div>
+                      </a>
                       <div className="flex-1">
                         <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.phone')}</h4>
                         <a 
@@ -228,9 +233,13 @@ const Contact = () => {
 
                   <div className="card-parish p-5">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-accent/20 rounded-lg">
+                      <a
+                        href="mailto:paroissestpaul.corbeil@gmail.com"
+                        className="p-3 bg-accent/20 rounded-lg hover:bg-accent/30 transition-colors cursor-pointer"
+                        aria-label={t('contact.info.email')}
+                      >
                         <Mail className="text-accent" size={24} />
-                      </div>
+                      </a>
                       <div>
                         <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.email')}</h4>
                         <a 
@@ -245,14 +254,21 @@ const Contact = () => {
 
                   <div className="card-parish p-5">
                     <div className="flex items-start gap-4">
-                      <div className="p-3 bg-primary/10 rounded-lg">
-                        <Clock className="text-primary" size={24} />
-                      </div>
+                      <Link
+                        to="/horaires"
+                        className="p-3 bg-primary/10 rounded-lg hover:bg-primary/20 transition-colors cursor-pointer"
+                        aria-label={t('contact.info.massSchedulesLink')}
+                      >
+                        <Calendar className="text-primary" size={24} />
+                      </Link>
                       <div>
-                        <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.hours')}</h4>
-                        <p className="text-muted-foreground text-sm whitespace-pre-line">
-                          {t('contact.info.hoursValue')}
-                        </p>
+                        <h4 className="font-heading font-bold text-foreground mb-1">{t('contact.info.massSchedules')}</h4>
+                        <Link 
+                          to="/horaires"
+                          className="text-muted-foreground text-sm hover:text-primary transition-colors"
+                        >
+                          {t('contact.info.massSchedulesLink')}
+                        </Link>
                       </div>
                     </div>
                   </div>
