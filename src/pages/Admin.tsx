@@ -131,7 +131,16 @@ const Admin = () => {
               <h1 className="text-xl font-heading font-bold text-foreground">
                 {t('admin.title')}
               </h1>
-              <p className="text-sm text-muted-foreground">{user?.email}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">{user?.email}</p>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  isAdmin 
+                    ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' 
+                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                }`}>
+                  {isAdmin ? t('admin.roles.admin', 'Admin') : t('admin.roles.editor', 'Éditeur')}
+                </span>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
