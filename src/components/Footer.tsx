@@ -38,6 +38,16 @@ const getSocialIcon = (iconName: string, size = 18) => {
 const Footer = () => {
   const { t, i18n } = useTranslation();
   const currentYear = new Date().getFullYear();
+  // Facebook/Flickr can be blocked when opened from an iframe (preview). In production,
+  // we prefer opening in a new tab.
+  const isInIframe = (() => {
+    try {
+      return window.self !== window.top;
+    } catch {
+      return true;
+    }
+  })();
+  const externalTarget = isInIframe ? undefined : '_blank';
   const [footerLinks, setFooterLinks] = useState<FooterLink[]>([]);
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
 
@@ -93,6 +103,7 @@ const Footer = () => {
                 <a
                   key={social.id}
                   href={social.url}
+                  target={externalTarget}
                   rel="noopener noreferrer"
                   aria-label={social.name}
                   className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors"
