@@ -66,19 +66,19 @@ const Footer = () => {
               {t('footer.description')}
             </p>
             <div className="flex gap-3">
-              <a href="https://www.facebook.com/stpaulcorbeil" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
+              <a href="https://www.facebook.com/stpaulcorbeil" aria-label="Facebook" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
                 <Facebook size={18} />
               </a>
-              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
+              <a href="#" aria-label="Instagram" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
                 <Instagram size={18} />
               </a>
-              <a href="https://www.youtube.com/@eglise-st.paul-corbeil-essonne" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
+              <a href="https://www.youtube.com/@eglise-st.paul-corbeil-essonne" aria-label="YouTube" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
                 <Youtube size={18} />
               </a>
-              <a href="https://www.flickr.com/photos/paroissesaintpaul/albums/" target="_blank" rel="noopener noreferrer" aria-label="Flickr" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
+              <a href="https://www.flickr.com/photos/paroissesaintpaul/albums/" aria-label="Flickr" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
                 <FlickrIcon size={18} />
               </a>
-              <a href="https://wa.me/33986346726" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
+              <a href="https://wa.me/33986346726" aria-label="WhatsApp" className="p-2 bg-primary-foreground/10 rounded-full hover:bg-accent hover:text-accent-foreground transition-colors">
                 <WhatsAppIcon size={18} />
               </a>
             </div>
