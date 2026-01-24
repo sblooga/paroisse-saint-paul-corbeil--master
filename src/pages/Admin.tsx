@@ -6,7 +6,7 @@ import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
   Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck, Lock,
-  HelpCircle, Heart
+  HelpCircle, Heart, Star
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,9 +22,10 @@ import AdminUsers from '@/components/admin/AdminUsers';
 import AdminDocsPassword from '@/components/admin/AdminDocsPassword';
 import AdminFAQ from '@/components/admin/AdminFAQ';
 import AdminLifeStages from '@/components/admin/AdminLifeStages';
+import AdminEvents from '@/components/admin/AdminEvents';
 import ChangePasswordDialog from '@/components/admin/ChangePasswordDialog';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'footerLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'events' | 'footerLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
 
 interface Stats {
   messages: number;
@@ -255,6 +256,14 @@ const Admin = () => {
             {t('admin.tabs.schedules')}
           </Button>
           <Button
+            variant={activeTab === 'events' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('events')}
+            size="sm"
+          >
+            <Star size={16} />
+            Événements
+          </Button>
+          <Button
             variant={activeTab === 'messages' ? 'default' : 'outline'}
             onClick={() => setActiveTab('messages')}
             size="sm"
@@ -321,6 +330,7 @@ const Admin = () => {
           {activeTab === 'pages' && <AdminPages key={`pages-${refreshKey}`} />}
           {activeTab === 'team' && <AdminTeam key={`team-${refreshKey}`} />}
           {activeTab === 'schedules' && <AdminMassSchedules key={`schedules-${refreshKey}`} />}
+          {activeTab === 'events' && <AdminEvents key={`events-${refreshKey}`} />}
           {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
           {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
