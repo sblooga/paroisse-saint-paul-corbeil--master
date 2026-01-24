@@ -451,6 +451,39 @@ export type Database = {
         }
         Relationships: []
       }
+      social_links: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          icon: string
+          id: string
+          name: string
+          sort_order: number | null
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          icon: string
+          id?: string
+          name: string
+          sort_order?: number | null
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          icon?: string
+          id?: string
+          name?: string
+          sort_order?: number | null
+          updated_at?: string
+          url?: string
+        }
+        Relationships: []
+      }
       submission_rate_limits: {
         Row: {
           created_at: string
