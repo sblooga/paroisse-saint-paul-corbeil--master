@@ -31,6 +31,9 @@ import {
   FileAudio,
   FileText,
   Eye,
+  Music,
+  Play,
+  Pause,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -58,9 +61,19 @@ import {
 } from './select';
 import { ScrollArea } from './scroll-area';
 import { sanitizeHtml } from '@/lib/sanitize';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 
 // Lazy load emoji picker to avoid build issues
 const EmojiPicker = lazy(() => import('./emoji-picker'));
+
+interface AudioFile {
+  id: string;
+  title: string;
+  title_fr: string | null;
+  title_pl: string | null;
+  file_url: string;
+  active: boolean;
+}
 
 interface RichTextEditorProps {
   content: string;
@@ -197,6 +210,64 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   const [imageWidth, setImageWidth] = useState('100%');
   const [imageAlign, setImageAlign] = useState('center');
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
+  
+  // Audio library state
+  const [audioFiles, setAudioFiles] = useState<AudioFile[]>([]);
+  const [loadingAudio, setLoadingAudio] = useState(false);
+  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+  const audioPreviewRef = useRef<HTMLAudioElement | null>(null);
+
+  // Fetch audio files when podcast dialog opens
+  useEffect(() => {
+    if (showPodcastDialog) {
+      fetchAudioFiles();
+    }
+  }, [showPodcastDialog]);
+
+  const fetchAudioFiles = async () => {
+    setLoadingAudio(true);
+    const { data, error } = await supabase
+      .from('audio_files')
+      .select('id, title, title_fr, title_pl, file_url, active')
+      .eq('active', true)
+      .order('sort_order', { ascending: true });
+
+    if (!error && data) {
+      setAudioFiles(data);
+    }
+    setLoadingAudio(false);
+  };
+
+  const toggleAudioPreview = (file: AudioFile) => {
+    if (playingAudioId === file.id) {
+      audioPreviewRef.current?.pause();
+      setPlayingAudioId(null);
+    } else {
+      if (audioPreviewRef.current) {
+        audioPreviewRef.current.pause();
+      }
+      audioPreviewRef.current = new Audio(file.file_url);
+      audioPreviewRef.current.play();
+      audioPreviewRef.current.onended = () => setPlayingAudioId(null);
+      setPlayingAudioId(file.id);
+    }
+  };
+
+  const insertAudioFromLibrary = (file: AudioFile) => {
+    if (!editor) return;
+    const title = file.title_fr || file.title;
+    const audioHtml = `<div class="my-4 p-4 bg-muted/50 rounded-lg"><p class="font-medium mb-2">🎧 ${title}</p><audio controls class="w-full"><source src="${file.file_url}" type="audio/mpeg">Votre navigateur ne supporte pas l'audio.</audio></div>`;
+    editor.chain().focus().insertContent(audioHtml).run();
+    
+    // Stop preview if playing
+    if (audioPreviewRef.current) {
+      audioPreviewRef.current.pause();
+      setPlayingAudioId(null);
+    }
+    
+    setShowPodcastDialog(false);
+    toast.success('Audio inséré');
+  };
 
   const editor = useEditor({
     extensions: [
@@ -830,31 +901,103 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
       </Dialog>
       
       {/* Podcast Dialog */}
-      <Dialog open={showPodcastDialog} onOpenChange={setShowPodcastDialog}>
-        <DialogContent>
+      <Dialog open={showPodcastDialog} onOpenChange={(open) => {
+        setShowPodcastDialog(open);
+        if (!open && audioPreviewRef.current) {
+          audioPreviewRef.current.pause();
+          setPlayingAudioId(null);
+        }
+      }}>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Ajouter un podcast</DialogTitle>
+            <DialogTitle>Ajouter un audio / podcast</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="podcast-url">URL du podcast</Label>
-              <Input
-                id="podcast-url"
-                value={podcastUrl}
-                onChange={(e) => setPodcastUrl(e.target.value)}
-                placeholder="https://open.spotify.com/episode/..."
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Supporte: Spotify, Apple Podcasts, SoundCloud, Deezer
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowPodcastDialog(false)}>
-              Annuler
-            </Button>
-            <Button onClick={insertPodcast}>Insérer</Button>
-          </DialogFooter>
+          <Tabs defaultValue="library" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="library">
+                <Music className="h-4 w-4 mr-2" />
+                Bibliothèque
+              </TabsTrigger>
+              <TabsTrigger value="external">
+                <FileAudio className="h-4 w-4 mr-2" />
+                Lien externe
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="library" className="mt-4">
+              {loadingAudio ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin text-2xl">⏳</div>
+                </div>
+              ) : audioFiles.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Music className="h-10 w-10 mx-auto mb-2 opacity-50" />
+                  <p>Aucun audio dans la bibliothèque</p>
+                  <p className="text-sm">Ajoutez des fichiers dans Admin → Podcasts/Homélies</p>
+                </div>
+              ) : (
+                <ScrollArea className="h-[300px] pr-4">
+                  <div className="space-y-2">
+                    {audioFiles.map((file) => (
+                      <div
+                        key={file.id}
+                        className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                      >
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => toggleAudioPreview(file)}
+                          className="shrink-0"
+                        >
+                          {playingAudioId === file.id ? (
+                            <Pause className="h-4 w-4" />
+                          ) : (
+                            <Play className="h-4 w-4" />
+                          )}
+                        </Button>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{file.title_fr || file.title}</p>
+                        </div>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => insertAudioFromLibrary(file)}
+                        >
+                          Insérer
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="external" className="mt-4">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="podcast-url">URL du podcast</Label>
+                  <Input
+                    id="podcast-url"
+                    value={podcastUrl}
+                    onChange={(e) => setPodcastUrl(e.target.value)}
+                    placeholder="https://open.spotify.com/episode/..."
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Supporte: Spotify, Apple Podcasts, SoundCloud, Deezer
+                  </p>
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button variant="outline" onClick={() => setShowPodcastDialog(false)}>
+                    Annuler
+                  </Button>
+                  <Button onClick={insertPodcast} disabled={!podcastUrl}>
+                    Insérer
+                  </Button>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </DialogContent>
       </Dialog>
       
