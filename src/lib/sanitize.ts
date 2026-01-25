@@ -35,7 +35,8 @@ export const sanitizeHtml = (html: string): string => {
       'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
       'ul', 'ol', 'li', 'strong', 'em', 'a', 'br', 
       'span', 'div', 'blockquote', 'img', 'iframe',
-      'svg', 'path', 'polyline', 'line'
+      'svg', 'path', 'polyline', 'line',
+      'audio', 'source'
     ],
     ALLOWED_ATTR: [
       'href', 'target', 'rel', 'src', 'alt', 'class', 'style',
@@ -44,10 +45,12 @@ export const sanitizeHtml = (html: string): string => {
       // SVG attributes
       'xmlns', 'viewBox', 'fill', 'stroke', 'stroke-width', 
       'stroke-linecap', 'stroke-linejoin', 'd', 'points', 
-      'x1', 'y1', 'x2', 'y2'
+      'x1', 'y1', 'x2', 'y2',
+      // Audio attributes
+      'controls', 'preload', 'type'
     ],
     ALLOW_DATA_ATTR: true,
-    ADD_TAGS: ['iframe'],
-    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+    ADD_TAGS: ['iframe', 'audio', 'source'],
+    ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'controls', 'preload', 'type'],
   });
 };
