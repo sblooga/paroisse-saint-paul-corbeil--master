@@ -6,7 +6,7 @@ import {
   Mail, Users, MessageSquare, LogOut,
   Check, RefreshCw, LayoutDashboard, FileText,
   Calendar, UsersRound, Newspaper, Link as LinkIcon, ShieldCheck, Lock,
-  HelpCircle, Heart, Star, Share2
+  HelpCircle, Heart, Star, Share2, Music
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,9 +24,10 @@ import AdminDocsPassword from '@/components/admin/AdminDocsPassword';
 import AdminFAQ from '@/components/admin/AdminFAQ';
 import AdminLifeStages from '@/components/admin/AdminLifeStages';
 import AdminEvents from '@/components/admin/AdminEvents';
+import AdminAudioFiles from '@/components/admin/AdminAudioFiles';
 import ChangePasswordDialog from '@/components/admin/ChangePasswordDialog';
 
-type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'events' | 'footerLinks' | 'socialLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
+type TabType = 'messages' | 'subscribers' | 'articles' | 'pages' | 'team' | 'schedules' | 'events' | 'audioFiles' | 'footerLinks' | 'socialLinks' | 'users' | 'docsPassword' | 'faq' | 'lifeStages';
 
 interface Stats {
   messages: number;
@@ -274,6 +275,14 @@ const Admin = () => {
             Événements
           </Button>
           <Button
+            variant={activeTab === 'audioFiles' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('audioFiles')}
+            size="sm"
+          >
+            <Music size={16} />
+            Podcasts/Homélies
+          </Button>
+          <Button
             variant={activeTab === 'messages' ? 'default' : 'outline'}
             onClick={() => setActiveTab('messages')}
             size="sm"
@@ -349,6 +358,7 @@ const Admin = () => {
           {activeTab === 'team' && <AdminTeam key={`team-${refreshKey}`} />}
           {activeTab === 'schedules' && <AdminMassSchedules key={`schedules-${refreshKey}`} />}
           {activeTab === 'events' && <AdminEvents key={`events-${refreshKey}`} />}
+          {activeTab === 'audioFiles' && <AdminAudioFiles key={`audioFiles-${refreshKey}`} />}
           {activeTab === 'messages' && <AdminMessages key={`messages-${refreshKey}`} />}
           {activeTab === 'subscribers' && <AdminNewsletter key={`subscribers-${refreshKey}`} />}
           {activeTab === 'footerLinks' && <AdminFooterLinks key={`footerLinks-${refreshKey}`} />}
