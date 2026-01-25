@@ -196,7 +196,7 @@ const ArticleDetail = () => {
               {content ? (
                 <div 
                   className="prose prose-lg max-w-none dark:prose-invert overflow-hidden
-                    [&_iframe]:w-full [&_iframe]:rounded-lg [&_iframe]:my-4
+                    [&_iframe]:w-full [&_iframe]:rounded-lg [&_iframe]:my-4 [&_iframe]:max-h-[250px] [&_iframe]:sm:max-h-[350px] [&_iframe]:md:max-h-[450px] [&_iframe]:aspect-video
                     [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-md [&_img]:my-4
                     [&_img[data-align='left']]:float-left [&_img[data-align='left']]:mr-4 [&_img[data-align='left']]:mb-2 [&_img[data-align='left']]:clear-left
                     [&_img[data-align='right']]:float-right [&_img[data-align='right']]:ml-4 [&_img[data-align='right']]:mb-2 [&_img[data-align='right']]:clear-right
