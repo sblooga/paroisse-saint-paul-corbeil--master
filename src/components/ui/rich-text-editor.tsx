@@ -7,6 +7,8 @@ import Image from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import TextAlign from '@tiptap/extension-text-align';
 import Youtube from '@tiptap/extension-youtube';
+import { TextStyle } from '@tiptap/extension-text-style';
+import { Color } from '@tiptap/extension-color';
 import { Button } from './button';
 import {
   Bold,
@@ -34,6 +36,8 @@ import {
   Music,
   Play,
   Pause,
+  Palette,
+  X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -310,6 +314,8 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
           },
         },
       }),
+      TextStyle,
+      Color,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
         alignments: ['left', 'center', 'right', 'justify'],
@@ -629,6 +635,78 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
         >
           <Strikethrough className="h-4 w-4" />
         </Button>
+        
+        {/* Text Color Picker */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              title="Couleur du texte"
+              className="relative"
+            >
+              <Palette className="h-4 w-4" />
+              {editor.getAttributes('textStyle').color && (
+                <span 
+                  className="absolute bottom-1 left-1/2 -translate-x-1/2 w-3 h-1 rounded-full"
+                  style={{ backgroundColor: editor.getAttributes('textStyle').color }}
+                />
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-3" align="start">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Couleur du texte</span>
+                {editor.getAttributes('textStyle').color && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().unsetColor().run()}
+                    className="h-6 px-2 text-xs"
+                  >
+                    <X className="h-3 w-3 mr-1" />
+                    Réinitialiser
+                  </Button>
+                )}
+              </div>
+              <div className="grid grid-cols-8 gap-1">
+                {[
+                  '#000000', '#374151', '#6B7280', '#9CA3AF',
+                  '#DC2626', '#EA580C', '#D97706', '#CA8A04',
+                  '#16A34A', '#059669', '#0D9488', '#0891B2',
+                  '#2563EB', '#4F46E5', '#7C3AED', '#A855F7',
+                  '#C026D3', '#DB2777', '#E11D48', '#F43F5E',
+                  '#1034A6', '#00C268', '#F4A325', '#8B4513',
+                ].map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    onClick={() => editor.chain().focus().setColor(color).run()}
+                    className={cn(
+                      'w-6 h-6 rounded border border-border hover:scale-110 transition-transform',
+                      editor.getAttributes('textStyle').color === color && 'ring-2 ring-primary ring-offset-1'
+                    )}
+                    style={{ backgroundColor: color }}
+                    title={color}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center gap-2 pt-2 border-t">
+                <Label htmlFor="custom-color" className="text-xs">Personnalisée:</Label>
+                <input
+                  id="custom-color"
+                  type="color"
+                  value={editor.getAttributes('textStyle').color || '#000000'}
+                  onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
+                  className="w-8 h-8 rounded cursor-pointer border border-border"
+                />
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
         
         <div className="w-px h-6 bg-border mx-1" />
         
