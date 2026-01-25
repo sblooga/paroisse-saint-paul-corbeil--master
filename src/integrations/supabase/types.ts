@@ -77,6 +77,48 @@ export type Database = {
         }
         Relationships: []
       }
+      audio_files: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          duration: number | null
+          file_size: number | null
+          file_url: string
+          id: string
+          sort_order: number | null
+          title: string
+          title_fr: string | null
+          title_pl: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          duration?: number | null
+          file_size?: number | null
+          file_url: string
+          id?: string
+          sort_order?: number | null
+          title: string
+          title_fr?: string | null
+          title_pl?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          duration?: number | null
+          file_size?: number | null
+          file_url?: string
+          id?: string
+          sort_order?: number | null
+          title?: string
+          title_fr?: string | null
+          title_pl?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
