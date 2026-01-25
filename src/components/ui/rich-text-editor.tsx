@@ -62,6 +62,7 @@ import {
 import { ScrollArea } from './scroll-area';
 import { sanitizeHtml } from '@/lib/sanitize';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
+import { AudioBlock } from '@/components/editor/extensions/AudioBlock';
 
 // Lazy load emoji picker to avoid build issues
 const EmojiPicker = lazy(() => import('./emoji-picker'));
@@ -256,8 +257,18 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   const insertAudioFromLibrary = (file: AudioFile) => {
     if (!editor) return;
     const title = file.title_fr || file.title;
-    const audioHtml = `<div class="my-4 p-4 bg-muted/50 rounded-lg"><p class="font-medium mb-2">🎧 ${title}</p><audio controls class="w-full"><source src="${file.file_url}" type="audio/mpeg">Votre navigateur ne supporte pas l'audio.</audio></div>`;
-    editor.chain().focus().insertContent(audioHtml).run();
+    editor
+      .chain()
+      .focus()
+      .insertContent({
+        type: 'audioBlock',
+        attrs: {
+          src: file.file_url,
+          title,
+          type: 'audio/mpeg',
+        },
+      })
+      .run();
     
     // Stop preview if playing
     if (audioPreviewRef.current) {
@@ -314,6 +325,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
         allowBase64: false,
       }),
       Iframe,
+      AudioBlock,
       Youtube.configure({
         width: 640,
         height: 360,
