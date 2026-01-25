@@ -1,73 +1,158 @@
-# Welcome to your Lovable project
+# 🏛️ Parish Template - Master 1
 
-## Project info
+> Template réutilisable pour sites de paroisses - Version 1.0
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 📋 Description
 
-## How can I edit this code?
+Ce projet est un **template Master** conçu pour être déployé sur plusieurs paroisses avec des personnalisations mineures (images, nom de domaine, coordonnées). Il sert de site pilote pour un diocèse comptant 100+ paroisses.
 
-There are several ways of editing your application.
+## 🛠️ Technologies utilisées
 
-**Use Lovable**
+| Catégorie | Technologie |
+|-----------|-------------|
+| Frontend | React 18, TypeScript, Vite |
+| UI | Tailwind CSS, shadcn/ui, Framer Motion |
+| Backend | Lovable Cloud (Supabase) |
+| Base de données | PostgreSQL (via Supabase) |
+| Stockage médias | Supabase Storage |
+| Authentification | Supabase Auth |
+| Internationalisation | i18next (FR/PL) |
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## 🚀 Installation locale
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Cloner le dépôt
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Accéder au dossier
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Installer les dépendances
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Lancer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 📁 Structure du projet
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+src/
+├── assets/          # Images et ressources statiques
+├── components/      # Composants React réutilisables
+│   ├── admin/       # Composants du panneau d'administration
+│   └── ui/          # Composants UI (shadcn/ui)
+├── hooks/           # Hooks React personnalisés
+├── integrations/    # Configuration Supabase (auto-généré)
+├── lib/             # Utilitaires (sanitize, utils)
+├── locales/         # Fichiers de traduction (fr.json, pl.json)
+├── pages/           # Pages de l'application
+supabase/
+├── functions/       # Edge Functions (delete-user, list-users)
+└── config.toml      # Configuration Supabase
+```
 
-**Use GitHub Codespaces**
+## 🔧 Variables à personnaliser par paroisse
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Pour déployer ce template sur une nouvelle paroisse, modifier :
 
-## What technologies are used for this project?
+1. **Informations de contact** : Adresse, téléphone, email
+2. **Images** : Logo, photos de l'église, équipe pastorale
+3. **Nom de domaine** : Configuration DNS
+4. **Contenu** : Articles, horaires de messes, équipe
+5. **Traductions** : Adapter les fichiers `locales/*.json` si nécessaire
 
-This project is built with:
+## 🔐 Rôles utilisateurs
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+| Rôle | Permissions |
+|------|-------------|
+| Admin | Gestion complète + utilisateurs |
+| Éditeur | Gestion du contenu (articles, pages, équipe) |
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+# 📦 Plan de Migration - Master 2
 
-## Can I connect a custom domain to my Lovable project?
+## Objectif
 
-Yes, you can!
+Migrer le template Master 1 (Lovable Cloud/Supabase) vers une architecture autonome :
+- **Base de données** : Neon (PostgreSQL serverless)
+- **Stockage médias** : Cloudinary
+- **Hébergement** : Render.com
+- **Dépôt** : GitHub
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## ✅ Ce qui sera conservé sans modification
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- Tout le code React/TypeScript du frontend
+- Les composants UI (shadcn/ui, Tailwind)
+- La structure des pages et la navigation
+- Les animations Framer Motion
+- Le système i18next (traductions FR/PL)
+- Les hooks personnalisés (hors auth)
+
+## ⚠️ Éléments nécessitant une adaptation
+
+| Composant | Effort | Description |
+|-----------|--------|-------------|
+| Client Supabase → Neon | Moyen | Remplacer `@supabase/supabase-js` par un client PostgreSQL (Drizzle ORM ou Prisma) |
+| Supabase Storage → Cloudinary | Moyen | Adapter l'upload d'images vers l'API Cloudinary |
+| Supabase Auth → Clerk/Auth0 | Important | Implémenter un nouveau système d'authentification |
+| Edge Functions → API Routes | Moyen | Convertir les fonctions Deno en routes Express/Hono sur Render.com |
+| RLS Policies → Middleware | Moyen | Implémenter les règles de sécurité côté serveur |
+
+## 📋 Étapes de migration
+
+### Phase 1 : Préparation (1 session)
+1. Créer un nouveau projet Lovable (remix de Master 1)
+2. **Ne pas activer Lovable Cloud**
+3. Connecter à un nouveau dépôt GitHub
+
+### Phase 2 : Base de données (1-2 sessions)
+1. Créer un projet Neon et récupérer la connection string
+2. Installer Drizzle ORM ou Prisma
+3. Migrer le schéma de tables
+4. Adapter les requêtes Supabase → ORM
+
+### Phase 3 : Authentification (1-2 sessions)
+1. Créer un compte Clerk ou Auth0
+2. Configurer les providers (email/password)
+3. Remplacer `useAuth` hook
+4. Adapter les pages `/auth` et `/admin`
+
+### Phase 4 : Stockage médias (1 session)
+1. Créer un compte Cloudinary
+2. Configurer l'upload widget ou l'API
+3. Adapter les composants `ImageUpload`
+
+### Phase 5 : Déploiement (1 session)
+1. Créer un Web Service sur Render.com
+2. Configurer les variables d'environnement
+3. Déployer depuis GitHub
+4. Configurer le domaine personnalisé
+
+## 🎯 Résultat attendu
+
+Un template **100% autonome** sans dépendance à Lovable Cloud, déployable à l'infini pour chaque paroisse du diocèse avec :
+- Versionnage (V1.0, V1.1, V2.0...)
+- Coûts maîtrisés (Neon free tier, Cloudinary free tier)
+- Maintenance centralisée via GitHub
+
+## 📞 Support
+
+Pour toute question sur la migration, consulter :
+- [Documentation Neon](https://neon.tech/docs)
+- [Documentation Cloudinary](https://cloudinary.com/documentation)
+- [Documentation Clerk](https://clerk.com/docs)
+- [Documentation Render](https://render.com/docs)
+
+---
+
+## 📝 Déploiement Lovable (Master 1)
+
+Pour publier le site : [Lovable](https://lovable.dev) → Share → Publish
+
+## 🌐 Domaine personnalisé
+
+Project > Settings > Domains > Connect Domain
+
+Documentation : [Custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
