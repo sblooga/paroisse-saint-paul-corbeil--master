@@ -120,6 +120,7 @@ const Contact = () => {
           newsletter_optin: formData.newsletter,
           attachment_url: attachmentUrl,
           attachment_name: attachmentName,
+          attachment_size: attachment ? attachment.size : null,
         });
 
       if (messageError) throw messageError;
