@@ -10,9 +10,6 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
-import {
-  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
-} from '@/components/ui/tooltip';
 
 interface ContactMessage {
   id: string;
@@ -25,6 +22,7 @@ interface ContactMessage {
   created_at: string;
   attachment_url: string | null;
   attachment_name: string | null;
+  attachment_size: number | null;
 }
 
 const AdminMessages = () => {
@@ -223,16 +221,12 @@ const AdminMessages = () => {
                   </TableCell>
                   <TableCell>
                     {msg.attachment_url ? (
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Paperclip size={18} className="text-primary" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{msg.attachment_name}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <div className="flex items-center gap-1.5">
+                        <Paperclip size={16} className="text-primary" />
+                        <span className="text-xs text-muted-foreground">
+                          {msg.attachment_size ? formatFileSize(msg.attachment_size) : '—'}
+                        </span>
+                      </div>
                     ) : (
                       <X size={18} className="text-muted-foreground" />
                     )}
@@ -302,6 +296,11 @@ const AdminMessages = () => {
                   <div className="flex items-center gap-2">
                     <Paperclip size={16} className="text-primary" />
                     <span className="text-sm font-medium">{selectedMessage.attachment_name}</span>
+                    {selectedMessage.attachment_size && (
+                      <span className="text-xs text-muted-foreground">
+                        ({formatFileSize(selectedMessage.attachment_size)})
+                      </span>
+                    )}
                   </div>
                   <Button
                     size="sm"
