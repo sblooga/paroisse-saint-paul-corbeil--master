@@ -315,13 +315,20 @@ const AdminMessages = () => {
               <div className="flex gap-2 justify-end">
                 <Button
                   variant="outline"
+                  onClick={() => window.location.href = `mailto:${selectedMessage.email}?subject=${encodeURIComponent('Re: ' + selectedMessage.subject)}`}
+                >
+                  <Mail size={16} />
+                  Répondre
+                </Button>
+                <Button
+                  variant="outline"
                   onClick={() => {
                     const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(selectedMessage.email)}&su=${encodeURIComponent('Re: ' + selectedMessage.subject)}`;
                     window.open(gmailUrl, '_blank');
                   }}
                 >
                   <Mail size={16} />
-                  Répondre (Gmail)
+                  Gmail
                 </Button>
                 <Button variant="destructive" onClick={() => deleteMessage(selectedMessage.id)}>
                   <Trash2 size={16} />
