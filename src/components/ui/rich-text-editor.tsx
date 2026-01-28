@@ -42,6 +42,7 @@ import {
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import {
   Popover,
   PopoverContent,
@@ -203,6 +204,8 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   placeholder = 'Commencez à écrire...',
   className,
 }, ref) => {
+  const { i18n } = useTranslation();
+  const isFrench = i18n.language === 'fr';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showVideoDialog, setShowVideoDialog] = useState(false);
   const [showPodcastDialog, setShowPodcastDialog] = useState(false);
@@ -260,7 +263,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   const insertAudioFromLibrary = (file: AudioFile) => {
     if (!editor) return;
-    const title = file.title_fr || file.title;
+    const title = isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title);
     editor
       .chain()
       .focus()
