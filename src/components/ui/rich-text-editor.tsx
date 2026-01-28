@@ -1043,14 +1043,15 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                     {audioFiles.map((file) => (
                       <div
                         key={file.id}
-                        className="flex items-center gap-2 p-3 rounded-lg border hover:bg-muted/50 transition-colors overflow-hidden"
+                        className="flex items-center gap-2 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                        style={{ maxWidth: '100%' }}
                       >
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleAudioPreview(file)}
-                          className="shrink-0"
+                          className="shrink-0 h-8 w-8 p-0"
                         >
                           {playingAudioId === file.id ? (
                             <Pause className="h-4 w-4" />
@@ -1058,14 +1059,18 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                             <Play className="h-4 w-4" />
                           )}
                         </Button>
-                        <p className="flex-1 min-w-0 font-medium truncate">
+                        <span 
+                          className="font-medium text-sm overflow-hidden text-ellipsis whitespace-nowrap"
+                          style={{ flex: '1 1 0%', minWidth: 0 }}
+                          title={effectiveLang === 'fr' ? (file.title_fr || file.title) : (file.title_pl || file.title)}
+                        >
                           {effectiveLang === 'fr' ? (file.title_fr || file.title) : (file.title_pl || file.title)}
-                        </p>
+                        </span>
                         <Button
                           type="button"
                           size="sm"
                           onClick={() => insertAudioFromLibrary(file)}
-                          className="shrink-0"
+                          className="shrink-0 whitespace-nowrap"
                         >
                           Insérer
                         </Button>
