@@ -1050,7 +1050,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                           )}
                         </Button>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{file.title_fr || file.title}</p>
+                          <p className="font-medium truncate">{isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title)}</p>
                         </div>
                         <Button
                           type="button"
