@@ -1059,7 +1059,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                           )}
                         </Button>
                         <p className="flex-1 min-w-0 font-medium truncate">
-                          {isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title)}
+                          {effectiveLang === 'fr' ? (file.title_fr || file.title) : (file.title_pl || file.title)}
                         </p>
                         <Button
                           type="button"
