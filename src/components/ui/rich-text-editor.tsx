@@ -1038,12 +1038,12 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                   <p className="text-sm">Ajoutez des fichiers dans Admin → Podcasts/Homélies</p>
                 </div>
               ) : (
-                <ScrollArea className="h-[300px] pr-4">
-                  <div className="space-y-2">
+                <ScrollArea className="h-[300px]">
+                  <div className="space-y-2 pr-4">
                     {audioFiles.map((file) => (
                       <div
                         key={file.id}
-                        className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+                        className="flex items-center gap-2 p-3 rounded-lg border hover:bg-muted/50 transition-colors overflow-hidden"
                       >
                         <Button
                           type="button"
@@ -1058,13 +1058,14 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                             <Play className="h-4 w-4" />
                           )}
                         </Button>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title)}</p>
-                        </div>
+                        <p className="flex-1 min-w-0 font-medium truncate">
+                          {isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title)}
+                        </p>
                         <Button
                           type="button"
                           size="sm"
                           onClick={() => insertAudioFromLibrary(file)}
+                          className="shrink-0"
                         >
                           Insérer
                         </Button>
