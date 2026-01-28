@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Eye, Trash2, Download, Check, X, Mail } from 'lucide-react';
+import { Eye, Trash2, Download, Check, X, Mail, Paperclip } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -10,6 +10,9 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface ContactMessage {
   id: string;
@@ -20,6 +23,8 @@ interface ContactMessage {
   newsletter_optin: boolean;
   read: boolean;
   created_at: string;
+  attachment_url: string | null;
+  attachment_name: string | null;
 }
 
 const AdminMessages = () => {
@@ -129,6 +134,26 @@ const AdminMessages = () => {
 
   const unreadCount = messages.filter(m => !m.read).length;
 
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return `${bytes} o`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} Ko`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`;
+  };
+
+  const downloadAttachment = async (url: string, fileName: string) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = fileName;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch (error) {
+      toast({ title: 'Erreur', description: 'Impossible de télécharger le fichier', variant: 'destructive' });
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -164,13 +189,14 @@ const AdminMessages = () => {
               <TableHead>Sujet</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Newsletter</TableHead>
+              <TableHead>Pièce jointe</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {messages.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                   Aucun message reçu
                 </TableCell>
               </TableRow>
@@ -196,10 +222,35 @@ const AdminMessages = () => {
                     )}
                   </TableCell>
                   <TableCell>
+                    {msg.attachment_url ? (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Paperclip size={18} className="text-primary" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{msg.attachment_name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ) : (
+                      <X size={18} className="text-muted-foreground" />
+                    )}
+                  </TableCell>
+                  <TableCell>
                     <div className="flex gap-2">
                       <Button size="sm" variant="outline" onClick={() => viewMessage(msg)}>
                         <Eye size={14} />
                       </Button>
+                      {msg.attachment_url && (
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={() => downloadAttachment(msg.attachment_url!, msg.attachment_name || 'piece-jointe')}
+                        >
+                          <Download size={14} />
+                        </Button>
+                      )}
                       <Button size="sm" variant="destructive" onClick={() => deleteMessage(msg.id)}>
                         <Trash2 size={14} />
                       </Button>
@@ -244,6 +295,22 @@ const AdminMessages = () => {
                 <div className="flex items-center gap-2 text-sm text-green-600">
                   <Mail size={16} />
                   Souhaite s'inscrire à la newsletter
+                </div>
+              )}
+              {selectedMessage.attachment_url && (
+                <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Paperclip size={16} className="text-primary" />
+                    <span className="text-sm font-medium">{selectedMessage.attachment_name}</span>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => downloadAttachment(selectedMessage.attachment_url!, selectedMessage.attachment_name || 'piece-jointe')}
+                  >
+                    <Download size={14} />
+                    Télécharger
+                  </Button>
                 </div>
               )}
               <div className="flex gap-2 justify-end">
