@@ -315,7 +315,7 @@ const AdminMessages = () => {
               <div className="flex gap-2 justify-end">
                 <Button
                   variant="outline"
-                  onClick={() => window.location.href = `mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject}`}
+                  onClick={() => window.open(`mailto:${selectedMessage.email}?subject=Re: ${encodeURIComponent(selectedMessage.subject)}`, '_blank')}
                 >
                   <Mail size={16} />
                   Répondre
