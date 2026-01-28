@@ -121,6 +121,8 @@ export type Database = {
       }
       contact_messages: {
         Row: {
+          attachment_name: string | null
+          attachment_url: string | null
           created_at: string
           email: string
           id: string
@@ -131,6 +133,8 @@ export type Database = {
           subject: string
         }
         Insert: {
+          attachment_name?: string | null
+          attachment_url?: string | null
           created_at?: string
           email: string
           id?: string
@@ -141,6 +145,8 @@ export type Database = {
           subject: string
         }
         Update: {
+          attachment_name?: string | null
+          attachment_url?: string | null
           created_at?: string
           email?: string
           id?: string
