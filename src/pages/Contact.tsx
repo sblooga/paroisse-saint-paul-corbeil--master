@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { MapPin, Phone, Mail, Calendar, Send, CheckCircle, MessageCircle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { MapPin, Phone, Mail, Calendar, Send, CheckCircle, MessageCircle, Paperclip, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +34,32 @@ const Contact = () => {
     newsletter: false,
     rgpd: false,
   });
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 Mo
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        toast({
+          title: t('contact.form.fileTooLarge'),
+          description: t('contact.form.fileTooLargeDesc'),
+          variant: "destructive",
+        });
+        return;
+      }
+      setAttachment(file);
+    }
+  };
+
+  const removeAttachment = () => {
+    setAttachment(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,6 +89,27 @@ const Contact = () => {
       const categoryLabel = formData.category ? `[${formData.category.toUpperCase()}] ` : '';
       const fullSubject = `${categoryLabel}${formData.subject.trim()}`;
 
+      let attachmentUrl = null;
+      let attachmentName = null;
+
+      // Upload attachment if present
+      if (attachment) {
+        const fileExt = attachment.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('contact-attachments')
+          .upload(fileName, attachment);
+
+        if (uploadError) {
+          console.error('Upload error:', uploadError);
+          throw new Error(t('contact.form.uploadError'));
+        }
+
+        attachmentUrl = fileName;
+        attachmentName = attachment.name;
+      }
+
       const { error: messageError } = await supabase
         .from('contact_messages')
         .insert({
@@ -71,6 +118,8 @@ const Contact = () => {
           subject: fullSubject,
           message: formData.message.trim(),
           newsletter_optin: formData.newsletter,
+          attachment_url: attachmentUrl,
+          attachment_name: attachmentName,
         });
 
       if (messageError) throw messageError;
@@ -102,6 +151,10 @@ const Contact = () => {
         newsletter: false,
         rgpd: false,
       });
+      setAttachment(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
@@ -366,6 +419,51 @@ const Contact = () => {
                         required
                         className="bg-background resize-none"
                       />
+                    </div>
+
+                    {/* File Attachment */}
+                    <div className="space-y-2">
+                      <Label htmlFor="attachment">{t('contact.form.attachment')}</Label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          id="attachment"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif,.txt"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="flex items-center gap-2"
+                        >
+                          <Paperclip size={16} />
+                          {t('contact.form.addAttachment')}
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          {t('contact.form.maxFileSize')}
+                        </span>
+                      </div>
+                      {attachment && (
+                        <div className="flex items-center gap-2 p-2 bg-muted rounded-lg">
+                          <Paperclip size={14} className="text-muted-foreground" />
+                          <span className="text-sm flex-1 truncate">{attachment.name}</span>
+                          <span className="text-xs text-muted-foreground">
+                            ({(attachment.size / 1024 / 1024).toFixed(2)} Mo)
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={removeAttachment}
+                            className="h-6 w-6 p-0"
+                          >
+                            <X size={14} />
+                          </Button>
+                        </div>
+                      )}
                     </div>
 
                     {/* Newsletter Opt-in */}

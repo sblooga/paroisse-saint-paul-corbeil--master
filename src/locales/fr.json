@@ -165,7 +165,13 @@
       "categoryRequiredDesc": "Veuillez sélectionner une catégorie pour votre demande.",
       "sendMessage": "Envoyez-nous un message",
       "sendMessageDesc": "Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.",
-      "responseTime": "Réponse sous 48h ouvrées"
+      "responseTime": "Réponse sous 48h ouvrées",
+      "attachment": "Pièce jointe",
+      "addAttachment": "Ajouter un fichier",
+      "maxFileSize": "10 Mo max",
+      "fileTooLarge": "Fichier trop volumineux",
+      "fileTooLargeDesc": "Le fichier ne doit pas dépasser 10 Mo.",
+      "uploadError": "Erreur lors de l'envoi du fichier"
     },
     "info": {
       "address": "Adresse",
