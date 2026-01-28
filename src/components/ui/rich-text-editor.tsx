@@ -86,6 +86,8 @@ interface RichTextEditorProps {
   onChange: (content: string) => void;
   placeholder?: string;
   className?: string;
+  /** Force the language used for editor UI behaviors (spellcheck lang, audio title selection). */
+  contentLanguage?: 'fr' | 'pl';
 }
 
 // Custom Image extension with alignment and size
@@ -203,9 +205,16 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   onChange,
   placeholder = 'Commencez à écrire...',
   className,
+  contentLanguage,
 }, ref) => {
   const { i18n } = useTranslation();
-  const isFrench = i18n.language === 'fr';
+
+  // In the CMS we edit FR and PL content side-by-side.
+  // The inserted audio title must follow the *content language being edited*,
+  // not necessarily the global UI language.
+  const effectiveLang: 'fr' | 'pl' =
+    contentLanguage ?? (i18n.language?.startsWith('pl') ? 'pl' : 'fr');
+  const isFrench = effectiveLang === 'fr';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showVideoDialog, setShowVideoDialog] = useState(false);
   const [showPodcastDialog, setShowPodcastDialog] = useState(false);
@@ -354,7 +363,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
       attributes: {
         class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] p-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4 [&_p]:mb-2 [&_h1]:font-playfair [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:font-playfair [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:font-playfair [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-2 [&_p]:font-lato [&_li]:font-lato',
         spellcheck: 'true',
-        lang: 'fr',
+        lang: effectiveLang,
       },
     },
   });

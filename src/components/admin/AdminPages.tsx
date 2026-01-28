@@ -288,6 +288,7 @@ const AdminPages = () => {
                       content={formData.content_fr}
                       onChange={(content) => setFormData(prev => ({ ...prev, content_fr: content }))}
                       placeholder="Contenu de la page en français..."
+                      contentLanguage="fr"
                     />
                   </div>
                   <div className="border-t pt-4 mt-4">
@@ -336,6 +337,7 @@ const AdminPages = () => {
                       content={formData.content_pl}
                       onChange={(content) => setFormData(prev => ({ ...prev, content_pl: content }))}
                       placeholder="Treść strony po polsku..."
+                      contentLanguage="pl"
                     />
                   </div>
                   <div className="border-t pt-4 mt-4">
