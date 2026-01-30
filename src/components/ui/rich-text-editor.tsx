@@ -88,6 +88,10 @@ interface RichTextEditorProps {
   className?: string;
   /** Force the language used for editor UI behaviors (spellcheck lang, audio title selection). */
   contentLanguage?: 'fr' | 'pl';
+  /** Minimum height for the editor content area */
+  minHeight?: string;
+  /** Simplified toolbar - only basic formatting (bold, italic, link, lists) */
+  simplified?: boolean;
 }
 
 // Custom Image extension with alignment and size
@@ -206,6 +210,8 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
   placeholder = 'Commencez à écrire...',
   className,
   contentLanguage,
+  minHeight = '200px',
+  simplified = false,
 }, ref) => {
   const { i18n } = useTranslation();
 
@@ -361,9 +367,10 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] p-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4 [&_p]:mb-2 [&_h1]:font-playfair [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:font-playfair [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:font-playfair [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-2 [&_p]:font-lato [&_li]:font-lato',
+        class: 'prose prose-sm max-w-none focus:outline-none p-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4 [&_p]:mb-2 [&_h1]:font-playfair [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:font-playfair [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:font-playfair [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-2 [&_p]:font-lato [&_li]:font-lato',
         spellcheck: 'true',
         lang: effectiveLang,
+        style: `min-height: ${minHeight};`,
       },
     },
   });
@@ -615,8 +622,9 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   return (
     <div className={cn('border rounded-md bg-background', className)}>
-      {/* Toolbar Row 1 - Text formatting */}
+      {/* Toolbar - Simplified or Full */}
       <div className="flex flex-wrap gap-1 p-2 border-b bg-muted/50">
+        {/* Basic formatting - always visible */}
         <Button
           type="button"
           variant="ghost"
@@ -637,168 +645,184 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
         >
           <Italic className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleStrike().run()}
-          className={editor.isActive('strike') ? 'bg-accent' : ''}
-          title="Barré"
-        >
-          <Strikethrough className="h-4 w-4" />
-        </Button>
         
-        {/* Text Color Picker */}
-        <Popover>
-          <PopoverTrigger asChild>
+        {/* Strikethrough - only in full mode */}
+        {!simplified && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => editor.chain().focus().toggleStrike().run()}
+            className={editor.isActive('strike') ? 'bg-accent' : ''}
+            title="Barré"
+          >
+            <Strikethrough className="h-4 w-4" />
+          </Button>
+        )}
+        
+        {/* Text Color Picker - only in full mode */}
+        {!simplified && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                title="Couleur du texte"
+                className="relative"
+              >
+                <Palette className="h-4 w-4" />
+                {editor.getAttributes('textStyle').color && (
+                  <span 
+                    className="absolute bottom-1 left-1/2 -translate-x-1/2 w-3 h-1 rounded-full"
+                    style={{ backgroundColor: editor.getAttributes('textStyle').color }}
+                  />
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-3" align="start">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Couleur du texte</span>
+                  {editor.getAttributes('textStyle').color && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => editor.chain().focus().unsetColor().run()}
+                      className="h-6 px-2 text-xs"
+                    >
+                      <X className="h-3 w-3 mr-1" />
+                      Réinitialiser
+                    </Button>
+                  )}
+                </div>
+                <div className="grid grid-cols-8 gap-1">
+                  {[
+                    '#000000', '#374151', '#6B7280', '#9CA3AF',
+                    '#DC2626', '#EA580C', '#D97706', '#CA8A04',
+                    '#16A34A', '#059669', '#0D9488', '#0891B2',
+                    '#2563EB', '#4F46E5', '#7C3AED', '#A855F7',
+                    '#C026D3', '#DB2777', '#E11D48', '#F43F5E',
+                    '#1034A6', '#00C268', '#F4A325', '#8B4513',
+                  ].map((color) => (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() => editor.chain().focus().setColor(color).run()}
+                      className={cn(
+                        'w-6 h-6 rounded border border-border hover:scale-110 transition-transform',
+                        editor.getAttributes('textStyle').color === color && 'ring-2 ring-primary ring-offset-1'
+                      )}
+                      style={{ backgroundColor: color }}
+                      title={color}
+                    />
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 pt-2 border-t">
+                  <Label htmlFor="custom-color" className="text-xs">Personnalisée:</Label>
+                  <input
+                    id="custom-color"
+                    type="color"
+                    value={editor.getAttributes('textStyle').color || '#000000'}
+                    onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
+                    className="w-8 h-8 rounded cursor-pointer border border-border"
+                  />
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        )}
+        
+        {!simplified && <div className="w-px h-6 bg-border mx-1" />}
+        
+        {/* Headings - only in full mode */}
+        {!simplified && (
+          <>
             <Button
               type="button"
               variant="ghost"
               size="sm"
-              title="Couleur du texte"
-              className="relative"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              className={editor.isActive('heading', { level: 1 }) ? 'bg-accent' : ''}
+              title="Titre 1"
             >
-              <Palette className="h-4 w-4" />
-              {editor.getAttributes('textStyle').color && (
-                <span 
-                  className="absolute bottom-1 left-1/2 -translate-x-1/2 w-3 h-1 rounded-full"
-                  style={{ backgroundColor: editor.getAttributes('textStyle').color }}
-                />
-              )}
+              <Heading1 className="h-4 w-4" />
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-3" align="start">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Couleur du texte</span>
-                {editor.getAttributes('textStyle').color && (
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => editor.chain().focus().unsetColor().run()}
-                    className="h-6 px-2 text-xs"
-                  >
-                    <X className="h-3 w-3 mr-1" />
-                    Réinitialiser
-                  </Button>
-                )}
-              </div>
-              <div className="grid grid-cols-8 gap-1">
-                {[
-                  '#000000', '#374151', '#6B7280', '#9CA3AF',
-                  '#DC2626', '#EA580C', '#D97706', '#CA8A04',
-                  '#16A34A', '#059669', '#0D9488', '#0891B2',
-                  '#2563EB', '#4F46E5', '#7C3AED', '#A855F7',
-                  '#C026D3', '#DB2777', '#E11D48', '#F43F5E',
-                  '#1034A6', '#00C268', '#F4A325', '#8B4513',
-                ].map((color) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => editor.chain().focus().setColor(color).run()}
-                    className={cn(
-                      'w-6 h-6 rounded border border-border hover:scale-110 transition-transform',
-                      editor.getAttributes('textStyle').color === color && 'ring-2 ring-primary ring-offset-1'
-                    )}
-                    style={{ backgroundColor: color }}
-                    title={color}
-                  />
-                ))}
-              </div>
-              <div className="flex items-center gap-2 pt-2 border-t">
-                <Label htmlFor="custom-color" className="text-xs">Personnalisée:</Label>
-                <input
-                  id="custom-color"
-                  type="color"
-                  value={editor.getAttributes('textStyle').color || '#000000'}
-                  onChange={(e) => editor.chain().focus().setColor(e.target.value).run()}
-                  className="w-8 h-8 rounded cursor-pointer border border-border"
-                />
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              className={editor.isActive('heading', { level: 2 }) ? 'bg-accent' : ''}
+              title="Titre 2"
+            >
+              <Heading2 className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              className={editor.isActive('heading', { level: 3 }) ? 'bg-accent' : ''}
+              title="Titre 3"
+            >
+              <Heading3 className="h-4 w-4" />
+            </Button>
+          </>
+        )}
+        
+        {!simplified && <div className="w-px h-6 bg-border mx-1" />}
+        
+        {/* Text alignment - only in full mode */}
+        {!simplified && (
+          <>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().setTextAlign('left').run()}
+              className={editor.isActive({ textAlign: 'left' }) ? 'bg-accent' : ''}
+              title="Aligner à gauche"
+            >
+              <AlignLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().setTextAlign('center').run()}
+              className={editor.isActive({ textAlign: 'center' }) ? 'bg-accent' : ''}
+              title="Centrer"
+            >
+              <AlignCenter className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().setTextAlign('right').run()}
+              className={editor.isActive({ textAlign: 'right' }) ? 'bg-accent' : ''}
+              title="Aligner à droite"
+            >
+              <AlignRight className="h-4 w-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+              className={editor.isActive({ textAlign: 'justify' }) ? 'bg-accent' : ''}
+              title="Justifier"
+            >
+              <AlignJustify className="h-4 w-4" />
+            </Button>
+          </>
+        )}
         
         <div className="w-px h-6 bg-border mx-1" />
         
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          className={editor.isActive('heading', { level: 1 }) ? 'bg-accent' : ''}
-          title="Titre 1"
-        >
-          <Heading1 className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          className={editor.isActive('heading', { level: 2 }) ? 'bg-accent' : ''}
-          title="Titre 2"
-        >
-          <Heading2 className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          className={editor.isActive('heading', { level: 3 }) ? 'bg-accent' : ''}
-          title="Titre 3"
-        >
-          <Heading3 className="h-4 w-4" />
-        </Button>
-        
-        <div className="w-px h-6 bg-border mx-1" />
-        
-        {/* Text alignment */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          className={editor.isActive({ textAlign: 'left' }) ? 'bg-accent' : ''}
-          title="Aligner à gauche"
-        >
-          <AlignLeft className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          className={editor.isActive({ textAlign: 'center' }) ? 'bg-accent' : ''}
-          title="Centrer"
-        >
-          <AlignCenter className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('right').run()}
-          className={editor.isActive({ textAlign: 'right' }) ? 'bg-accent' : ''}
-          title="Aligner à droite"
-        >
-          <AlignRight className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-          className={editor.isActive({ textAlign: 'justify' }) ? 'bg-accent' : ''}
-          title="Justifier"
-        >
-          <AlignJustify className="h-4 w-4" />
-        </Button>
-        
-        <div className="w-px h-6 bg-border mx-1" />
-        
+        {/* Lists - always visible */}
         <Button
           type="button"
           variant="ghost"
@@ -819,19 +843,24 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          className={editor.isActive('blockquote') ? 'bg-accent' : ''}
-          title="Citation"
-        >
-          <Quote className="h-4 w-4" />
-        </Button>
+        
+        {/* Blockquote - only in full mode */}
+        {!simplified && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            className={editor.isActive('blockquote') ? 'bg-accent' : ''}
+            title="Citation"
+          >
+            <Quote className="h-4 w-4" />
+          </Button>
+        )}
         
         <div className="w-px h-6 bg-border mx-1" />
         
+        {/* Link - always visible */}
         <Button
           type="button"
           variant="ghost"
@@ -843,75 +872,83 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
           <LinkIcon className="h-4 w-4" />
         </Button>
         
-        {/* Emoji picker */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button type="button" variant="ghost" size="sm" title="Émojis">
-              <Smile className="h-4 w-4" />
+        {/* Emoji picker - only in full mode */}
+        {!simplified && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button type="button" variant="ghost" size="sm" title="Émojis">
+                <Smile className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Suspense fallback={<div className="p-4">Chargement...</div>}>
+                <EmojiPicker onEmojiSelect={insertEmoji} />
+              </Suspense>
+            </PopoverContent>
+          </Popover>
+        )}
+        
+        {/* Media buttons - only in full mode */}
+        {!simplified && (
+          <>
+            <div className="w-px h-6 bg-border mx-1" />
+            
+            {/* Image upload */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => fileInputRef.current?.click()}
+              title="Image"
+            >
+              <ImagePlus className="h-4 w-4" />
             </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Suspense fallback={<div className="p-4">Chargement...</div>}>
-              <EmojiPicker onEmojiSelect={insertEmoji} />
-            </Suspense>
-          </PopoverContent>
-        </Popover>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+            
+            {/* Video */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowVideoDialog(true)}
+              title="Vidéo (YouTube, Vimeo)"
+            >
+              <Video className="h-4 w-4" />
+            </Button>
+            
+            {/* Podcast */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowPodcastDialog(true)}
+              title="Podcast (Spotify, Apple, SoundCloud)"
+            >
+              <FileAudio className="h-4 w-4" />
+            </Button>
+            
+            {/* Google Drive */}
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowDriveDialog(true)}
+              title="Fichier Google Drive"
+            >
+              <FileText className="h-4 w-4" />
+            </Button>
+          </>
+        )}
         
         <div className="w-px h-6 bg-border mx-1" />
         
-        {/* Image upload */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => fileInputRef.current?.click()}
-          title="Image"
-        >
-          <ImagePlus className="h-4 w-4" />
-        </Button>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="hidden"
-        />
-        
-        {/* Video */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowVideoDialog(true)}
-          title="Vidéo (YouTube, Vimeo)"
-        >
-          <Video className="h-4 w-4" />
-        </Button>
-        
-        {/* Podcast */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowPodcastDialog(true)}
-          title="Podcast (Spotify, Apple, SoundCloud)"
-        >
-          <FileAudio className="h-4 w-4" />
-        </Button>
-        
-        {/* Google Drive */}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowDriveDialog(true)}
-          title="Fichier Google Drive"
-        >
-          <FileText className="h-4 w-4" />
-        </Button>
-        
-        <div className="w-px h-6 bg-border mx-1" />
-        
+        {/* Undo/Redo - always visible */}
         <Button
           type="button"
           variant="ghost"
@@ -933,20 +970,24 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
           <Redo className="h-4 w-4" />
         </Button>
         
-        <div className="w-px h-6 bg-border mx-1" />
-        
-        {/* Preview button */}
-        <Button
-          type="button"
-          variant={showPreview ? "default" : "ghost"}
-          size="sm"
-          onClick={() => setShowPreview(!showPreview)}
-          title="Prévisualiser"
-          className={showPreview ? "bg-primary text-primary-foreground" : ""}
-        >
-          <Eye className="h-4 w-4 mr-1" />
-          <span className="text-xs">Aperçu</span>
-        </Button>
+        {/* Preview button - only in full mode */}
+        {!simplified && (
+          <>
+            <div className="w-px h-6 bg-border mx-1" />
+            
+            <Button
+              type="button"
+              variant={showPreview ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setShowPreview(!showPreview)}
+              title="Prévisualiser"
+              className={showPreview ? "bg-primary text-primary-foreground" : ""}
+            >
+              <Eye className="h-4 w-4 mr-1" />
+              <span className="text-xs">Aperçu</span>
+            </Button>
+          </>
+        )}
       </div>
       
       {/* Editor or Preview */}
