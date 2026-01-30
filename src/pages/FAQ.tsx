@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
 import { supabase } from '@/integrations/supabase/client';
+import { sanitizeHtml } from '@/lib/sanitize';
 import {
   Accordion,
   AccordionContent,
@@ -155,8 +156,8 @@ const FAQ = () => {
                           <AccordionTrigger className="text-left text-base md:text-lg font-semibold text-foreground hover:text-soft-blue hover:no-underline py-5">
                             {getLocalizedText(item.question_fr, item.question_pl, item.question)}
                           </AccordionTrigger>
-                          <AccordionContent className="text-base text-muted-foreground pb-5 leading-relaxed">
-                            {getLocalizedText(item.answer_fr, item.answer_pl, item.answer)}
+                          <AccordionContent className="text-base text-muted-foreground pb-5 leading-relaxed prose prose-sm max-w-none [&_a]:text-primary [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+                            <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(getLocalizedText(item.answer_fr, item.answer_pl, item.answer)) }} />
                           </AccordionContent>
                         </AccordionItem>
                       ))}

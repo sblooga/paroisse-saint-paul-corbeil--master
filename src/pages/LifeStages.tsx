@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Baby, Cross, Heart, Sparkles, HandHeart, Users, Flower2, BookHeart, Church, Droplets, Handshake, Star, Crown, Flame, LucideIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { sanitizeHtml } from '@/lib/sanitize';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -157,9 +158,10 @@ const LifeStages = () => {
                               />
                             </div>
                             <div className="p-6 md:w-2/3">
-                              <p className="text-muted-foreground leading-relaxed">
-                                {stage.description}
-                              </p>
+                              <div 
+                                className="text-muted-foreground leading-relaxed prose prose-sm max-w-none [&_a]:text-primary [&_a]:underline [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                                dangerouslySetInnerHTML={{ __html: sanitizeHtml(stage.description) }}
+                              />
                             </div>
                           </div>
                         </AccordionContent>

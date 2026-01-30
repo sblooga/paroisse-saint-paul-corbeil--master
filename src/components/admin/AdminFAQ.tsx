@@ -3,7 +3,7 @@ import { Plus, Edit, Trash2, Save, X, ChevronDown, ChevronUp } from 'lucide-reac
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -303,7 +303,13 @@ const AdminFAQ = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Réponse (FR) *</Label>
-                  <Textarea value={itemForm.answer_fr} onChange={(e) => setItemForm(prev => ({ ...prev, answer_fr: e.target.value }))} placeholder="La réponse..." rows={4} />
+                  <RichTextEditor 
+                    content={itemForm.answer_fr} 
+                    onChange={(html) => setItemForm(prev => ({ ...prev, answer_fr: html }))} 
+                    placeholder="La réponse..."
+                    minHeight="150px"
+                    simplified
+                  />
                 </div>
               </TabsContent>
               <TabsContent value="pl" className="space-y-4 mt-4">
@@ -313,7 +319,13 @@ const AdminFAQ = () => {
                 </div>
                 <div className="space-y-2">
                   <Label>Réponse (PL)</Label>
-                  <Textarea value={itemForm.answer_pl} onChange={(e) => setItemForm(prev => ({ ...prev, answer_pl: e.target.value }))} placeholder="Odpowiedź..." rows={4} />
+                  <RichTextEditor 
+                    content={itemForm.answer_pl} 
+                    onChange={(html) => setItemForm(prev => ({ ...prev, answer_pl: html }))} 
+                    placeholder="Odpowiedź..."
+                    minHeight="150px"
+                    simplified
+                  />
                 </div>
               </TabsContent>
             </Tabs>

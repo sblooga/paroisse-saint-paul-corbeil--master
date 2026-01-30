@@ -3,7 +3,7 @@ import { Plus, Edit, Trash2, Save, X, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { ImageUpload } from '@/components/ui/image-upload';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '@/components/ui/badge';
@@ -257,11 +257,12 @@ const AdminLifeStages = () => {
                   </div>
                   <div className="space-y-2">
                     <Label>Description (FR) *</Label>
-                    <Textarea
-                      value={formData.description_fr}
-                      onChange={(e) => setFormData(prev => ({ ...prev, description_fr: e.target.value }))}
+                    <RichTextEditor
+                      content={formData.description_fr}
+                      onChange={(html) => setFormData(prev => ({ ...prev, description_fr: html }))}
                       placeholder="Description détaillée..."
-                      rows={5}
+                      minHeight="150px"
+                      simplified
                     />
                   </div>
                 </TabsContent>
@@ -277,11 +278,12 @@ const AdminLifeStages = () => {
                   </div>
                   <div className="space-y-2">
                     <Label>Description (PL)</Label>
-                    <Textarea
-                      value={formData.description_pl}
-                      onChange={(e) => setFormData(prev => ({ ...prev, description_pl: e.target.value }))}
+                    <RichTextEditor
+                      content={formData.description_pl}
+                      onChange={(html) => setFormData(prev => ({ ...prev, description_pl: html }))}
                       placeholder="Szczegółowy opis..."
-                      rows={5}
+                      minHeight="150px"
+                      simplified
                     />
                   </div>
                 </TabsContent>
