@@ -38,6 +38,7 @@ import {
   Pause,
   Palette,
   X,
+  Languages,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -215,12 +216,30 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 }, ref) => {
   const { i18n } = useTranslation();
 
+  // Supported languages for spell checker
+  const SPELL_CHECK_LANGUAGES = [
+    { code: 'fr', label: '🇫🇷 Français' },
+    { code: 'pl', label: '🇵🇱 Polski' },
+    { code: 'en', label: '🇬🇧 English' },
+    { code: 'es', label: '🇪🇸 Español' },
+    { code: 'pt', label: '🇵🇹 Português' },
+    { code: 'de', label: '🇩🇪 Deutsch' },
+    { code: 'it', label: '🇮🇹 Italiano' },
+    { code: 'nl', label: '🇳🇱 Nederlands' },
+    { code: 'uk', label: '🇺🇦 Українська' },
+    { code: 'ru', label: '🇷🇺 Русский' },
+  ];
+
   // In the CMS we edit FR and PL content side-by-side.
   // The inserted audio title must follow the *content language being edited*,
   // not necessarily the global UI language.
-  const effectiveLang: 'fr' | 'pl' =
+  const defaultLang: string =
     contentLanguage ?? (i18n.language?.startsWith('pl') ? 'pl' : 'fr');
-  const isFrench = effectiveLang === 'fr';
+  
+  // Local state for spell check language (can be changed by user)
+  const [spellCheckLang, setSpellCheckLang] = useState<string>(defaultLang);
+  
+  const isFrench = spellCheckLang === 'fr';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showVideoDialog, setShowVideoDialog] = useState(false);
   const [showPodcastDialog, setShowPodcastDialog] = useState(false);
@@ -369,7 +388,7 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
       attributes: {
         class: 'prose prose-sm max-w-none focus:outline-none p-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_blockquote]:border-l-4 [&_blockquote]:border-primary [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-4 [&_p]:mb-2 [&_h1]:font-playfair [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mb-4 [&_h2]:font-playfair [&_h2]:text-xl [&_h2]:font-bold [&_h2]:mb-3 [&_h3]:font-playfair [&_h3]:text-lg [&_h3]:font-bold [&_h3]:mb-2 [&_p]:font-lato [&_li]:font-lato',
         spellcheck: 'true',
-        lang: effectiveLang,
+        lang: spellCheckLang,
         style: `min-height: ${minHeight};`,
       },
     },
@@ -381,6 +400,16 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
       editor.commands.setContent(content);
     }
   }, [content, editor]);
+
+  // Update spell check language when user changes it
+  useEffect(() => {
+    if (editor) {
+      const editorElement = document.querySelector('.ProseMirror');
+      if (editorElement) {
+        editorElement.setAttribute('lang', spellCheckLang);
+      }
+    }
+  }, [spellCheckLang, editor]);
 
   // Step 1: User picks a file -> show settings dialog BEFORE upload
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -970,7 +999,44 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
           <Redo className="h-4 w-4" />
         </Button>
         
-        {/* Preview button - only in full mode */}
+        <div className="w-px h-6 bg-border mx-1" />
+        
+        {/* Language selector for spell check */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              title="Langue du correcteur orthographique"
+              className="gap-1 px-2"
+            >
+              <Languages className="h-4 w-4" />
+              <span className="text-xs uppercase font-medium">{spellCheckLang}</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-48 p-2" align="end">
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground mb-2 px-2">Langue du correcteur</p>
+              {SPELL_CHECK_LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  type="button"
+                  onClick={() => setSpellCheckLang(lang.code)}
+                  className={cn(
+                    'w-full text-left px-2 py-1.5 text-sm rounded-md transition-colors',
+                    spellCheckLang === lang.code 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'hover:bg-muted'
+                  )}
+                >
+                  {lang.label}
+                </button>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
+        
         {!simplified && (
           <>
             <div className="w-px h-6 bg-border mx-1" />
@@ -1103,9 +1169,9 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
                         <span 
                           className="font-medium text-sm overflow-hidden text-ellipsis whitespace-nowrap"
                           style={{ flex: '1 1 0%', minWidth: 0 }}
-                          title={effectiveLang === 'fr' ? (file.title_fr || file.title) : (file.title_pl || file.title)}
+                          title={isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title)}
                         >
-                          {effectiveLang === 'fr' ? (file.title_fr || file.title) : (file.title_pl || file.title)}
+                          {isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title)}
                         </span>
                         <Button
                           type="button"
