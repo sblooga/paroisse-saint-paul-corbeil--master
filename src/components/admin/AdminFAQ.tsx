@@ -249,7 +249,7 @@ const AdminFAQ = () => {
                 <TabsContent value="pl" className="space-y-4 mt-4">
                   <div className="space-y-2">
                     <Label>Titre (PL)</Label>
-                    <Input value={categoryForm.title_pl} onChange={(e) => setCategoryForm(prev => ({ ...prev, title_pl: e.target.value }))} placeholder="Tytuł kategorii" />
+                    <Input value={categoryForm.title_pl} onChange={(e) => setCategoryForm(prev => ({ ...prev, title_pl: e.target.value }))} placeholder="Tytuł kategorii" lang="pl" spellCheck />
                   </div>
                 </TabsContent>
               </Tabs>
@@ -315,7 +315,7 @@ const AdminFAQ = () => {
               <TabsContent value="pl" className="space-y-4 mt-4">
                 <div className="space-y-2">
                   <Label>Question (PL)</Label>
-                  <Input value={itemForm.question_pl} onChange={(e) => setItemForm(prev => ({ ...prev, question_pl: e.target.value }))} placeholder="Pytanie..." />
+                  <Input value={itemForm.question_pl} onChange={(e) => setItemForm(prev => ({ ...prev, question_pl: e.target.value }))} placeholder="Pytanie..." lang="pl" spellCheck />
                 </div>
                 <div className="space-y-2">
                   <Label>Réponse (PL)</Label>
@@ -325,6 +325,7 @@ const AdminFAQ = () => {
                     placeholder="Odpowiedź..."
                     minHeight="150px"
                     simplified
+                    contentLanguage="pl"
                   />
                 </div>
               </TabsContent>

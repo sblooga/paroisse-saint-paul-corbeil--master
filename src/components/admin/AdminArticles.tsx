@@ -330,6 +330,8 @@ const AdminArticles = () => {
                       value={formData.title_pl}
                       onChange={(e) => handleTitleChange(e.target.value, 'pl')}
                       placeholder="Tytuł artykułu po polsku"
+                      lang="pl"
+                      spellCheck
                     />
                   </div>
                   <div className="space-y-2">
@@ -340,6 +342,8 @@ const AdminArticles = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, excerpt_pl: e.target.value }))}
                       placeholder="Krótkie podsumowanie po polsku..."
                       rows={2}
+                      lang="pl"
+                      spellCheck
                     />
                   </div>
                   <div className="space-y-2">

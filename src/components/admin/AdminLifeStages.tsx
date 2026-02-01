@@ -274,6 +274,8 @@ const AdminLifeStages = () => {
                       value={formData.title_pl}
                       onChange={(e) => setFormData(prev => ({ ...prev, title_pl: e.target.value }))}
                       placeholder="Ex: Chcę ochrzcić moje dziecko"
+                      lang="pl"
+                      spellCheck
                     />
                   </div>
                   <div className="space-y-2">
@@ -284,6 +286,7 @@ const AdminLifeStages = () => {
                       placeholder="Szczegółowy opis..."
                       minHeight="150px"
                       simplified
+                      contentLanguage="pl"
                     />
                   </div>
                 </TabsContent>
