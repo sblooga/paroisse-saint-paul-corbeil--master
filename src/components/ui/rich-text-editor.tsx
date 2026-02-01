@@ -403,12 +403,14 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   // Update spell check language when user changes it
   useEffect(() => {
-    if (editor) {
-      const editorElement = document.querySelector('.ProseMirror');
-      if (editorElement) {
-        editorElement.setAttribute('lang', spellCheckLang);
-      }
-    }
+    if (!editor) return;
+
+    // IMPORTANT: use the current editor instance DOM.
+    // Using document.querySelector('.ProseMirror') breaks when multiple editors exist on the page
+    // (e.g. FR + PL tabs) because it only updates the first one.
+    const editorElement = editor.view.dom as HTMLElement;
+    editorElement.setAttribute('lang', spellCheckLang);
+    editorElement.setAttribute('spellcheck', 'true');
   }, [spellCheckLang, editor]);
 
   // Step 1: User picks a file -> show settings dialog BEFORE upload
