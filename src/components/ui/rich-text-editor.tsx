@@ -218,28 +218,58 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   // Supported languages for spell checker
   const SPELL_CHECK_LANGUAGES = [
-    { code: 'fr', label: '🇫🇷 Français' },
-    { code: 'pl', label: '🇵🇱 Polski' },
-    { code: 'en', label: '🇬🇧 English' },
-    { code: 'es', label: '🇪🇸 Español' },
-    { code: 'pt', label: '🇵🇹 Português' },
-    { code: 'de', label: '🇩🇪 Deutsch' },
-    { code: 'it', label: '🇮🇹 Italiano' },
-    { code: 'nl', label: '🇳🇱 Nederlands' },
-    { code: 'uk', label: '🇺🇦 Українська' },
-    { code: 'ru', label: '🇷🇺 Русский' },
+    // Use BCP47 language tags with region when possible.
+    // Some browsers behave more reliably with a full locale (e.g. pl-PL).
+    { code: 'fr-FR', label: '🇫🇷 Français' },
+    { code: 'pl-PL', label: '🇵🇱 Polski' },
+    { code: 'en-US', label: '🇬🇧 English' },
+    { code: 'es-ES', label: '🇪🇸 Español' },
+    { code: 'pt-PT', label: '🇵🇹 Português' },
+    { code: 'de-DE', label: '🇩🇪 Deutsch' },
+    { code: 'it-IT', label: '🇮🇹 Italiano' },
+    { code: 'nl-NL', label: '🇳🇱 Nederlands' },
+    { code: 'uk-UA', label: '🇺🇦 Українська' },
+    { code: 'ru-RU', label: '🇷🇺 Русский' },
   ];
 
   // In the CMS we edit FR and PL content side-by-side.
   // The inserted audio title must follow the *content language being edited*,
   // not necessarily the global UI language.
-  const defaultLang: string =
-    contentLanguage ?? (i18n.language?.startsWith('pl') ? 'pl' : 'fr');
+  const normalizeLang = (lang?: string) => {
+    const base = (lang ?? '').split('-')[0];
+    switch (base) {
+      case 'pl':
+        return 'pl-PL';
+      case 'fr':
+        return 'fr-FR';
+      case 'en':
+        return 'en-US';
+      case 'es':
+        return 'es-ES';
+      case 'pt':
+        return 'pt-PT';
+      case 'de':
+        return 'de-DE';
+      case 'it':
+        return 'it-IT';
+      case 'nl':
+        return 'nl-NL';
+      case 'uk':
+        return 'uk-UA';
+      case 'ru':
+        return 'ru-RU';
+      default:
+        return 'fr-FR';
+    }
+  };
+
+  const defaultLang: string = normalizeLang(contentLanguage ?? i18n.language);
   
   // Local state for spell check language (can be changed by user)
   const [spellCheckLang, setSpellCheckLang] = useState<string>(defaultLang);
   
-  const isFrench = spellCheckLang === 'fr';
+  const isFrench = spellCheckLang.startsWith('fr');
+  const isPolish = spellCheckLang.startsWith('pl');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showVideoDialog, setShowVideoDialog] = useState(false);
   const [showPodcastDialog, setShowPodcastDialog] = useState(false);
@@ -297,7 +327,8 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
 
   const insertAudioFromLibrary = (file: AudioFile) => {
     if (!editor) return;
-    const title = isFrench ? (file.title_fr || file.title) : (file.title_pl || file.title);
+    // We only have FR/PL titles in the DB; for other languages, fallback to FR.
+    const title = isPolish ? (file.title_pl || file.title) : (file.title_fr || file.title);
     editor
       .chain()
       .focus()
