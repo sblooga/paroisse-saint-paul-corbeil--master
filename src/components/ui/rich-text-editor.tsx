@@ -1082,7 +1082,13 @@ export const RichTextEditor = forwardRef<HTMLDivElement, RichTextEditorProps>(({
           />
         </div>
       ) : (
-        <EditorContent editor={editor} />
+        <EditorContent
+          editor={editor}
+          // Some browsers rely on the closest ancestor lang/spellcheck for contenteditable.
+          // Setting it here in addition to editorProps avoids inconsistent behavior across pages.
+          lang={spellCheckLang}
+          spellCheck
+        />
       )}
       
       {/* Video Dialog */}
